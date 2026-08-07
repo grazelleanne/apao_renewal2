@@ -12,7 +12,7 @@ body { font-family: Arial, sans-serif; background: #f4f4f4; margin: 0; padding: 
 </head>
 <body>
 <div class="container">
-<div class="header">APAO Renewal System — Official Notification</div>
+<div class="header">APAO Renewal System</div>
 <div class="body">{{ $body }}</div>
 <div class="footer">This is an automated notification. Do not reply to this email.</div>
 </div>

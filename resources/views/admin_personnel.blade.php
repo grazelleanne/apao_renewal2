@@ -430,7 +430,12 @@ document.addEventListener("DOMContentLoaded", function () {
       e.stopPropagation();
       const isOpen = dropdown.classList.contains('open');
       dropdown.classList.toggle('open');
-      if (!isOpen) loadNotifications();
+      if (!isOpen) {
+      bell.classList.remove('has-unread');
+      badge.style.display = 'none';
+      badge.textContent = '';
+      fetch(ADMIN_NOTIF_READ_URL, { method:'POST', headers:{ 'X-CSRF-TOKEN':CSRF, 'Accept':'application/json' } }).finally(loadNotifications);
+    }
     });
     document.addEventListener('click', function (e) {
       if (!document.getElementById('adminNotifWrapper').contains(e.target)) dropdown.classList.remove('open');
@@ -451,7 +456,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
   function asText(v) { return v == null ? "" : String(v).trim(); }
 
-  // FIX 1: normalizeRow — sanitize null/undefined strings from API
+  // normalizeRow — sanitize null/undefined strings from API
   function normalizeRow(row, index) {
     const s = row || {};
     return {
@@ -507,7 +512,7 @@ dateOfValidity: (s.dateOfValidity && s.dateOfValidity !== 'null' && s.dateOfVali
     return 'expired';
   }
 
-  // FIX 2: resolveStatus — don't let default "pending" block date-based status
+  // resolveStatus — don't let default "pending" block date-based status
   function resolveStatus(row) {
     const manual = (row.approvedStatus || '').trim().toLowerCase();
     // If explicitly set to something other than "pending", honour it
@@ -638,7 +643,7 @@ dateOfValidity: (s.dateOfValidity && s.dateOfValidity !== 'null' && s.dateOfVali
       return;
     }
 
-    // FIX 3: Date of Validity column — show "Pending Inspection" in amber when empty
+    // Date of Validity column — show "Pending Inspection" in amber when empty
     filtered.forEach((row, i) => {
      const resolvedSt = resolveStatus(row);
 const validityDisplay = row.dateOfValidity
@@ -712,7 +717,7 @@ const validityDisplay = row.dateOfValidity
     const cleanEmail = (row.email && row.email !== 'undefined' && row.email !== 'null' && row.email !== '')
       ? escapeHtml(row.email) : '—';
 
-    // FIX 4: VALIDITY in modal — show "Pending Inspection" in amber when empty
+    // VALIDITY in modal — show "Pending Inspection" in amber when empty
     const validityHtml = row.dateOfValidity
       ? `<span class="pd-val">${escapeHtml(row.dateOfValidity)}</span>`
       : `<span class="pd-val" style="color:#f59e0b;font-style:italic;font-size:0.7rem;">Pending Inspection</span>`;
@@ -825,7 +830,7 @@ const validityDisplay = row.dateOfValidity
     };
   }
 
-  // ===== RENEWAL HISTORY LOADER =====
+  // ===== RENEWAL HISTORY =====
   async function loadRenewalHistory(itemNumber) {
     const loading = document.getElementById('pd-renewal-loading');
     const content = document.getElementById('pd-renewal-content');
@@ -893,7 +898,7 @@ const validityDisplay = row.dateOfValidity
   }
 
 
-  // FIX 5: EDIT MODAL — was completely missing, now added
+  //  EDIT MODAL //
   function showEditPersonnelModal(row) {
     const modal = document.getElementById("editPersonnelModal");
     modal.innerHTML = `
@@ -955,3 +960,4 @@ const validityDisplay = row.dateOfValidity
 </script>
 </body>
 </html>
+

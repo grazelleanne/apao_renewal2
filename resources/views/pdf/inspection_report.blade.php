@@ -156,12 +156,18 @@
 <body>
 
   {{-- ===================== HEADER ===================== --}}
+  @php
+    $logo1Path = public_path('images/logo1.png');
+    $logo2Path = public_path('images/logo2.png');
+    $logo1Data = file_exists($logo1Path) ? base64_encode(file_get_contents($logo1Path)) : '';
+    $logo2Data = file_exists($logo2Path) ? base64_encode(file_get_contents($logo2Path)) : '';
+  @endphp
   <table class="header-table">
     <tr>
       <td style="width:60px; text-align:left; vertical-align:middle;">
-        <img class="header-logo"
-             src="file:///{{ str_replace('\\', '/', public_path('images/logo1.png')) }}"
-             alt="4ID Logo">
+        @if($logo1Data)
+          <img class="header-logo" src="data:image/png;base64,{{ $logo1Data }}" alt="4ID Logo">
+        @endif
       </td>
       <td class="header-center">
         <p>REPUBLIC OF THE PHILIPPINES</p>
@@ -171,9 +177,9 @@
         <p class="bold">10TH FIELD PROPERTY ACCOUNTABILITY OFFICE (FPAO)</p>
       </td>
       <td style="width:60px; text-align:right; vertical-align:middle;">
-        <img class="header-logo"
-             src="file:///{{ str_replace('\\', '/', public_path('images/logo2.png')) }}"
-             alt="FPAO Logo">
+        @if($logo2Data)
+          <img class="header-logo" src="data:image/png;base64,{{ $logo2Data }}" alt="FPAO Logo">
+        @endif
       </td>
     </tr>
   </table>

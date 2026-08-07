@@ -58,6 +58,16 @@
     .strength-good     { background: #3ec6ff; }
     .strength-strong   { background: #33b481; }
     .strength-hint     { font-size: 11px; color: #94a3b8; margin-top: 4px; line-height: 1.5; }
+    .password-wrapper { position: relative; }
+    .password-wrapper .input { padding-right: 44px; }
+    .toggle-password {
+      position: absolute; right: 12px; top: 13px;
+      background: none; border: none; cursor: pointer;
+      padding: 4px; display: flex; align-items: center; justify-content: center;
+      color: var(--text-muted);
+    }
+    .toggle-password:hover { color: var(--green-accent); }
+    .toggle-password svg { width: 19px; height: 19px; fill: currentColor; }
     .btn { width: 100%; background: linear-gradient(135deg, var(--green-dark), var(--green-mid)); color: var(--white); border: none; border-radius: 10px; padding: 14px; font-size: 15px; font-weight: 700; font-family: inherit; cursor: pointer; letter-spacing: .3px; box-shadow: 0 8px 20px rgba(45,87,65,0.35); transition: filter .2s, transform .1s; margin-top: 4px; }
     .btn:hover  { filter: brightness(1.08); transform: translateY(-1px); }
     .btn:active { transform: translateY(0); }
@@ -102,14 +112,26 @@
         </div>
         <div class="field">
           <label class="label" for="password">Password</label>
-          <input class="input" type="password" id="password" placeholder="Min 8 chars, uppercase, number, symbol" autocomplete="new-password" />
+          <div class="password-wrapper">
+            <input class="input" type="password" id="password" placeholder="Min 8 chars, uppercase, number, symbol" autocomplete="new-password" />
+            <button type="button" class="toggle-password" id="togglePassword" aria-label="Show password">
+              <svg class="icon-eye" viewBox="0 0 24 24"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+              <svg class="icon-eye-off" viewBox="0 0 24 24" style="display:none;"><path d="M2 4.27 3.28 3 21 20.72 19.73 22l-3.08-3.08A11.6 11.6 0 0 1 12 20C5 20 2 13 2 13a17.6 17.6 0 0 1 4.06-5.94L2 4.27zM12 6c7 0 10 7 10 7a17.9 17.9 0 0 1-2.19 3.36l-2.16-2.16A4 4 0 0 0 12 8a3.95 3.95 0 0 0-1.29.22L8.36 5.86A11.6 11.6 0 0 1 12 6zm-3.29 4.29 5 5A4 4 0 0 1 8.71 10.29z"/></svg>
+            </button>
+          </div>
           <div class="strength-bar-wrap"><div class="strength-bar" id="strengthBar"></div></div>
           <div class="strength-text" id="strengthText"></div>
           <div class="strength-hint">Must contain: uppercase letter, number, and special character (@#!$%)</div>
         </div>
-        <div class="field">
+       <div class="field">
           <label class="label" for="password_confirm">Confirm Password</label>
-          <input class="input" type="password" id="password_confirm" placeholder="Repeat your password" autocomplete="new-password" />
+          <div class="password-wrapper">
+            <input class="input" type="password" id="password_confirm" placeholder="Repeat your password" autocomplete="new-password" />
+            <button type="button" class="toggle-password" id="toggleConfirmPassword" aria-label="Show password">
+              <svg class="icon-eye" viewBox="0 0 24 24"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+              <svg class="icon-eye-off" viewBox="0 0 24 24" style="display:none;"><path d="M2 4.27 3.28 3 21 20.72 19.73 22l-3.08-3.08A11.6 11.6 0 0 1 12 20C5 20 2 13 2 13a17.6 17.6 0 0 1 4.06-5.94L2 4.27zM12 6c7 0 10 7 10 7a17.9 17.9 0 0 1-2.19 3.36l-2.16-2.16A4 4 0 0 0 12 8a3.95 3.95 0 0 0-1.29.22L8.36 5.86A11.6 11.6 0 0 1 12 6zm-3.29 4.29 5 5A4 4 0 0 1 8.71 10.29z"/></svg>
+            </button>
+          </div>
         </div>
 
         <button type="button" class="btn" id="registerBtn">Create Account</button>
@@ -128,6 +150,24 @@
     function showError(msg)   { errorMsg.textContent=msg; errorMsg.style.display='block'; successMsg.style.display='none'; }
     function showSuccess(msg) { successMsg.textContent=msg; successMsg.style.display='block'; errorMsg.style.display='none'; }
     function hide()           { errorMsg.style.display='none'; successMsg.style.display='none'; }
+
+    // Show/hide password toggle (reusable for both fields)
+    function setupToggle(buttonId, inputId) {
+      const button = document.getElementById(buttonId);
+      const input  = document.getElementById(inputId);
+      if (!button || !input) return;
+      const eyeIcon    = button.querySelector('.icon-eye');
+      const eyeOffIcon = button.querySelector('.icon-eye-off');
+      button.addEventListener('click', function () {
+        const isPassword = input.type === 'password';
+        input.type = isPassword ? 'text' : 'password';
+        eyeIcon.style.display    = isPassword ? 'none' : 'block';
+        eyeOffIcon.style.display = isPassword ? 'block' : 'none';
+        button.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+      });
+    }
+    setupToggle('togglePassword', 'password');
+    setupToggle('toggleConfirmPassword', 'password_confirm');
 
     // Password strength checker
     document.getElementById('password').addEventListener('input', function () {
@@ -177,7 +217,7 @@
       try {
         const res  = await fetch('/register', {
           method: 'POST',
-          headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': csrf },
+          headers: { 'Content-Type': 'application/json', 'Accept': 'application/json', 'X-CSRF-TOKEN': csrf },
           body: JSON.stringify({ name, email, password })
         });
         const data = await res.json();

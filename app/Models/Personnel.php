@@ -4,6 +4,10 @@ namespace App\Models;
 
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
+
+use App\Models\Inspection;
 
 class Personnel extends Model
 {
@@ -24,6 +28,8 @@ class Personnel extends Model
         'approved_status',
         'is_archived',
         'archived_at',
+        'ics_status',
+        'date_approved',
     ];
 
     public static function computeStatus($validityRaw)
@@ -106,6 +112,23 @@ class Personnel extends Model
         return $query->where('approved_status', $status);
     }
 
+    public function propertyAcknowledgementReceipts(): HasMany
+    {
+        return $this->hasMany(PropertyAcknowledgementReceipt::class);
+    }
+
+    public function activePropertyAcknowledgementReceipt(): HasOne
+    {
+        return $this->hasOne(PropertyAcknowledgementReceipt::class)
+            ->where('status', 'Active')
+            ->latestOfMany();
+    }
+
+    public function inspections()
+    {
+        return $this->hasMany(Inspection::class, 'personnel_id');
+    }
+
     private function formatDate($value)
     {
         if (empty($value)) {
@@ -152,6 +175,8 @@ class Personnel extends Model
             'archivedAt'         => $this->formatDate($this->archived_at),
             'createdAt'          => $this->formatDatetime($this->created_at),
             'updatedAt'          => $this->formatDatetime($this->updated_at),
+            'dateApproved'       => $this->formatDate($this->date_approved),
+            'icsStatus'          => $this->ics_status,
         ];
     }
 }

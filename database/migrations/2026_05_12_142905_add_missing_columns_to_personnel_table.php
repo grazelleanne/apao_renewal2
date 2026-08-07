@@ -41,7 +41,7 @@ return new class extends Migration
 
         // Fix approved_status column to include all values used in the app
         // Drop and re-create with proper enum values
-        DB::statement("ALTER TABLE personnel MODIFY approved_status ENUM('new','pending','within','within_renewal','renewed','expired','valid') DEFAULT 'pending'");
+        DB::statement("ALTER TABLE personnel MODIFY approved_status ENUM('new','pending','within','within_renewal','renewed','expired','valid') DEFAULT 'new'");
     }
 
     public function down(): void

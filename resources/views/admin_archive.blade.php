@@ -356,7 +356,12 @@ document.addEventListener("DOMContentLoaded", function () {
     e.stopPropagation();
     const isOpen = dropdown.classList.contains('open');
     dropdown.classList.toggle('open');
-    if (!isOpen) loadNotifications();
+    if (!isOpen) {
+      bell.classList.remove('has-unread');
+      badge.style.display = 'none';
+      badge.textContent = '';
+      fetch(ADMIN_NOTIF_READ_URL, { method:'POST', headers:{ 'X-CSRF-TOKEN':CSRF, 'Accept':'application/json' } }).finally(loadNotifications);
+    }
   });
   document.addEventListener('click', function (e) {
     if (!document.getElementById('adminNotifWrapper').contains(e.target)) {
@@ -523,3 +528,4 @@ async function deleteArchived(itemNumber) {
 </script>
 </body>
 </html>
+

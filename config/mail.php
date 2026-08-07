@@ -47,6 +47,18 @@ return [
             'password' => env('MAIL_PASSWORD'),
             'timeout' => null,
             'local_domain' => env('MAIL_EHLO_DOMAIN', parse_url((string) env('APP_URL', 'http://localhost'), PHP_URL_HOST)),
+
+            // Only relevant when MAIL_TLS_VERIFY=false (set that in your
+            // LOCAL .env only, when you hit "SSL certificate verify failed"
+            // errors caused by a missing/outdated local CA bundle).
+            // Leave MAIL_TLS_VERIFY unset (defaults to true) in staging/production.
+            'stream' => [
+                'ssl' => [
+                    'verify_peer' => env('MAIL_TLS_VERIFY', true),
+                    'verify_peer_name' => env('MAIL_TLS_VERIFY', true),
+                    'allow_self_signed' => ! env('MAIL_TLS_VERIFY', true),
+                ],
+            ],
         ],
 
         'ses' => [

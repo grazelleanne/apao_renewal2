@@ -7,7 +7,7 @@
     <div style="max-width:560px;margin:0 auto;background:#ffffff;border-radius:10px;overflow:hidden;border:1px solid #e5e7eb;">
         <div style="background:#085041;padding:20px 24px;">
             <p style="color:#ffffff;font-size:18px;font-weight:700;margin:0;">AFP Personnel Management System</p>
-            <p style="color:rgba(255,255,255,0.7);font-size:12px;margin:4px 0 0;">Official Notification</p>
+            <p style="color:rgba(255,255,255,0.7);font-size:12px;margin:4px 0 0;">Official</p>
         </div>
         <div style="padding:24px;">
             <p style="font-size:14px;color:#111827;line-height:1.7;">

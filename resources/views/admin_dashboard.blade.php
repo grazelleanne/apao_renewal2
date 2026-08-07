@@ -120,6 +120,15 @@
     body.light-mode .notif-item:hover{background:#f8fafc!important;}
     body.light-mode .notif-item.unread:hover{background:#e0f0ff!important;}
     body.light-mode #adminNotifDropdown .notif-list::-webkit-scrollbar-track{background:#f1f5f9!important;}
+    body.light-mode .admin-panel{background:#ffffff!important;border-color:#e2e8f0!important;}
+    body.light-mode .admin-panel-title{color:#1e293b!important;}
+    body.light-mode .admin-action-row{background:#f8fafc!important;border-color:#e2e8f0!important;}
+    body.light-mode .admin-action-label{color:#334155!important;}
+    body.light-mode .admin-action-desc{color:#64748b!important;}
+    body.light-mode .activity-row{border-color:#e2e8f0!important;}
+    body.light-mode .activity-title{color:#334155!important;}
+    body.light-mode .activity-meta{color:#64748b!important;}
+
   </style>
     
   </style>
@@ -180,11 +189,7 @@
   <!-- MAIN -->
   <main class="flex-1 main-bg bg-[#1a2025] p-7 overflow-y-auto">
 
-    <header class="flex flex-wrap justify-between mb-8 items-center gap-4">
-      <div class="relative w-80">
-        <input id="searchInput" type="text" placeholder="Search by name..." class="bg-[#23272f] text-white border border-[#363b48] rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-accent pr-10 force-light-text" />
-        <svg class="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-4.35-4.35M5 11a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>
-      </div>
+    <header class="flex flex-wrap justify-end mb-8 items-center gap-4">
       <div class="flex items-center gap-4">
         <span class="text-sm force-light-text opacity-70">Welcome, <strong>{{ $user->name ?? 'Admin' }}</strong></span>
         <div class="relative" id="adminNotifWrapper">
@@ -258,42 +263,75 @@
       </div>
     </div>
 
-    <!-- PERSONNEL TABLE -->
-    <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 mb-10 mt-10">
-      <div class="flex flex-wrap items-center justify-between mb-4 gap-2">
-        <h2 class="font-semibold text-base force-light-text tracking-tight">List of Personnel</h2>
-        <div class="flex gap-2 items-center">
-          <label for="sortSelect" class="text-[#b0bac7] text-xs force-light-text">Sort by:</label>
-          <select id="sortSelect" class="bg-[#23272f] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
-            <option value="itemNumber-desc" selected>Item # (Desc)</option>
-            <option value="itemNumber-asc">Item # (Asc)</option>
-            <option value="lastName-asc">Last Name (A-Z)</option>
-            <option value="lastName-desc">Last Name (Z-A)</option>
-            <option value="dateOfValidity-asc">Date of Validity (Earliest)</option>
-            <option value="dateOfValidity-desc">Date of Validity (Latest)</option>
-          </select>
+    <!-- ADMIN OVERSIGHT -->
+    <div class="grid lg:grid-cols-2 gap-6 mb-7">
+
+      <!-- PENDING ADMINISTRATIVE ACTIONS -->
+      <section class="admin-panel bg-[#23272f] border border-[#363b48] rounded-lg p-6 shadow shadow-black/10">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="admin-panel-title font-semibold text-base force-light-text tracking-tight">Pending Administrative Actions</h3>
+            <p class="text-xs text-[#94a3b8] mt-1">Items that currently require Admin attention.</p>
+          </div>
+          <a href="{{ route('admin.inspection') }}" class="text-xs text-cyan-400 hover:underline font-semibold">View Inspection →</a>
         </div>
-      </div>
-      <div class="overflow-x-auto">
-        <table class="w-full text-xs text-left">
-          <thead>
-            <tr class="border-b border-[#252b32] text-[#b0bac7]">
-              <th class="py-2 px-2 font-semibold force-light-text">Item #</th>
-              <th class="py-2 px-2 font-semibold force-light-text">Date of Validity</th>
-              <th class="py-2 px-2 font-semibold force-light-text">Last Name</th>
-              <th class="py-2 px-2 font-semibold force-light-text">First Name</th>
-              <th class="py-2 px-2 font-semibold force-light-text">Middle Name</th>
-              <th class="py-2 px-2 font-semibold force-light-text">AFP Serial #</th>
-              <th class="py-2 px-2 font-semibold force-light-text">Date of Birth</th>
-              <th class="py-2 px-2 font-semibold force-light-text">Nomenclature of Pistol</th>
-              <th class="py-2 px-2 font-semibold force-light-text">Pistol Serial #</th>
-              <th class="py-2 px-2 font-semibold force-light-text">Qty Ammo</th>
-              <th class="py-2 px-2 font-semibold force-light-text">Approval</th>
-            </tr>
-          </thead>
-          <tbody id="personnelTableBody"></tbody>
-        </table>
-      </div>
+
+        <div class="space-y-3">
+          <a href="{{ route('admin.inspection') }}" class="admin-action-row flex items-center justify-between gap-4 bg-[#1a2025] border border-[#303640] rounded-lg p-4 hover:border-cyan-500/50 transition" style="text-decoration:none;">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-10 h-10 rounded-lg bg-amber-500/10 text-amber-400 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/><path d="M11 8v4l2 2"/></svg>
+              </div>
+              <div>
+                <div class="admin-action-label text-sm font-semibold text-[#e5eaf2]">Awaiting Inspection</div>
+                <div class="admin-action-desc text-xs text-[#94a3b8]">Personnel sent by Staff and waiting for Admin review.</div>
+              </div>
+            </div>
+            <span id="pendingInspectionCount" class="text-2xl font-extrabold text-amber-400">0</span>
+          </a>
+
+          <a href="{{ route('admin.inspection') }}" class="admin-action-row flex items-center justify-between gap-4 bg-[#1a2025] border border-[#303640] rounded-lg p-4 hover:border-yellow-500/50 transition" style="text-decoration:none;">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-10 h-10 rounded-lg bg-yellow-500/10 text-yellow-400 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4m0 4h.01"/><path d="M10.3 3.7 2.8 17a2 2 0 001.7 3h15a2 2 0 001.7-3L13.7 3.7a2 2 0 00-3.4 0z"/></svg>
+              </div>
+              <div>
+                <div class="admin-action-label text-sm font-semibold text-[#e5eaf2]">Within Renewal Period</div>
+                <div class="admin-action-desc text-xs text-[#94a3b8]">Personnel approaching the end of firearm validity.</div>
+              </div>
+            </div>
+            <span id="actionWithinRenewal" class="text-2xl font-extrabold text-yellow-400">0</span>
+          </a>
+
+          <a href="{{ route('admin.inspection') }}" class="admin-action-row flex items-center justify-between gap-4 bg-[#1a2025] border border-[#303640] rounded-lg p-4 hover:border-red-500/50 transition" style="text-decoration:none;">
+            <div class="flex items-center gap-3 min-w-0">
+              <div class="w-10 h-10 rounded-lg bg-red-500/10 text-red-400 flex items-center justify-center flex-shrink-0">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9 9l6 6M15 9l-6 6"/></svg>
+              </div>
+              <div>
+                <div class="admin-action-label text-sm font-semibold text-[#e5eaf2]">Expired</div>
+                <div class="admin-action-desc text-xs text-[#94a3b8]">Personnel with expired firearm validity requiring attention.</div>
+              </div>
+            </div>
+            <span id="actionExpired" class="text-2xl font-extrabold text-red-400">0</span>
+          </a>
+        </div>
+      </section>
+
+      <!-- RECENT SYSTEM ACTIVITY -->
+      <section class="admin-panel bg-[#23272f] border border-[#363b48] rounded-lg p-6 shadow shadow-black/10">
+        <div class="flex items-center justify-between mb-5">
+          <div>
+            <h3 class="admin-panel-title font-semibold text-base force-light-text tracking-tight">Recent System Activity</h3>
+            <p class="text-xs text-[#94a3b8] mt-1">Latest important activity across the system.</p>
+          </div>
+          <a href="{{ route('admin.audit') }}" class="text-xs text-cyan-400 hover:underline font-semibold">View Audit Log →</a>
+        </div>
+
+        <div id="recentActivityList">
+          <div class="text-center py-10 text-sm text-[#64748b]">Loading recent activity...</div>
+        </div>
+      </section>
     </div>
 
   </main>
@@ -392,7 +430,12 @@ document.addEventListener("DOMContentLoaded", function () {
     e.stopPropagation();
     const isOpen = dropdown.classList.contains('open');
     dropdown.classList.toggle('open');
-    if (!isOpen) loadNotifications();
+    if (!isOpen) {
+      bell.classList.remove('has-unread');
+      badge.style.display = 'none';
+      badge.textContent = '';
+      fetch(ADMIN_NOTIF_READ_URL, { method:'POST', headers:{ 'X-CSRF-TOKEN':CSRF, 'Accept':'application/json' } }).finally(loadNotifications);
+    }
   });
   document.addEventListener('click', function (e) {
     if (!document.getElementById('adminNotifWrapper').contains(e.target)) dropdown.classList.remove('open');
@@ -402,23 +445,7 @@ document.addEventListener("DOMContentLoaded", function () {
   });
   loadNotifications();
   setInterval(loadNotifications, 30000);
-
-  // ===== BADGE =====
-  function approvedStatusBadge(status) {
-    const map = {
-      new:     `<span class="abadge abadge-new">● New</span>`,
-      renewed: `<span class="abadge abadge-renewed">✓ Renewed</span>`,
-      within:  `<span class="abadge abadge-within">⏱ Within Renewal</span>`,
-      expired: `<span class="abadge abadge-expired">✕ Expired</span>`,
-      pending: `<span class="abadge abadge-pending">— Pending —</span>`,
-    };
-    return map[status] || map['pending'];
-  }
-
   // ===== DATA =====
-  let personnel   = [];
-  let currentSort = "itemNumber-desc";
-
   const CHART_COLORS = ['#3ec6ff','#33b481','#ecc94b','#e53e3e','#64748b'];
   const CHART_LABELS = ['New','Renewed','Within Renewal','Expired','Pending'];
   const gridColor    = 'rgba(255,255,255,0.07)';
@@ -469,43 +496,57 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 
-  // ===== TABLE =====
-  function sortList(list) {
-    const [key, dir] = currentSort.split("-");
-    return list.slice().sort((a, b) => {
-      let av = ["itemNumber","qtyAmmo"].includes(key) ? Number(a[key]) : (a[key]||"").toString().toLowerCase();
-      let bv = ["itemNumber","qtyAmmo"].includes(key) ? Number(b[key]) : (b[key]||"").toString().toLowerCase();
-      if (av < bv) return dir === "asc" ? -1 : 1;
-      if (av > bv) return dir === "asc" ? 1  : -1;
-      return 0;
-    });
+  // ===== RECENT SYSTEM ACTIVITY =====
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, char => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;'
+    })[char]);
   }
 
-  function renderTable() {
-    const q = (document.getElementById("searchInput").value || "").trim().toLowerCase();
-    let filtered = personnel.filter(p =>
-      [p.firstName, p.middleName, p.lastName].some(v => (v||"").toLowerCase().includes(q))
-    );
-    filtered = sortList(filtered);
-    const tbody = document.getElementById("personnelTableBody");
-    if (!filtered.length) {
-      tbody.innerHTML = `<tr><td colspan="11" class="text-center py-4 text-gray-400 force-light-text">No data found.</td></tr>`;
+  function renderRecentActivities(items) {
+    const list = document.getElementById('recentActivityList');
+
+    if (!Array.isArray(items) || !items.length) {
+      list.innerHTML = `<div class="text-center py-10 text-sm text-[#64748b]">No recent activity available.</div>`;
       return;
     }
-    tbody.innerHTML = filtered.map(r => `
-      <tr class="border-b border-[#1a2025] hover:bg-[#1a2025] transition-colors">
-        <td class="py-2 px-2 force-light-text">${r.itemNumber ?? ''}</td>
-        <td class="py-2 px-2 force-light-text">${r.dateOfValidity ?? ''}</td>
-        <td class="py-2 px-2 force-light-text">${r.lastName ?? ''}</td>
-        <td class="py-2 px-2 force-light-text">${r.firstName ?? ''}</td>
-        <td class="py-2 px-2 force-light-text">${r.middleName ?? ''}</td>
-        <td class="py-2 px-2 force-light-text">${r.afpSerialNumber ?? ''}</td>
-        <td class="py-2 px-2 force-light-text">${r.dateOfBirth ?? ''}</td>
-        <td class="py-2 px-2 force-light-text">${r.pistolNomenclature ?? ''}</td>
-        <td class="py-2 px-2 force-light-text">${r.pistolSerialNumber ?? ''}</td>
-        <td class="py-2 px-2 force-light-text">${r.qtyAmmo ?? ''}</td>
-        <td class="py-2 px-2">${approvedStatusBadge(r.approvedStatus)}</td>
-      </tr>`).join("");
+
+    list.innerHTML = items.slice(0, 6).map(item => {
+      const title = item.title || item.action || item.description || item.message || 'System activity';
+      const actor = item.userName || item.user || item.actor || item.performedBy || 'System';
+      const date  = item.createdAt || item.created_at || item.date || item.timestamp || '';
+
+      return `
+        <div class="activity-row flex items-start gap-3 py-3 border-b border-[#303640] last:border-b-0">
+          <div class="w-9 h-9 rounded-full bg-cyan-500/10 text-cyan-400 flex items-center justify-center flex-shrink-0">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M12 8v4l3 2"/><circle cx="12" cy="12" r="9"/>
+            </svg>
+          </div>
+          <div class="min-w-0 flex-1">
+            <div class="activity-title text-sm font-semibold text-[#e5eaf2]">${escapeHtml(title)}</div>
+            <div class="activity-meta text-xs text-[#64748b] mt-1">
+              ${escapeHtml(actor)}${date ? ` • ${escapeHtml(timeAgo(date))}` : ''}
+            </div>
+          </div>
+        </div>`;
+    }).join('');
+  }
+
+  async function loadRecentActivity() {
+    const list = document.getElementById('recentActivityList');
+
+    try {
+      // Reuse the notification feed as a safe recent-activity source.
+      // If your dashboard API later returns recentActivity, that data is preferred below.
+      const res = await fetch(ADMIN_NOTIF_URL, {
+        headers: { 'Accept':'application/json', 'X-CSRF-TOKEN':CSRF }
+      });
+      const json = await res.json();
+      renderRecentActivities(json.notifications || []);
+    } catch (e) {
+      list.innerHTML = `<div class="text-center py-10 text-sm text-red-400">Failed to load recent activity.</div>`;
+    }
   }
 
   // ===== LOAD DASHBOARD =====
@@ -522,25 +563,33 @@ document.addEventListener("DOMContentLoaded", function () {
       document.getElementById("totalRenewed").innerText  = m.totalRenewed   ?? '0';
       document.getElementById("withinRenewal").innerText = m.withinRenewal  ?? '0';
       document.getElementById("expired").innerText       = m.expired        ?? '0';
-      personnel = json.personnel || [];
-      renderTable();
+
+      // Admin oversight counters.
+      document.getElementById("actionWithinRenewal").innerText = m.withinRenewal ?? '0';
+      document.getElementById("actionExpired").innerText       = m.expired ?? '0';
+
+      // Uses an inspection-specific count if your dashboard endpoint provides one.
+      // Falls back to the existing pending metric so the dashboard remains compatible.
+      document.getElementById("pendingInspectionCount").innerText =
+        m.pendingInspection ?? m.forInspection ?? m.pending ?? '0';
+
+      if (Array.isArray(json.recentActivity) && json.recentActivity.length) {
+        renderRecentActivities(json.recentActivity);
+      }
+
       initCharts(m.totalNew ?? 0, m.totalRenewed ?? 0, m.withinRenewal ?? 0, m.expired ?? 0, m.pending ?? 0);
     } catch (e) {
       console.error('Dashboard load error:', e);
       ["totalUsers","totalRenewed","withinRenewal","expired"].forEach(id => {
         document.getElementById(id).innerText = '--';
       });
-      document.getElementById("personnelTableBody").innerHTML =
-        `<tr><td colspan="11" class="text-center py-4 text-red-400">Failed to load data. Please refresh.</td></tr>`;
     }
   }
-
-  document.getElementById("searchInput").addEventListener("input", renderTable);
-  document.getElementById("sortSelect").addEventListener("change", e => { currentSort = e.target.value; renderTable(); });
-
-  loadDashboard();
+loadDashboard();
+loadRecentActivity();
 
 });
 </script>
 </body>
 </html>
+

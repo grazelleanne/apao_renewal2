@@ -179,6 +179,37 @@
 
     .input.error { border-color: var(--error); }
 
+    .password-wrapper {
+      position: relative;
+    }
+
+    .password-wrapper .input {
+      padding-right: 2.75rem;
+    }
+
+    .toggle-password {
+      position: absolute;
+      right: 0.75rem;
+      top: 50%;
+      transform: translateY(-50%);
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--text-muted);
+    }
+
+    .toggle-password:hover { color: var(--forest); }
+
+    .toggle-password svg {
+      width: 20px;
+      height: 20px;
+      fill: currentColor;
+    }
+
     /* ROW */
     .row {
       display: flex;
@@ -369,10 +400,16 @@
             placeholder="you@example.com" required autocomplete="email" />
         </div>
 
-        <div class="field">
+       <div class="field">
           <label class="label" for="password">Password</label>
-          <input class="input" type="password" id="password" name="password"
-            placeholder="Enter your password" required autocomplete="current-password" />
+          <div class="password-wrapper">
+            <input class="input" type="password" id="password" name="password"
+              placeholder="Enter your password" required autocomplete="current-password" />
+            <button type="button" class="toggle-password" id="togglePassword" aria-label="Show password">
+              <svg class="icon-eye" viewBox="0 0 24 24"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+              <svg class="icon-eye-off" viewBox="0 0 24 24" style="display:none;"><path d="M2 4.27 3.28 3 21 20.72 19.73 22l-3.08-3.08A11.6 11.6 0 0 1 12 20C5 20 2 13 2 13a17.6 17.6 0 0 1 4.06-5.94L2 4.27zM12 6c7 0 10 7 10 7a17.9 17.9 0 0 1-2.19 3.36l-2.16-2.16A4 4 0 0 0 12 8a3.95 3.95 0 0 0-1.29.22L8.36 5.86A11.6 11.6 0 0 1 12 6zm-3.29 4.29 5 5A4 4 0 0 1 8.71 10.29z"/></svg>
+            </button>
+          </div>
         </div>
 
         <div class="row">
@@ -380,15 +417,11 @@
             <input type="checkbox" id="remember" name="remember" />
             <span>Remember me</span>
           </label>
-        <a href="{{ route('forgot.password') }}" class="forgot-link">Forgot password?</a>
         </div>
 
         <button type="submit" class="btn" id="loginBtn">Login</button>
 
-        <p class="subtle">
-          Don't have an account?
-         <a href="{{ route('register') }}">Register</a>
-        </p>
+
       </form>
     </section>
 
@@ -411,6 +444,19 @@
   </div>
 
   <script>
+   const togglePasswordBtn = document.getElementById('togglePassword');
+    const passwordInput     = document.getElementById('password');
+    const eyeIcon           = togglePasswordBtn.querySelector('.icon-eye');
+    const eyeOffIcon        = togglePasswordBtn.querySelector('.icon-eye-off');
+
+    togglePasswordBtn.addEventListener('click', function () {
+      const isPassword = passwordInput.type === 'password';
+      passwordInput.type = isPassword ? 'text' : 'password';
+      eyeIcon.style.display    = isPassword ? 'none' : 'block';
+      eyeOffIcon.style.display = isPassword ? 'block' : 'none';
+      togglePasswordBtn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+    });
+
     document.getElementById('loginForm').addEventListener('submit', async function (e) {
       e.preventDefault();
 

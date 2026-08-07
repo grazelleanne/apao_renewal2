@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
 use App\Http\Controllers\ForgotPasswordController;
+use App\Http\Controllers\StaffController;
+use App\Http\Controllers\ParController;
 use App\Models\Inspection;
 
 // =====================================================
@@ -59,21 +61,32 @@ Route::get('/register',        fn() => view('register'))->name('register');
 Route::get('/forgot-password', fn() => view('forgot_password'))->name('forgot.password');
 
 // ===== REGISTER =====
+// ===== REGISTER =====
 Route::post('/register', function (Request $request) {
-    $request->validate([
+    $validator = validator($request->all(), [
         'name'     => 'required|string|max:255',
         'email'    => 'required|email|unique:users,email',
         'password' => 'required|min:6',
     ]);
-   DB::table('users')->insert([
-    'name'       => $request->name,
-    'email'      => $request->email,
-    'password'   => bcrypt($request->password),
-    'role'       => 'staff',
-    'status'     => 'Active',   // ← add this
-    'created_at' => now(),
-    'updated_at' => now(),
-]);
+
+    if ($validator->fails()) {
+        return response()->json([
+            'success' => false,
+            'errors'  => $validator->errors(),
+            'message' => $validator->errors()->first(),
+        ], 422);
+    }
+
+    DB::table('users')->insert([
+        'name'       => $request->name,
+        'email'      => $request->email,
+        'password'   => bcrypt($request->password),
+        'role'       => 'staff',
+        'status'     => 'Active',
+        'created_at' => now(),
+        'updated_at' => now(),
+    ]);
+
     return response()->json(['success' => true, 'message' => 'Registration successful']);
 })->name('register.post');
 
@@ -210,7 +223,7 @@ Route::middleware('check.session:admin')->prefix('admin')->group(function () {
                 'qty_ammo'             => (int) ($request->qtyAmmo     ?? 0),
                 'email'                => $request->email              ?? null,
                 'photo' => $request->input('photo') ?? null,
-                'approved_status'      => 'pending',
+                'approved_status'      => 'new',
                 'status'               => 'active',
                 'created_at'           => now(),
                 'updated_at'           => now(),
@@ -428,16 +441,19 @@ Route::middleware('check.session:admin')->prefix('admin')->group(function () {
             'fullName' => 'required|string',
             'role'     => 'required|in:admin,staff',
             'password' => 'required|min:6',
+            'status'   => 'nullable|in:Active,Inactive',
         ]);
-      DB::table('users')->insert([
-    'name'       => $request->name,
-    'email'      => $request->email,
-    'password'   => bcrypt($request->password),
-    'role'       => 'staff',
-    'is_active'  => 1,   // ← add this
-    'created_at' => now(),
-    'updated_at' => now(),
-]);
+
+        DB::table('users')->insert([
+            'name'       => $request->fullName,
+            'email'      => $request->username,
+            'password'   => bcrypt($request->password),
+            'role'       => $request->role,
+            'is_active'  => $request->status !== 'Inactive',
+            'created_at' => now(),
+            'updated_at' => now(),
+        ]);
+
         auditLog('user_created', $request->username, ['role' => $request->role]);
         return response()->json(['success' => true]);
     })->name('admin.users.store');
@@ -657,6 +673,7 @@ if ($request->status === 'approved') {
             'approved_status'  => 'renewed',
             'date_of_validity' => $newValidity,
             'ics_status'       => 'ready',
+            'date_approved'    => now()->toDateString(),
             'updated_at'       => now(),
         ]);
 
@@ -794,9 +811,26 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
 
     // ---- DASHBOARD ----
     Route::get('/dashboard', function () {
-        $user = (object) session('user');
+        $sessionUser = session('user');
+        $userId = is_object($sessionUser) ? $sessionUser->id : ($sessionUser['id'] ?? null);
+        $user = DB::table('users')->where('id', $userId)->first();
+        session(['user' => (array) $user]);
         return view('staff_dashboard', compact('user'));
     })->name('staff.dashboard');
+
+    Route::put('/profile', [StaffController::class, 'updateProfile'])->name('staff.profile.update');
+    Route::put('/profile/password', [StaffController::class, 'updatePassword'])->name('staff.profile.password');
+
+    // ---- PROPERTY ACKNOWLEDGEMENT RECEIPTS (PAR) ----
+    Route::get('/par-dashboard', [ParController::class, 'dashboard'])->name('staff.par.dashboard');
+    Route::get('/par-issuance', [ParController::class, 'issuance'])->name('staff.par.issuance');
+    Route::get('/par', [ParController::class, 'index'])->name('staff.par.index');
+    Route::post('/par', [ParController::class, 'store'])->name('staff.par.store');
+    Route::get('/par/{par}', [ParController::class, 'show'])->whereNumber('par')->name('staff.par.show');
+    Route::put('/par/{par}', [ParController::class, 'update'])->whereNumber('par')->name('staff.par.update');
+    Route::post('/par/{par}/replace', [ParController::class, 'replace'])->whereNumber('par')->name('staff.par.replace');
+    Route::get('/par/{par}/document', [ParController::class, 'document'])->whereNumber('par')->name('staff.par.document');
+    Route::get('/par/{par}/pdf', [ParController::class, 'pdf'])->whereNumber('par')->name('staff.par.pdf');
 
     Route::get('/dashboard-data', function () {
         $all = DB::table('personnel')
@@ -864,9 +898,9 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
         try {
             $body  = json_decode($request->getContent(), true) ?? [];
             $email = $body['email'] ?? $request->input('email') ?? null;
-
-            $lastItem = DB::table('personnel')->max('item_number') ?? 0;
-            $id = DB::table('personnel')->insertGetId([
+            $id = DB::transaction(function () use ($body, $request, $email) {
+              $lastItem = DB::table('personnel')->lockForUpdate()->max('item_number') ?? 0;
+              $id = DB::table('personnel')->insertGetId([
                 'item_number'          => $lastItem + 1,
                 'date_of_validity'     => $body['dateOfValidity']     ?? $request->dateOfValidity     ?: null,
                 'rank'                 => $body['rank']               ?? $request->rank               ?? '',
@@ -883,12 +917,15 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
                 'qty_ammo'             => (int) ($body['qtyAmmo']     ?? $request->qtyAmmo            ?? 0),
                 'email'                => $email,
                 'photo'                => $body['photo'] ?? $request->input('photo') ?? null,
-               'approved_status'      => 'new',
+                'signature'            => $body['signature'] ?? null,
+                'approved_status'      => 'new',
                 'ics_status'           => 'inspection',
                 'status'               => 'active',
                 'created_at'           => now(),
                 'updated_at'           => now(),
-            ]);
+              ]);
+              return $id;
+            });
             $newRow = DB::table('personnel')->where('id', $id)->first();
             $name   = trim(($newRow->rank ?? '') . ' ' . ($newRow->last_name ?? '') . ', ' . ($newRow->first_name ?? ''));
             auditLog('personnel_added_by_staff', $name, ['item_number' => $newRow->item_number]);
@@ -1032,3 +1069,4 @@ Route::post('/staff/personnel-debug', function (Request $request) {
         'photo_length'  => isset($body['photo']) ? strlen($body['photo']) : 0,
     ]);
 });
+
