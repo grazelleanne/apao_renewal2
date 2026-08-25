@@ -247,7 +247,7 @@
         <svg class="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-4.35-4.35M5 11a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>
       </div>
       <div class="flex items-center gap-4">
-        <span class="text-sm force-light-text opacity-70">Welcome, <strong>{{ $user->name ?? 'Admin' }}</strong></span>
+        @include('partials.account_dropdown')
         <div class="relative" id="adminNotifWrapper">
           <button id="notificationBell" class="notification-bell text-cyan-400 focus:outline-none" aria-label="Notifications" type="button">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
@@ -264,14 +264,12 @@
             <div class="notif-footer" id="adminNotifFooter">Auto-refreshes every 30 seconds</div>
           </div>
         </div>
-        <form method="POST" action="{{ route('logout') }}">
-          @csrf
-          <button type="submit" class="text-red-400 hover:underline text-base font-semibold tracking-tight">Logout</button>
-        </form>
       </div>
     </header>
 
     <div class="flex flex-wrap gap-2 items-center mb-4">
+      <input id="rankFilter" type="text" placeholder="Rank" class="control-input bg-[#23272f] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text" />
+      <input id="unitFilter" type="text" placeholder="Unit / Office / Department" class="control-input bg-[#23272f] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text" />
       <label class="text-xs text-[#94a3b8] force-light-text">Filter by Approval:</label>
       <select id="approvalFilter" class="control-select bg-[#23272f] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
         <option value="">All</option>
@@ -281,6 +279,7 @@
         <option value="within">Within Renewal</option>
         <option value="expired">Expired</option>
       </select>
+      <button id="clearFilters" type="button" class="control-select bg-[#23272f] text-[#94a3b8] border border-[#363b48] rounded px-3 py-1 text-xs">Clear Filters</button>
     </div>
 
     <section class="personnel-panel bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 mb-10 mt-2">
@@ -304,8 +303,7 @@
           <thead>
             <tr>
               <th class="py-2 px-2">Item #</th>
-              <th class="py-2 px-2">Rank</th>
-              <th class="py-2 px-2">Last Name</th>
+              <th class="py-2 px-2">Last Name | Rank</th>
               <th class="py-2 px-2">First Name</th>
               <th class="py-2 px-2">Date of Validity</th>
               <th class="py-2 px-2">Approved Status</th>
@@ -316,6 +314,7 @@
         </table>
       </div>
       <div id="personnelCount" class="mt-4 text-xs text-[#b0bac7] force-light-text"></div>
+      <div id="personnelPagination" class="mt-3 flex flex-wrap gap-1"></div>
     </section>
 
     <div id="personnelModal"     style="display:none;"></div>
@@ -608,6 +607,8 @@ dateOfValidity: (s.dateOfValidity && s.dateOfValidity !== 'null' && s.dateOfVali
 
   // ===== TABLE =====
   let currentSort = "itemNumber-desc";
+  let personnelPage = 1;
+  const PERSONNEL_PER_PAGE = 15;
 
   function sortPersonnel(list, sortBy) {
     const [key, dir] = sortBy.split("-");
@@ -624,13 +625,17 @@ dateOfValidity: (s.dateOfValidity && s.dateOfValidity !== 'null' && s.dateOfVali
   function renderPersonnelTable() {
     const nameFilter     = (document.getElementById("searchInput")?.value || "").trim().toLowerCase();
     const approvalFilter = (document.getElementById("approvalFilter")?.value || "");
+    const rankFilter     = (document.getElementById("rankFilter")?.value || "").trim().toLowerCase();
+    const unitFilter     = (document.getElementById("unitFilter")?.value || "").trim().toLowerCase();
 
-    let filtered = personnel.filter(p => {
+    let filtered = [...new Map(personnel.map(p => [p.itemNumber, p])).values()].filter(p => {
       const nameMatch     = p.firstName.toLowerCase().includes(nameFilter) ||
                             p.middleName.toLowerCase().includes(nameFilter) ||
                             p.lastName.toLowerCase().includes(nameFilter);
       const approvalMatch = approvalFilter ? resolveStatus(p) === approvalFilter : true;
-      return nameMatch && approvalMatch;
+      const rankMatch = !rankFilter || p.rank.toLowerCase().includes(rankFilter);
+      const unitMatch = !unitFilter || p.unit.toLowerCase().includes(unitFilter);
+      return nameMatch && approvalMatch && rankMatch && unitMatch;
     });
     filtered = sortPersonnel(filtered, currentSort);
 
@@ -638,13 +643,18 @@ dateOfValidity: (s.dateOfValidity && s.dateOfValidity !== 'null' && s.dateOfVali
     tbody.innerHTML = "";
 
     if (filtered.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7" class="text-center py-4 text-gray-400 force-light-text">No personnel found.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6" class="text-center py-4 text-gray-400 force-light-text">No personnel found.</td></tr>`;
       document.getElementById("personnelCount").innerText = "No personnel found.";
+      document.getElementById('personnelPagination').innerHTML = '';
       return;
     }
 
     // Date of Validity column — show "Pending Inspection" in amber when empty
-    filtered.forEach((row, i) => {
+    const totalPages = Math.max(1, Math.ceil(filtered.length / PERSONNEL_PER_PAGE));
+    if (personnelPage > totalPages) personnelPage = 1;
+    const pageStart = (personnelPage - 1) * PERSONNEL_PER_PAGE;
+    const pageRows = filtered.slice(pageStart, pageStart + PERSONNEL_PER_PAGE);
+    pageRows.forEach((row, i) => {
      const resolvedSt = resolveStatus(row);
 const validityDisplay = row.dateOfValidity
   ? `<span>${row.dateOfValidity}</span>`
@@ -654,8 +664,7 @@ const validityDisplay = row.dateOfValidity
 
       tbody.innerHTML += `<tr>
         <td class="py-2 px-2 force-light-text">${row.itemNumber}</td>
-        <td class="py-2 px-2 force-light-text">${row.rank}</td>
-        <td class="py-2 px-2 force-light-text">${row.lastName}</td>
+        <td class="py-2 px-2 force-light-text">${escapeHtml(row.lastName.toUpperCase())} <span class="text-[#64748b]">|</span> ${escapeHtml(row.rank)}</td>
         <td class="py-2 px-2 force-light-text">${row.firstName}</td>
         <td class="py-2 px-2 force-light-text">${validityDisplay}</td>
         <td class="py-2 px-2">${approvedStatusBadge(row)}</td>
@@ -673,18 +682,22 @@ const validityDisplay = row.dateOfValidity
       </tr>`;
     });
 
-    document.getElementById("personnelCount").innerText = `Showing ${filtered.length} of ${personnel.length} personnel.`;
+    document.getElementById("personnelCount").innerText = `Showing ${filtered.length ? pageStart + 1 : 0}–${Math.min(pageStart + PERSONNEL_PER_PAGE, filtered.length)} of ${filtered.length} personnel.`;
+    document.getElementById('personnelPagination').innerHTML = totalPages > 1
+      ? Array.from({length: totalPages}, (_, index) => `<button type="button" data-page="${index + 1}" class="px-2 py-1 rounded text-xs ${index + 1 === personnelPage ? 'bg-[#33b481] text-white' : 'bg-[#1a2025] text-[#94a3b8]'}">${index + 1}</button>`).join('')
+      : '';
+    document.querySelectorAll('#personnelPagination button').forEach(button => button.addEventListener('click', () => { personnelPage = Number(button.dataset.page); renderPersonnelTable(); }));
 
     document.querySelectorAll('.view-btn').forEach(btn =>
-      btn.addEventListener('click', function () { showPersonnelModal(filtered[parseInt(this.dataset.idx)]); })
+      btn.addEventListener('click', function () { showPersonnelModal(pageRows[parseInt(this.dataset.idx)]); })
     );
     document.querySelectorAll('.edit-btn').forEach(btn =>
-      btn.addEventListener('click', function () { showEditPersonnelModal(filtered[parseInt(this.dataset.idx)]); })
+      btn.addEventListener('click', function () { showEditPersonnelModal(pageRows[parseInt(this.dataset.idx)]); })
     );
     document.querySelectorAll('.remove-btn').forEach(btn =>
       btn.addEventListener('click', async function () {
         const idx      = parseInt(this.dataset.idx);
-        const selected = filtered[idx];
+        const selected = pageRows[idx];
         if (!selected) return;
         const displayName = `${selected.firstName || ""} ${selected.lastName || ""}`.trim() || `Item #${selected.itemNumber}`;
         if (!confirm(`Archive ${displayName}? They will be moved to Archive Data.`)) return;
@@ -952,12 +965,16 @@ const validityDisplay = row.dateOfValidity
 
   // ===== INIT =====
   loadPersonnelData();
-  document.getElementById("searchInput").addEventListener("input", renderPersonnelTable);
+  ['searchInput','rankFilter','unitFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', () => { personnelPage = 1; renderPersonnelTable(); }));
   document.getElementById("sortSelect").addEventListener("change", function (e) { currentSort = e.target.value; renderPersonnelTable(); });
-  document.getElementById("approvalFilter").addEventListener("change", renderPersonnelTable);
+  document.getElementById("approvalFilter").addEventListener("change", () => { personnelPage = 1; renderPersonnelTable(); });
+  document.getElementById('clearFilters').addEventListener('click', () => {
+    ['searchInput','rankFilter','unitFilter','approvalFilter'].forEach(id => { document.getElementById(id).value = ''; });
+    personnelPage = 1;
+    renderPersonnelTable();
+  });
 
 });
 </script>
 </body>
 </html>
-

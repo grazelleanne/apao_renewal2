@@ -8,7 +8,8 @@
       #par-hub-view        -> landing page (default view when PAR nav is clicked)
       #par-issuance-list   -> "Open PAR Issuance": personnel with no PAR yet
       #par-mgmt-list       -> "Open PAR Management": existing PAR records
-      #par-doc-view        -> shared form used for Issue / View / Update / Replace
+      #par-doc-view        -> shared form used for Issue / View / Update
+      #par-replace-view    -> dedicated Replace / Reissue PAR workflow
 
   DATA WIRING NOTES:
   Personnel are fetched from the existing route('staff.dashboard.data').
@@ -275,6 +276,29 @@
   body.light-mode #page-par #par-mgmt-tbl-pages button{background:#ffffff!important;color:#64748b!important;border-color:#cbd5e1!important;}
   body.light-mode #page-par #par-tbl-pages button[style*="border-color:#3ec6ff"],
   body.light-mode #page-par #par-mgmt-tbl-pages button[style*="border-color:#3ec6ff"]{background:#e0f2fe!important;color:#0369a1!important;border-color:#38bdf8!important;}
+
+  /* ===== DEDICATED REPLACE PAR WORKFLOW ===== */
+  .par-replace-banner{background:#241033;border:1px solid #6b21a8;border-radius:12px;padding:16px 18px;margin-bottom:18px;}
+  .par-replace-banner h3{color:#d8b4fe;font-size:.9rem;font-weight:800;margin:0 0 4px;}
+  .par-replace-banner p{color:#c4b5fd;font-size:.74rem;margin:0;line-height:1.5;}
+  .par-replace-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px;}
+  .par-replace-card{background:#23272f;border:1px solid #2f3540;border-radius:12px;padding:18px;}
+  .par-replace-card h3{color:#e5eaf2;font-size:.82rem;font-weight:800;text-transform:uppercase;letter-spacing:.05em;margin:0 0 14px;}
+  .par-replace-readonly{background:#1b1f26;border:1px solid #343b47;border-radius:7px;padding:.55rem .7rem;font-size:.8rem;color:#e5eaf2;font-weight:600;min-height:2.15rem;}
+  .par-replace-note{background:#2d1a0a;border:1px solid #7c4a03;border-radius:8px;padding:10px 12px;color:#f6d789;font-size:.72rem;line-height:1.5;margin-top:10px;}
+  .par-replace-actions{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:18px;}
+  .par-replace-confirm{background:#9333ea;color:#fff;border:0;border-radius:8px;padding:10px 20px;font-size:.84rem;font-weight:800;cursor:pointer;}
+  .par-replace-confirm:hover{background:#7e22ce;}
+  .par-replace-confirm:disabled{opacity:.6;cursor:not-allowed;}
+  body.light-mode #par-replace-view .par-replace-banner{background:#faf5ff!important;border-color:#d8b4fe!important;}
+  body.light-mode #par-replace-view .par-replace-banner h3{color:#7e22ce!important;}
+  body.light-mode #par-replace-view .par-replace-banner p{color:#6b21a8!important;}
+  body.light-mode #par-replace-view .par-replace-card{background:#fff!important;border-color:#e2e8f0!important;}
+  body.light-mode #par-replace-view .par-replace-card h3{color:#1e293b!important;}
+  body.light-mode #par-replace-view .par-replace-readonly{background:#f8fafc!important;border-color:#cbd5e1!important;color:#1e293b!important;}
+  body.light-mode #par-replace-view .par-replace-note{background:#fffbeb!important;border-color:#fcd34d!important;color:#92400e!important;}
+  @media(max-width:800px){.par-replace-grid{grid-template-columns:1fr;}}
+
 </style>
 
 {{-- Single source of truth for the receipt's look: the SAME partial used by
@@ -610,6 +634,129 @@
     </div>
   </div>{{-- /par-mgmt-list --}}
 
+
+  {{-- ================= DEDICATED REPLACE PAR WORKFLOW ================= --}}
+  <div id="par-replace-view" style="display:none;">
+    <button type="button" class="par-crumb" onclick="parBackFromReplace()">
+      <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
+      Back to PAR Management
+    </button>
+
+    <div class="mb-5">
+      <h1 class="text-xl font-bold force-light-text tracking-tight">Replace / Reissue PAR</h1>
+      <p class="text-xs text-[#64748b] mt-1">Create a new Property Acknowledgement Receipt that replaces the currently active PAR while preserving the previous PAR reference.</p>
+    </div>
+
+    <div class="par-replace-banner">
+      <h3>Replacement Process</h3>
+      <p>The existing PAR will be retained as the previous record. A new PAR number will be generated and linked to the old PAR together with the replacement reason.</p>
+    </div>
+
+    <div class="par-replace-grid">
+      <section class="par-replace-card">
+        <h3>1. Current PAR Information</h3>
+        <div class="par-doc-field-grid">
+          <div><label class="reg-label">Current PAR Number</label><div id="replace_oldParNumber" class="par-replace-readonly">—</div></div>
+          <div><label class="reg-label">Original Date Issued</label><div id="replace_oldDateIssued" class="par-replace-readonly">—</div></div>
+          <div><label class="reg-label">Personnel Name</label><div id="replace_personnelName" class="par-replace-readonly">—</div></div>
+          <div><label class="reg-label">AFP Serial Number</label><div id="replace_afpSerial" class="par-replace-readonly">—</div></div>
+          <div><label class="reg-label">Rank</label><div id="replace_rank" class="par-replace-readonly">—</div></div>
+          <div><label class="reg-label">Unit / Organization</label><div id="replace_unit" class="par-replace-readonly">—</div></div>
+          <div><label class="reg-label">Current Firearm</label><div id="replace_firearm" class="par-replace-readonly">—</div></div>
+          <div><label class="reg-label">Firearm Serial Number</label><div id="replace_firearmSerial" class="par-replace-readonly">—</div></div>
+        </div>
+      </section>
+
+      <section class="par-replace-card">
+        <h3>2. Reason for Replacement</h3>
+        <label class="reg-label">Replacement Reason <span style="color:#ef4444;">*</span></label>
+        <select id="replace_reason" class="reg-input">
+          <option value="">Select reason</option>
+          <option value="Lost PAR">Lost PAR</option>
+          <option value="Damaged PAR">Damaged PAR</option>
+          <option value="Change / Reassignment of Firearm">Change / Reassignment of Firearm</option>
+          <option value="Correction of PAR Information">Correction of PAR Information</option>
+          <option value="Renewal / Reissuance">Renewal / Reissuance</option>
+          <option value="Other">Other</option>
+        </select>
+
+        <div id="replace_otherReasonWrap" style="display:none;margin-top:10px;">
+          <label class="reg-label">Specify Other Reason <span style="color:#ef4444;">*</span></label>
+          <input id="replace_otherReason" class="reg-input" type="text" maxlength="200" placeholder="Enter replacement reason">
+        </div>
+
+        <div class="par-replace-note">
+          The old PAR will not be deleted. It will remain referenced as the previous PAR for audit/history purposes.
+        </div>
+      </section>
+
+      <section class="par-replace-card">
+        <h3>3. Replacement PAR Information</h3>
+        <div class="par-doc-field-grid">
+          <div><label class="reg-label">New PAR Number</label><div id="replace_newParNumber" class="par-replace-readonly">Auto-generated</div></div>
+          <div><label class="reg-label">Date Issued <span style="color:#ef4444;">*</span></label><input id="replace_dateIssued" type="date" class="reg-input"></div>
+          <div><label class="reg-label">Issued By <span style="color:#ef4444;">*</span></label><input id="replace_issuedBy" type="text" class="reg-input" placeholder="Enter complete name"></div>
+          <div><label class="reg-label">Approved By <span style="color:#ef4444;">*</span></label><input id="replace_approvedBy" type="text" class="reg-input" placeholder="Enter complete name"></div>
+        </div>
+        <div style="margin-top:12px;">
+          <label class="reg-label">Remarks</label>
+          <textarea id="replace_remarks" class="reg-input" rows="3" maxlength="500" placeholder="Optional notes about this replacement"></textarea>
+        </div>
+      </section>
+
+      <section class="par-replace-card">
+        <h3>4. Assigned Property</h3>
+        <div class="par-doc-field-grid">
+          <div><label class="reg-label">Firearm</label><div id="replace_propertyFirearm" class="par-replace-readonly">—</div></div>
+          <div><label class="reg-label">Firearm Serial Number</label><div id="replace_propertySerial" class="par-replace-readonly">—</div></div>
+          <div><label class="reg-label">Ammunition Quantity</label><div id="replace_ammoQty" class="par-replace-readonly">—</div></div>
+          <div><label class="reg-label">Equipment Package</label><div id="replace_package" class="par-replace-readonly">—</div></div>
+        </div>
+      </section>
+
+      <section class="par-replace-card">
+        <h3>5. Digital Signatures</h3>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+          <div class="par-sig-col">
+            <h5>Issued By</h5>
+            <div class="par-sig-box" id="replace_sigIssuedBox" onclick="parPickReplaceSig('Issued')">
+              <img id="replace_sigIssued" src="" style="display:none;">
+              <span class="empty" id="replace_sigIssuedEmpty">Click to upload</span>
+            </div>
+            <input type="file" id="replace_sigIssuedInput" accept="image/*" class="hidden">
+            <button type="button" class="par-sig-clear" onclick="parClearReplaceSig('Issued')">Clear</button>
+          </div>
+          <div class="par-sig-col">
+            <h5>Approved By</h5>
+            <div class="par-sig-box" id="replace_sigApprovedBox" onclick="parPickReplaceSig('Approved')">
+              <img id="replace_sigApproved" src="" style="display:none;">
+              <span class="empty" id="replace_sigApprovedEmpty">Click to upload</span>
+            </div>
+            <input type="file" id="replace_sigApprovedInput" accept="image/*" class="hidden">
+            <button type="button" class="par-sig-clear" onclick="parClearReplaceSig('Approved')">Clear</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="par-replace-card">
+        <h3>6. Replacement Summary</h3>
+        <div class="par-summary-row"><div class="lbl">Previous PAR</div><div class="val" id="replace_summaryOld">—</div></div>
+        <div class="par-summary-row"><div class="lbl">New PAR</div><div class="val" id="replace_summaryNew">—</div></div>
+        <div class="par-summary-row"><div class="lbl">Reason</div><div class="val" id="replace_summaryReason">Not selected</div></div>
+        <div class="par-summary-row"><div class="lbl">Personnel</div><div class="val" id="replace_summaryPersonnel">—</div></div>
+      </section>
+    </div>
+
+    <div id="replace_err" style="color:#fc8181;font-size:.8rem;margin-top:14px;display:none;"></div>
+
+    <div class="par-replace-actions">
+      <button type="button" class="par-ghost-btn" onclick="parBackFromReplace()">Cancel</button>
+      <button type="button" id="replace_confirmBtn" class="par-replace-confirm" onclick="parConfirmReplacement()">
+        Confirm Replacement
+      </button>
+    </div>
+  </div>{{-- /par-replace-view --}}
+
   {{-- ================= SHARED DOC VIEW (Issue / View / Update / Replace) ================= --}}
   <div id="par-doc-view" style="display:none;">
     <div class="flex flex-wrap items-center justify-between mb-5 gap-3">
@@ -653,8 +800,8 @@
               <div><label class="reg-label">PAR Number</label><div class="par-readonly-field" id="par_number">Auto-generated</div></div>
               <div><label class="reg-label">Date Issued <span style="color:#ef4444;">*</span></label><input id="par_dateIssued" type="date" class="reg-input"></div>
               <div style="grid-column:1/-1;display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                <div><label class="reg-label">Issued By <span style="color:#ef4444;">*</span></label><input id="par_issuedBy" type="text" class="reg-input" placeholder="Enter complete name"></div>
-                <div><label class="reg-label">Approved By <span style="color:#ef4444;">*</span></label><input id="par_approvedBy" type="text" class="reg-input" placeholder="Enter complete name"></div>
+                <div><label class="reg-label">Issued By <span style="color:#ef4444;">*</span></label><input id="par_issuedBy" type="text" class="reg-input" value="MS ROSEMARIE O VILBAR" placeholder="Enter complete name"></div>
+                <div><label class="reg-label">Approved By <span style="color:#ef4444;">*</span></label><input id="par_approvedBy" type="text" class="reg-input" value="MS EVANGELINE M SINGUEO, Ph.D." placeholder="Enter complete name"></div>
               </div>
             </div>
           </div>
@@ -801,7 +948,7 @@
               <tr>
                 <td>
                   <h3>RECEIVED BY</h3>
-                  <p>SIGNATURE: <span class="signature-line"><img id="pp_sigReceived" src="" style="display:none;"></span></p>
+                  <p>SIGNATURE: <span class="signature-line"><img id="pp_sigReceived" src="" alt="Personnel digital signature" style="display:none;max-height:34px;max-width:150px;object-fit:contain;"></span></p>
                   <b id="pp_receivedName">—</b>
                   <small>(RANK) (NAME) (MI) (LNAME) (AFPSN) (BR of SVC)</small>
                   <p>Unit Assignment: <strong id="pp_unit2">—</strong></p>
@@ -818,6 +965,8 @@
                 </td>
               </tr>
             </table>
+
+            <p id="pp_replacementNote" class="replacement-note" style="display:none;"></p>
 
             <footer>
               <div class="footer-badges">
@@ -869,7 +1018,10 @@
   var parCurrentItem  = null;  // record currently open in the shared doc view
   var parDocMode      = 'issue'; // 'issue' | 'view' | 'update' | 'replace'
   var parDocReturnTo  = 'issuance'; // 'issuance' | 'management'
-  var parSigIssuedBase64 = null, parSigApprovedBase64 = null;
+  var PAR_DEFAULT_ISSUED_SIGNATURE = @json(asset('images/ROSEMARIE VILBAR.png'));
+  var PAR_DEFAULT_APPROVED_SIGNATURE = @json(asset('images/SINGUEO EVAGELINE.png'));
+  var parSigIssuedBase64 = PAR_DEFAULT_ISSUED_SIGNATURE;
+  var parSigApprovedBase64 = PAR_DEFAULT_APPROVED_SIGNATURE;
 
   var EQUIPMENT_PACKAGES = {
     default: {
@@ -916,6 +1068,45 @@
   }
   function setText(id, v) { var el = document.getElementById(id); if (el) el.textContent = v; }
 
+  // Normalizes the personnel digital signature returned by staff.dashboard.data.
+  // New Registration stores the canvas as a data:image/png;base64 URL, but this
+  // also supports records that contain only the raw base64 payload.
+  function parSignatureSrc(signature) {
+    if (!signature) return null;
+
+    var value = String(signature).trim().replace(/^['"]|['"]$/g, '');
+    if (!value) return null;
+
+    // Already a complete browser-readable source.
+    if (
+      /^data:image\//i.test(value) ||
+      /^https?:\/\//i.test(value) ||
+      value.startsWith('/')
+    ) {
+      return value;
+    }
+
+    if (/^(storage|images)\//i.test(value)) return '/' + value;
+
+    // Raw base64 saved in the database.
+    return 'data:image/png;base64,' + value.replace(/\s/g, '');
+  }
+
+  function parSetSignatureImage(imageId, signature) {
+    var image = document.getElementById(imageId);
+    if (!image) return;
+
+    var src = parSignatureSrc(signature);
+
+    if (src) {
+      image.src = src;
+      image.style.display = 'block';
+    } else {
+      image.removeAttribute('src');
+      image.style.display = 'none';
+    }
+  }
+
   function parSeedNumber(itemNumber) {
     // Deterministic placeholder PAR number for personnel who, per their records
     // approvedStatus (i.e. they are "renewed"/"within"/"expired", not brand-new),
@@ -949,7 +1140,16 @@
         dateIssued: seededDate,
         issuedBy: ov.issuedBy || p.issuedBy || null,
         approvedBy: ov.approvedBy || p.approvedBy || null,
-        wasReplaced: !!(ov.wasReplaced || p.wasReplaced)
+
+        // Keep the uploaded officer signatures with the PAR state so
+        // Update -> Summary -> Generate PDF does not lose them.
+        issuedBySignature: ov.issuedBySignature || p.issuedBySignature || null,
+        approvedBySignature: ov.approvedBySignature || p.approvedBySignature || null,
+
+        wasReplaced: !!(ov.wasReplaced || p.wasReplaced),
+        previousParNumber: ov.previousParNumber || p.previousParNumber || null,
+        replacementReason: ov.replacementReason || p.replacementReason || null,
+        replacementRemarks: ov.replacementRemarks || p.replacementRemarks || null
       });
     });
   }
@@ -1032,6 +1232,7 @@
 
   // ── NAVIGATION ────────────────────────────────────────────────────
   window.parShowHub = function () {
+    var rv = document.getElementById('par-replace-view'); if (rv) rv.style.display = 'none';
     document.getElementById('par-hub-view').style.display = 'block';
     document.getElementById('par-issuance-list').style.display = 'none';
     document.getElementById('par-mgmt-list').style.display = 'none';
@@ -1040,6 +1241,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   window.parShowIssuanceList = function () {
+    var rv = document.getElementById('par-replace-view'); if (rv) rv.style.display = 'none';
     document.getElementById('par-hub-view').style.display = 'none';
     document.getElementById('par-mgmt-list').style.display = 'none';
     document.getElementById('par-doc-view').style.display = 'none';
@@ -1048,6 +1250,7 @@
     window.scrollTo({ top: 0, behavior: 'smooth' });
   };
   window.parShowMgmtList = function () {
+    var rv = document.getElementById('par-replace-view'); if (rv) rv.style.display = 'none';
     document.getElementById('par-hub-view').style.display = 'none';
     document.getElementById('par-issuance-list').style.display = 'none';
     document.getElementById('par-doc-view').style.display = 'none';
@@ -1058,6 +1261,7 @@
   };
   window.parBackFromDoc = function () {
     document.getElementById('par-doc-view').style.display = 'none';
+    var rv = document.getElementById('par-replace-view'); if (rv) rv.style.display = 'none';
     if (parDocReturnTo === 'management') parShowMgmtList(); else parShowIssuanceList();
   };
 
@@ -1237,7 +1441,12 @@
       var name = (r.firstName || '') + ' ' + (r.lastName || '');
       var selected = (r.itemNumber === mgmtSelectedItem);
       return `<tr class="border-b border-[#1a2025]${selected ? ' par-row-selected' : ''}" onclick="parSelectMgmtRow(${JSON.stringify(r.itemNumber)})">`
-        + `<td class="py-3 px-3 force-light-text" style="font-family:monospace;">${r.parNumber || '—'}</td>`
+        + `<td class="py-3 px-3 force-light-text" style="font-family:monospace;">
+            <div style="font-weight:${r.wasReplaced ? '800' : '500'};">${r.parNumber || '—'}</div>
+            ${r.wasReplaced && r.previousParNumber
+              ? `<div style="font-family:inherit;font-size:.63rem;color:#a855f7;margin-top:3px;">Replacement of ${r.previousParNumber}</div>`
+              : ''}
+          </td>`
         + `<td class="py-3 px-3 force-light-text">${name}</td>`
         + `<td class="py-3 px-3 force-light-text" style="font-family:monospace;">${r.afpSerialNumber || '—'}</td>`
         + `<td class="py-3 px-3 force-light-text">${r.unit || '—'}</td>`
@@ -1247,9 +1456,9 @@
           + '<div class="par-kebab-wrap" onclick="event.stopPropagation();">'
             + `<button class="par-kebab-btn" onclick="parToggleKebab(event, ${JSON.stringify(r.itemNumber)})"><svg width="15" height="15" fill="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="5" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="12" cy="19" r="1.6"/></svg></button>`
             + `<div class="par-kebab-menu" id="par-kebab-${r.itemNumber}">`
-              + `<div class="par-kebab-item" onclick="parOpenProcess(${JSON.stringify(r.itemNumber)}, 'view')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View PAR</div>`
+              + `<div class="par-kebab-item" onclick="parViewReceipt(${JSON.stringify(r.itemNumber)})"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View Receipt</div>`
               + `<div class="par-kebab-item" onclick="parOpenProcess(${JSON.stringify(r.itemNumber)}, 'update')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4z"/></svg>Update PAR</div>`
-              + `<div class="par-kebab-item" onclick="parOpenProcess(${JSON.stringify(r.itemNumber)}, 'replace')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>Replace PAR</div>`
+              + `<div class="par-kebab-item" onclick="parOpenReplace(${JSON.stringify(r.itemNumber)})"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>Replace PAR</div>`
             + '</div>'
           + '</div>'
         + '</td>'
@@ -1270,21 +1479,71 @@
 
   function parRenderSummaryPanel(r) {
     var body = document.getElementById('par-summary-body');
+
     if (!r) {
       body.innerHTML = '<p style="color:#4b5563;font-size:.78rem;padding:18px 0;">Select a record from the list to view its details.</p>';
       return;
     }
+
     var name = (r.firstName || '') + ' ' + (r.lastName || '');
-    function row(label, value) {
-      return '<div class="par-summary-row"><div class="lbl">' + label + '</div><div class="val">' + (value || '—') + '</div></div>';
+
+    function row(label, value, extraStyle) {
+      return '<div class="par-summary-row">'
+        + '<div class="lbl">' + label + '</div>'
+        + '<div class="val"' + (extraStyle ? ' style="' + extraStyle + '"' : '') + '>'
+        + (value || '—')
+        + '</div>'
+        + '</div>';
     }
+
+    var isReplacement = !!(r.wasReplaced && r.previousParNumber);
+
+    var statusHtml = isReplacement
+      ? '<div class="par-summary-row">'
+          + '<div class="lbl">PAR Status</div>'
+          + '<div class="val">'
+            + '<span style="display:inline-flex;align-items:center;gap:6px;background:#f3e8ff;color:#7e22ce;border-radius:999px;padding:5px 12px;font-size:.72rem;font-weight:800;">'
+              + '<span style="width:7px;height:7px;border-radius:50%;background:#a855f7;"></span>'
+              + 'Replacement · Active'
+            + '</span>'
+          + '</div>'
+        + '</div>'
+      : '<div class="par-summary-row">'
+          + '<div class="lbl">PAR Status</div>'
+          + '<div class="val"><span class="par-status-pill par-status-issued"><span></span>Active</span></div>'
+        + '</div>';
+
+    var replacementHtml = '';
+
+    if (isReplacement) {
+      replacementHtml =
+          '<div style="margin:12px 0 4px;padding:12px 13px;border:1px solid #d8b4fe;background:#faf5ff;border-radius:9px;">'
+            + '<div style="font-size:.68rem;font-weight:800;color:#7e22ce;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;">Replacement Information</div>'
+            + '<div class="par-summary-row" style="margin-bottom:7px;">'
+              + '<div class="lbl">Previous PAR Number</div>'
+              + '<div class="val" style="color:#7e22ce;font-weight:800;">' + (r.previousParNumber || '—') + '</div>'
+            + '</div>'
+            + '<div class="par-summary-row" style="margin-bottom:7px;">'
+              + '<div class="lbl">Replacement Reason</div>'
+              + '<div class="val">' + (r.replacementReason || '—') + '</div>'
+            + '</div>'
+            + (r.replacementRemarks
+                ? '<div class="par-summary-row">'
+                    + '<div class="lbl">Replacement Remarks</div>'
+                    + '<div class="val">' + r.replacementRemarks + '</div>'
+                  + '</div>'
+                : '')
+          + '</div>';
+    }
+
     body.innerHTML =
         row('Personnel Name', name)
       + row('AFP Serial Number', r.afpSerialNumber)
       + row('Unit / Organization', r.unit)
       + row('Assigned Firearm', r.pistolNomenclature)
-      + row('Current PAR Number', r.parNumber)
-      + '<div class="par-summary-row"><div class="lbl">PAR Status</div><div class="val"><span class="par-status-pill par-status-issued"><span></span>Active</span></div></div>'
+      + row(isReplacement ? 'New / Current PAR Number' : 'Current PAR Number', r.parNumber)
+      + statusHtml
+      + replacementHtml
       + row('Last Updated', fmtDateTime(r.dateIssued))
       + row('Issued Date', fmtDateShort(r.dateIssued))
       + row('Issued By', r.issuedBy)
@@ -1300,13 +1559,25 @@
     var r = parAll.find(function (p) { return p.itemNumber === itemNumber; });
     if (!r) return;
     parCurrentItem = r;
-    parSigIssuedBase64 = null; parSigApprovedBase64 = null;
+
+    // Reuse the saved signatures for PDF/Print instead of clearing them.
+    parSigIssuedBase64 = r.issuedBySignature || PAR_DEFAULT_ISSUED_SIGNATURE;
+    parSigApprovedBase64 = r.approvedBySignature || PAR_DEFAULT_APPROVED_SIGNATURE;
+
     document.getElementById('par_number').textContent = r.parNumber || '—';
     document.getElementById('par_dateIssued').value = r.dateIssued ? r.dateIssued.slice(0, 10) : '';
-    document.getElementById('par_issuedBy').value = r.issuedBy || '';
-    document.getElementById('par_approvedBy').value = r.approvedBy || '';
+    document.getElementById('par_issuedBy').value = r.issuedBy || 'MS ROSEMARIE O VILBAR';
+    document.getElementById('par_approvedBy').value = r.approvedBy || 'MS EVANGELINE M SINGUEO, Ph.D.';
     var recvImg = document.getElementById('par_sigReceived');
-    if (r.signature) { recvImg.src = r.signature.startsWith('data:') ? r.signature : 'data:image/png;base64,' + r.signature; }
+    var receiverSignature = parSignatureSrc(r.signature);
+    if (receiverSignature) {
+      recvImg.src = receiverSignature;
+      recvImg.style.display = 'block';
+    }
+
+    parApplySigInput('Issued', parSigIssuedBase64);
+    parApplySigInput('Approved', parSigApprovedBase64);
+
     parRenderPreview();
     if (kind === 'print') parPrintPAR(); else parGeneratePDF();
   };
@@ -1322,6 +1593,235 @@
     if (menu) menu.classList.toggle('open');
   };
   document.addEventListener('click', function () { document.querySelectorAll('.par-kebab-menu').forEach(function (m) { m.classList.remove('open'); }); });
+
+  // ── VIEW EXISTING PAR AS THE ACTUAL RECEIPT ─────────────────────
+  // The previous "View PAR" action opened the editable/read-only processing
+  // workspace. Existing PAR records should instead open the receipt itself.
+  // We reuse the same receipt markup (#par-print-area) and the same
+  // par._receipt_styles partial used by printing/PDF, so View Receipt,
+  // Preview, and Print all have one consistent appearance.
+  window.parViewReceipt = function (itemNumber) {
+    var r = parAll.find(function (p) { return p.itemNumber == itemNumber; });
+    if (!r) return;
+
+    // Populate the existing receipt preview using the saved PAR/personnel data.
+    parOpenProcess(itemNumber, 'view');
+
+    // Open the actual receipt immediately while this function is still running
+    // from the user's click, avoiding popup blockers.
+    parFullscreenPreview();
+
+    // Return the dashboard itself to PAR Management; the receipt stays open
+    // in its own tab/window.
+    parShowMgmtList();
+  };
+
+
+  // ── DEDICATED REPLACE PAR WORKFLOW ────────────────────────────────
+  var replaceSigIssuedBase64 = PAR_DEFAULT_ISSUED_SIGNATURE;
+  var replaceSigApprovedBase64 = PAR_DEFAULT_APPROVED_SIGNATURE;
+  var replaceNewParNumber = null;
+
+  window.parBackFromReplace = function () {
+    var view = document.getElementById('par-replace-view');
+    if (view) view.style.display = 'none';
+    parShowMgmtList();
+  };
+
+  function parReplacementReasonValue() {
+    var reason = document.getElementById('replace_reason')?.value || '';
+    if (reason === 'Other') {
+      return (document.getElementById('replace_otherReason')?.value || '').trim();
+    }
+    return reason;
+  }
+
+  function parUpdateReplacementSummary() {
+    setText('replace_summaryReason', parReplacementReasonValue() || 'Not selected');
+    setText('replace_summaryNew', replaceNewParNumber || '—');
+  }
+
+  window.parOpenReplace = function (itemNumber) {
+    var r = parAll.find(function (p) { return p.itemNumber == itemNumber; });
+    if (!r) return;
+
+    parCurrentItem = r;
+    parDocMode = 'replace';
+    parDocReturnTo = 'management';
+    replaceNewParNumber = parGenerateNumber(r.itemNumber, true);
+
+    var fullName = [r.firstName, r.middleName, r.lastName].filter(Boolean).join(' ');
+
+    setText('replace_oldParNumber', r.parNumber || '—');
+    setText('replace_oldDateIssued', fmtDateShort(r.dateIssued));
+    setText('replace_personnelName', fullName || '—');
+    setText('replace_afpSerial', r.afpSerialNumber || '—');
+    setText('replace_rank', r.rank || '—');
+    setText('replace_unit', r.unit || '—');
+    setText('replace_firearm', r.pistolNomenclature || '—');
+    setText('replace_firearmSerial', r.pistolSerialNumber || r.afpSerialNumber || '—');
+
+    setText('replace_newParNumber', replaceNewParNumber);
+    document.getElementById('replace_dateIssued').value = new Date().toISOString().slice(0, 10);
+    document.getElementById('replace_issuedBy').value = r.issuedBy || 'MS ROSEMARIE O VILBAR';
+    document.getElementById('replace_approvedBy').value = r.approvedBy || 'MS EVANGELINE M SINGUEO, Ph.D.';
+    document.getElementById('replace_remarks').value = '';
+    document.getElementById('replace_reason').value = '';
+    document.getElementById('replace_otherReason').value = '';
+    document.getElementById('replace_otherReasonWrap').style.display = 'none';
+
+    setText('replace_propertyFirearm', r.pistolNomenclature || '—');
+    setText('replace_propertySerial', r.pistolSerialNumber || r.afpSerialNumber || '—');
+    setText('replace_ammoQty', (Number(r.qtyAmmo) || 0) + ' rounds');
+    setText('replace_package', EQUIPMENT_PACKAGES.default.name);
+
+    setText('replace_summaryOld', r.parNumber || '—');
+    setText('replace_summaryNew', replaceNewParNumber);
+    setText('replace_summaryReason', 'Not selected');
+    setText('replace_summaryPersonnel', fullName || '—');
+
+    replaceSigIssuedBase64 = r.issuedBySignature || PAR_DEFAULT_ISSUED_SIGNATURE;
+    replaceSigApprovedBase64 = r.approvedBySignature || PAR_DEFAULT_APPROVED_SIGNATURE;
+    parApplyReplaceSig('Issued', null);
+    parApplyReplaceSig('Approved', null);
+
+    var err = document.getElementById('replace_err');
+    if (err) { err.style.display = 'none'; err.textContent = ''; }
+
+    document.getElementById('par-hub-view').style.display = 'none';
+    document.getElementById('par-issuance-list').style.display = 'none';
+    document.getElementById('par-mgmt-list').style.display = 'none';
+    document.getElementById('par-doc-view').style.display = 'none';
+    document.getElementById('par-replace-view').style.display = 'block';
+
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
+
+  document.getElementById('replace_reason')?.addEventListener('change', function () {
+    document.getElementById('replace_otherReasonWrap').style.display = this.value === 'Other' ? 'block' : 'none';
+    parUpdateReplacementSummary();
+  });
+  document.getElementById('replace_otherReason')?.addEventListener('input', parUpdateReplacementSummary);
+
+  function parApplyReplaceSig(which, src) {
+    var img = document.getElementById('replace_sig' + which);
+    var empty = document.getElementById('replace_sig' + which + 'Empty');
+    if (!img || !empty) return;
+    if (src) {
+      img.src = src;
+      img.style.display = 'block';
+      empty.style.display = 'none';
+    } else {
+      img.src = '';
+      img.style.display = 'none';
+      empty.style.display = 'block';
+    }
+  }
+
+  window.parPickReplaceSig = function (which) {
+    document.getElementById('replace_sig' + which + 'Input')?.click();
+  };
+
+  window.parClearReplaceSig = function (which) {
+    if (which === 'Issued') replaceSigIssuedBase64 = null;
+    else replaceSigApprovedBase64 = null;
+    parApplyReplaceSig(which, null);
+    var input = document.getElementById('replace_sig' + which + 'Input');
+    if (input) input.value = '';
+  };
+
+  ['Issued', 'Approved'].forEach(function (which) {
+    document.getElementById('replace_sig' + which + 'Input')?.addEventListener('change', function () {
+      var file = this.files && this.files[0];
+      if (!file || !file.type.startsWith('image/')) return;
+      var reader = new FileReader();
+      reader.onload = function (e) {
+        if (which === 'Issued') replaceSigIssuedBase64 = e.target.result;
+        else replaceSigApprovedBase64 = e.target.result;
+        parApplyReplaceSig(which, e.target.result);
+      };
+      reader.readAsDataURL(file);
+    });
+  });
+
+  window.parConfirmReplacement = function () {
+    var r = parCurrentItem;
+    if (!r) return;
+
+    var reason = parReplacementReasonValue();
+    var dateIssued = document.getElementById('replace_dateIssued').value;
+    var issuedBy = document.getElementById('replace_issuedBy').value.trim();
+    var approvedBy = document.getElementById('replace_approvedBy').value.trim();
+    var remarks = document.getElementById('replace_remarks').value.trim();
+    var errEl = document.getElementById('replace_err');
+
+    if (!reason) {
+      errEl.textContent = 'Please select or enter a reason for replacing the PAR.';
+      errEl.style.display = 'block';
+      return;
+    }
+    if (!dateIssued || !issuedBy || !approvedBy) {
+      errEl.textContent = 'Please complete Date Issued, Issued By, and Approved By.';
+      errEl.style.display = 'block';
+      return;
+    }
+
+    errEl.style.display = 'none';
+
+    var oldParNumber = r.parNumber || '—';
+    var newParNumber = replaceNewParNumber || parGenerateNumber(r.itemNumber, true);
+    var fullName = [r.firstName, r.lastName].filter(Boolean).join(' ');
+
+    var btn = document.getElementById('replace_confirmBtn');
+    btn.disabled = true;
+    btn.textContent = 'Replacing…';
+
+    setOverride(r.itemNumber, {
+      parStatus: 'issued',
+      parNumber: newParNumber,
+      previousParNumber: oldParNumber,
+      replacementReason: reason,
+      replacementRemarks: remarks,
+      dateIssued: new Date(dateIssued).toISOString(),
+      issuedBy: issuedBy,
+      approvedBy: approvedBy,
+      issuedBySignature: replaceSigIssuedBase64,
+      approvedBySignature: replaceSigApprovedBase64,
+      wasReplaced: true
+    });
+
+    r.previousParNumber = oldParNumber;
+    r.replacementReason = reason;
+    r.replacementRemarks = remarks;
+    r.parNumber = newParNumber;
+    r.dateIssued = dateIssued;
+    r.issuedBy = issuedBy;
+    r.approvedBy = approvedBy;
+    r.issuedBySignature = replaceSigIssuedBase64;
+    r.approvedBySignature = replaceSigApprovedBase64;
+    r.wasReplaced = true;
+
+    // Keep uploaded replacement signatures available for the receipt preview.
+    parSigIssuedBase64 = replaceSigIssuedBase64;
+    parSigApprovedBase64 = replaceSigApprovedBase64;
+
+    logActivity(fullName, 'PAR Replaced', newParNumber);
+
+    setTimeout(function () {
+      btn.disabled = false;
+      btn.textContent = 'Confirm Replacement';
+
+      // Keep the replaced personnel selected so the user immediately sees
+      // the NEW PAR number, previous PAR number, reason, and replacement status.
+      mgmtSelectedItem = r.itemNumber;
+
+      parRenderHub();
+      parRenderMgmtActivity();
+      parRenderMgmtTable();
+      parRenderSummaryPanel(r);
+      parShowMgmtList();
+    }, 350);
+  };
 
   // ── SHARED DOC VIEW ───────────────────────────────────────────────
   function parGenerateNumber(itemNumber, forceNew) {
@@ -1406,8 +1906,8 @@
     var displayNumber = isNewNumber ? (mode === 'replace' ? parGenerateNumber(r.itemNumber, true) : parGenerateNumber(r.itemNumber)) : (r.parNumber || parGenerateNumber(r.itemNumber));
     setText('par_number', displayNumber + (mode === 'replace' ? '  (new — replaces ' + (r.parNumber || '—') + ')' : ''));
     document.getElementById('par_dateIssued').value = (mode === 'issue' || mode === 'replace') ? new Date().toISOString().slice(0, 10) : (r.dateIssued ? r.dateIssued.slice(0, 10) : new Date().toISOString().slice(0, 10));
-    document.getElementById('par_issuedBy').value = r.issuedBy || '';
-    document.getElementById('par_approvedBy').value = r.approvedBy || '';
+    document.getElementById('par_issuedBy').value = r.issuedBy || 'MS ROSEMARIE O VILBAR';
+    document.getElementById('par_approvedBy').value = r.approvedBy || 'MS EVANGELINE M SINGUEO, Ph.D.';
     document.getElementById('par_remarks').value = '';
     setText('par_remarksCount', 0);
 
@@ -1424,15 +1924,18 @@
     setText('par_costNet', fmtMoney(net));
 
     var recvImg = document.getElementById('par_sigReceived'), recvEmpty = document.getElementById('par_sigReceivedEmpty');
-    if (r.signature) {
-      var sigSrc = r.signature.startsWith('data:') ? r.signature : 'data:image/png;base64,' + r.signature;
+    var sigSrc = parSignatureSrc(r.signature);
+    if (sigSrc) {
       recvImg.src = sigSrc; recvImg.style.display = 'block'; recvEmpty.style.display = 'none';
-    } else { recvImg.style.display = 'none'; recvEmpty.style.display = 'block'; }
+    } else { recvImg.removeAttribute('src'); recvImg.style.display = 'none'; recvEmpty.style.display = 'block'; }
     setText('par_sigReceivedName', (r.rank || '') + ' ' + fullName);
 
-    parSigIssuedBase64 = null; parSigApprovedBase64 = null;
-    parApplySigInput('Issued', null);
-    parApplySigInput('Approved', null);
+    // Restore signatures already saved with this PAR.
+    parSigIssuedBase64 = r.issuedBySignature || PAR_DEFAULT_ISSUED_SIGNATURE;
+    parSigApprovedBase64 = r.approvedBySignature || PAR_DEFAULT_APPROVED_SIGNATURE;
+
+    parApplySigInput('Issued', parSigIssuedBase64);
+    parApplySigInput('Approved', parSigApprovedBase64);
 
     document.getElementById('par_err').style.display = 'none';
     parRenderPreview();
@@ -1529,8 +2032,21 @@
     setText('pp_issuedName', (issuedBy || 'ISSUING OFFICER').toUpperCase());
     setText('pp_dateIssued2', fmtDateShort(dateIssued));
 
-    var pr = document.getElementById('pp_sigReceived');
-    if (r.signature) { pr.src = r.signature.startsWith('data:') ? r.signature : 'data:image/png;base64,' + r.signature; pr.style.display = 'block'; } else pr.style.display = 'none';
+    var replacementNote = document.getElementById('pp_replacementNote');
+    if (replacementNote) {
+      var previousNumber = r.previousParNumber || null;
+      var replacementReason = r.replacementReason || null;
+      if (previousNumber) {
+        replacementNote.textContent = 'Replacement for ' + previousNumber + (replacementReason ? ' — ' + replacementReason : '');
+        replacementNote.style.display = 'block';
+      } else {
+        replacementNote.textContent = '';
+        replacementNote.style.display = 'none';
+      }
+    }
+
+    // Automatically use the digital signature captured during personnel registration.
+    parSetSignatureImage('pp_sigReceived', r.signature);
     var pi = document.getElementById('pp_sigIssued');
     if (parSigIssuedBase64) { pi.src = parSigIssuedBase64; pi.style.display = 'block'; } else pi.style.display = 'none';
   }
@@ -1547,7 +2063,7 @@
     var w = window.open('', '_blank');
     if (!w) return;
     var paper = document.getElementById('par-print-area').outerHTML;
-    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>PAR Preview</title>' + parReceiptStylesHTML() + '<style>body{background:#20242b;padding:32px;display:flex;justify-content:center;}</style></head><body>' + paper + '</body></html>');
+    w.document.write('<!doctype html><html><head><meta charset="utf-8"><title>Property Acknowledgement Receipt</title>' + parReceiptStylesHTML() + '<style>body{background:#20242b;padding:32px;display:flex;justify-content:center;}</style></head><body>' + paper + '</body></html>');
     w.document.close();
   };
 
@@ -1622,9 +2138,18 @@
       dateIssued: new Date(dateIssued).toISOString(),
       issuedBy: issuedBy,
       approvedBy: approvedBy,
+      issuedBySignature: parSigIssuedBase64,
+      approvedBySignature: parSigApprovedBase64,
       wasReplaced: isReplace ? true : (getOverride(r.itemNumber).wasReplaced || false)
     });
-    r.parStatus = 'issued'; r.parNumber = parNumber; r.dateIssued = dateIssued; r.issuedBy = issuedBy; r.approvedBy = approvedBy;
+
+    r.parStatus = 'issued';
+    r.parNumber = parNumber;
+    r.dateIssued = dateIssued;
+    r.issuedBy = issuedBy;
+    r.approvedBy = approvedBy;
+    r.issuedBySignature = parSigIssuedBase64;
+    r.approvedBySignature = parSigApprovedBase64;
     if (isReplace) r.wasReplaced = true;
 
     var actionLabel = parDocMode === 'issue' ? 'PAR Issued' : parDocMode === 'update' ? 'PAR Updated' : 'PAR Replaced';
@@ -1634,6 +2159,14 @@
       btn.disabled = false;
       parSetDocMode(parDocMode); // restore label
       parRenderHub();
+
+      // Refresh the table and Selected PAR Summary immediately so the
+      // newly entered Issued By / Approved By values appear at once.
+      parRenderMgmtTable();
+      if (mgmtSelectedItem == r.itemNumber) {
+        parRenderSummaryPanel(r);
+      }
+
       if (parDocReturnTo === 'management') parShowMgmtList(); else parShowIssuanceList();
     }, 450);
   };

@@ -291,9 +291,9 @@
       ['magazine_catch',                     'Magazine Catch'],
       ['slide_lock',                         'Slide Lock'],
       ['slide_cover_plate',                  'Slide Cover Plate'],
-      ['connector',                          'Locking Block'],
+      ['connector',                          'Connector'],
       ['trigger_mechanism_housing',          'Trigger Mechanism Housing w/ Ejector'],
-      ['trigger',                            'Connector'],
+      ['trigger',                            'Trigger'],
       ['trigger_spring',                     'Trigger Spring'],
       ['trigger_with_trigger_bar',           'Trigger with Trigger Bar'],
       ['slide_stop_lever',                   'Slide Stop Lever'],
@@ -424,51 +424,83 @@
   </table>
 
   {{-- ===================== SIGNATORIES ===================== --}}
+  @php
+    $defaultSignatories = [
+      'inspected' => ['name' => 'Rennan F. Maglasang Jr', 'rank' => 'Cpl (OS) PA', 'position' => 'Armaments NCO'],
+      'witnessed' => ['name' => 'Marcelito H. Anino', 'rank' => 'MAJ (QMS) PA', 'position' => '901BDE, 9ID, PA'],
+      'approved'  => ['name' => 'Wenlie B. Enriola', 'rank' => 'CPT (OS) PA', 'position' => 'CO, Maintenance Coy'],
+      'noted'     => ['name' => 'Darrell P. Mariano', 'rank' => 'LTC OS (GSC) PA', 'position' => 'CO, 10FSSU, SPTCOM, PA'],
+    ];
+    $signatureSrc = function ($storedValue, $fileName) {
+      if (is_string($storedValue) && str_starts_with($storedValue, 'data:image/')) {
+        return $storedValue;
+      }
+
+      $localPath = public_path('images/' . $fileName);
+      if (!file_exists($localPath)) {
+        return '';
+      }
+
+      $mime = match (strtolower(pathinfo($localPath, PATHINFO_EXTENSION))) {
+        'jpg', 'jpeg' => 'image/jpeg',
+        'gif'         => 'image/gif',
+        'webp'        => 'image/webp',
+        default       => 'image/png',
+      };
+      return 'data:' . $mime . ';base64,' . base64_encode(file_get_contents($localPath));
+    };
+    $signatureImages = [
+      'inspected' => $signatureSrc(data_get($inspection, 'inspected_by_sig'), 'maglasang.png'),
+      'witnessed' => $signatureSrc(data_get($inspection, 'witnessed_by_sig'), 'anino.png'),
+      'approved'  => $signatureSrc(data_get($inspection, 'approved_by_sig'), 'enriola.png'),
+      'noted'     => $signatureSrc(data_get($inspection, 'noted_by_sig'), 'mariano.png'),
+    ];
+  @endphp
   <table class="sig-table">
     <tr>
       <td>
         <div class="sig-role">INSPECTED BY:</div>
-        @if(!empty($inspection->inspected_by_sig))
-          <img class="sig-img" src="{{ $inspection->inspected_by_sig }}" alt="sig">
+        @if($signatureImages['inspected'])
+          <img class="sig-img" src="{{ $signatureImages['inspected'] }}" alt="Maglasang signature">
         @else
           <div class="sig-space"></div>
         @endif
-        <div class="sig-name">{{ $inspection->inspected_by_name ?? '' }}</div>
-        <div class="sig-sub">{{ $inspection->inspected_by_rank ?? '' }}</div>
-        <div class="sig-sub">{{ $inspection->inspected_by_position ?? '' }}</div>
+        <div class="sig-name">{{ data_get($inspection, 'inspected_by_name') ?: $defaultSignatories['inspected']['name'] }}</div>
+        <div class="sig-sub">{{ data_get($inspection, 'inspected_by_rank') ?: $defaultSignatories['inspected']['rank'] }}</div>
+        <div class="sig-sub">{{ data_get($inspection, 'inspected_by_position') ?: $defaultSignatories['inspected']['position'] }}</div>
       </td>
       <td>
         <div class="sig-role">WITNESSED BY:</div>
-        @if(!empty($inspection->witnessed_by_sig))
-          <img class="sig-img" src="{{ $inspection->witnessed_by_sig }}" alt="sig">
+        @if($signatureImages['witnessed'])
+          <img class="sig-img" src="{{ $signatureImages['witnessed'] }}" alt="Anino signature">
         @else
           <div class="sig-space"></div>
         @endif
-        <div class="sig-name">{{ $inspection->witnessed_by_name ?? '' }}</div>
-        <div class="sig-sub">{{ $inspection->witnessed_by_rank ?? '' }}</div>
-        <div class="sig-sub">{{ $inspection->witnessed_by_position ?? '' }}</div>
+        <div class="sig-name">{{ data_get($inspection, 'witnessed_by_name') ?: $defaultSignatories['witnessed']['name'] }}</div>
+        <div class="sig-sub">{{ data_get($inspection, 'witnessed_by_rank') ?: $defaultSignatories['witnessed']['rank'] }}</div>
+        <div class="sig-sub">{{ data_get($inspection, 'witnessed_by_position') ?: $defaultSignatories['witnessed']['position'] }}</div>
       </td>
       <td>
         <div class="sig-role">APPROVED BY:</div>
-        @if(!empty($inspection->approved_by_sig))
-          <img class="sig-img" src="{{ $inspection->approved_by_sig }}" alt="sig">
+        @if($signatureImages['approved'])
+          <img class="sig-img" src="{{ $signatureImages['approved'] }}" alt="Enriola signature">
         @else
           <div class="sig-space"></div>
         @endif
-        <div class="sig-name">{{ $inspection->approved_by_name ?? '' }}</div>
-        <div class="sig-sub">{{ $inspection->approved_by_rank ?? '' }}</div>
-        <div class="sig-sub">{{ $inspection->approved_by_position ?? '' }}</div>
+        <div class="sig-name">{{ data_get($inspection, 'approved_by_name') ?: $defaultSignatories['approved']['name'] }}</div>
+        <div class="sig-sub">{{ data_get($inspection, 'approved_by_rank') ?: $defaultSignatories['approved']['rank'] }}</div>
+        <div class="sig-sub">{{ data_get($inspection, 'approved_by_position') ?: $defaultSignatories['approved']['position'] }}</div>
       </td>
       <td>
         <div class="sig-role">NOTED BY:</div>
-        @if(!empty($inspection->noted_by_sig))
-          <img class="sig-img" src="{{ $inspection->noted_by_sig }}" alt="sig">
+        @if($signatureImages['noted'])
+          <img class="sig-img" src="{{ $signatureImages['noted'] }}" alt="Mariano signature">
         @else
           <div class="sig-space"></div>
         @endif
-        <div class="sig-name">{{ $inspection->noted_by_name ?? '' }}</div>
-        <div class="sig-sub">{{ $inspection->noted_by_rank ?? '' }}</div>
-        <div class="sig-sub">{{ $inspection->noted_by_position ?? '' }}</div>
+        <div class="sig-name">{{ data_get($inspection, 'noted_by_name') ?: $defaultSignatories['noted']['name'] }}</div>
+        <div class="sig-sub">{{ data_get($inspection, 'noted_by_rank') ?: $defaultSignatories['noted']['rank'] }}</div>
+        <div class="sig-sub">{{ data_get($inspection, 'noted_by_position') ?: $defaultSignatories['noted']['position'] }}</div>
       </td>
     </tr>
   </table>

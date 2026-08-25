@@ -176,7 +176,7 @@ CREATE TABLE `failed_jobs` (
 -- --------------------------------------------------------
 
 --
--- Table structure for table `ics_settings`
+-- Table structure for table `ics_settings` 
 --
 
 CREATE TABLE `ics_settings` (

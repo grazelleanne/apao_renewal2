@@ -160,6 +160,11 @@ class ParController extends Controller
             'remarks' => ['nullable', 'string', 'max:3000'],
         ]);
 
+        $data['issued_by'] = trim((string) ($data['issued_by'] ?? '')) ?: 'MS ROSEMARIE O VILBAR';
+        $data['approved_by'] = trim((string) ($data['approved_by'] ?? '')) ?: 'MS EVANGELINE M SINGUEO, Ph.D.';
+        $data['issued_by_signature'] = '/images/ROSEMARIE VILBAR.png';
+        $data['approved_by_signature'] = '/images/SINGUEO EVAGELINE.png';
+
         $par = DB::transaction(function () use ($data, $numbers) {
             $personnel = Personnel::query()
                 ->whereKey($data['personnel_id'])

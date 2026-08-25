@@ -5,89 +5,13 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
-use Illuminate\Validation\Rule;
 use App\Models\Personnel;
 use App\Models\SystemNotification;
 use Carbon\Carbon;
 
 class StaffController extends Controller
 {
-    public function updateProfile(Request $request)
-    {
-        $sessionUser = session('user');
-        $userId = is_object($sessionUser) ? $sessionUser->id : ($sessionUser['id'] ?? null);
-
-        $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($userId)],
-            'contact_number' => ['nullable', 'string', 'max:30', 'regex:/^[0-9+()\-\s]+$/'],
-        ], [
-            'contact_number.regex' => 'The contact number format is invalid.',
-        ]);
-
-        DB::table('users')->where('id', $userId)->update([
-            'name' => $validated['name'],
-            'email' => $validated['email'],
-            'contact_number' => $validated['contact_number'] ?? null,
-            'updated_at' => now(),
-        ]);
-
-        $updatedUser = DB::table('users')->where('id', $userId)->first();
-        session(['user' => (array) $updatedUser]);
-
-        auditLog('profile_updated', $updatedUser->email);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Profile information updated successfully.',
-            'user' => [
-                'name' => $updatedUser->name,
-                'email' => $updatedUser->email,
-                'contact_number' => $updatedUser->contact_number,
-            ],
-        ]);
-    }
-
-    public function updatePassword(Request $request)
-    {
-        $validated = $request->validate([
-            'current_password' => ['required', 'string'],
-            'password' => ['required', 'string', 'min:8', 'confirmed'],
-        ]);
-
-        $sessionUser = session('user');
-        $userId = is_object($sessionUser) ? $sessionUser->id : ($sessionUser['id'] ?? null);
-        $user = DB::table('users')->where('id', $userId)->first();
-
-        if (!$user || !Hash::check($validated['current_password'], $user->password)) {
-            return response()->json([
-                'message' => 'The current password is incorrect.',
-                'errors' => ['current_password' => ['The current password is incorrect.']],
-            ], 422);
-        }
-
-        if (Hash::check($validated['password'], $user->password)) {
-            return response()->json([
-                'message' => 'The new password must be different from your current password.',
-                'errors' => ['password' => ['The new password must be different from your current password.']],
-            ], 422);
-        }
-
-        DB::table('users')->where('id', $userId)->update([
-            'password' => Hash::make($validated['password']),
-            'updated_at' => now(),
-        ]);
-
-        auditLog('password_changed', $user->email);
-
-        return response()->json([
-            'success' => true,
-            'message' => 'Password changed successfully.',
-        ]);
-    }
-
     public function index()
     {
         $user = Auth::user();

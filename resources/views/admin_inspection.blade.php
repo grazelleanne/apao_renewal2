@@ -181,6 +181,64 @@ body.light-mode .fi{background:#f8fafc;border-color:#cbd5e0;color:#1e293b;}
 body.light-mode input,body.light-mode select,body.light-mode textarea{background:#f8fafc !important;color:#1e293b !important;border-color:#cbd5e1 !important;}
 body.light-mode .btn-print{background:#e8edf5;color:#475569;border-color:#cbd5e1;}
 body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2e8f0 !important;}
+
+/* ── INSPECTION CONDITION SUMMARY ── */
+.condition-summary{
+  margin-top:12px;
+  border:1px solid #363b48;
+  border-radius:8px;
+  padding:11px 12px;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  background:#181c21;
+}
+.condition-summary-left{display:flex;align-items:center;gap:10px;}
+.condition-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0;background:#94a3b8;}
+.condition-label{font-size:.68rem;color:#64748b;text-transform:uppercase;letter-spacing:.05em;font-weight:700;}
+.condition-value{font-size:.82rem;font-weight:800;color:#e5eaf2;margin-top:1px;}
+.condition-help{font-size:.69rem;color:#64748b;text-align:right;max-width:320px;line-height:1.35;}
+.condition-serviceable{border-color:#166534;background:#0d3325;}
+.condition-serviceable .condition-dot{background:#33b481;}
+.condition-serviceable .condition-value{color:#33b481;}
+.condition-repair{border-color:#92400e;background:#2a1f00;}
+.condition-repair .condition-dot{background:#f59e0b;}
+.condition-repair .condition-value{color:#f59e0b;}
+.condition-replacement{border-color:#9a3412;background:#2b1608;}
+.condition-replacement .condition-dot{background:#fb923c;}
+.condition-replacement .condition-value{color:#fb923c;}
+.condition-unserviceable{border-color:#991b1b;background:#2d0a0a;}
+.condition-unserviceable .condition-dot{background:#fc8181;}
+.condition-unserviceable .condition-value{color:#fc8181;}
+
+.btn-save-under{
+  background:#1e1040;
+  color:#c4b5fd;
+  border:1px solid #6d28d9;
+  border-radius:7px;
+  padding:9px 20px;
+  font-size:.82rem;
+  font-weight:700;
+  cursor:pointer;
+  display:flex;
+  align-items:center;
+  gap:6px;
+}
+.btn-save-under:hover{background:#2d1a5a;}
+.btn-renew:disabled{opacity:.45;cursor:not-allowed;background:#1f2937;color:#94a3b8;border-color:#374151;}
+body.light-mode .condition-summary{background:#f8fafc;border-color:#cbd5e1;}
+body.light-mode .condition-serviceable{background:#ecfdf5;border-color:#a7f3d0;}
+body.light-mode .condition-repair{background:#fffbeb;border-color:#fde68a;}
+body.light-mode .condition-replacement{background:#fff7ed;border-color:#fdba74;}
+body.light-mode .condition-unserviceable{background:#fef2f2;border-color:#fecaca;}
+body.light-mode .condition-value{color:#1e293b;}
+body.light-mode .condition-serviceable .condition-value{color:#047857;}
+body.light-mode .condition-repair .condition-value{color:#b45309;}
+body.light-mode .condition-replacement .condition-value{color:#c2410c;}
+body.light-mode .condition-unserviceable .condition-value{color:#b91c1c;}
+body.light-mode .btn-save-under{background:#ede9fe;color:#6d28d9;border-color:#c4b5fd;}
+
 </style>
 </head>
 <body class="min-h-screen font-inter app-body">
@@ -244,11 +302,7 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
     <svg class="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-4.35-4.35M5 11a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>
   </div>
   <div class="flex items-center gap-4">
-    <span class="text-sm force-light-text opacity-70">Welcome, <strong>{{ $user->name ?? 'Admin' }}</strong></span>
-    <form method="POST" action="{{ route('logout') }}">
-      @csrf
-      <button type="submit" class="text-red-400 hover:underline text-base font-semibold tracking-tight">Logout</button>
-    </form>
+    @include('partials.account_dropdown')
   </div>
 </header>
 
@@ -311,12 +365,21 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
               Pending Inspection
               <span class="tab-label tab-label-pending" id="tableTitleBadge">Pending</span>
             </span>
-            <div class="flex items-center gap-2 text-sm text-[#64748b]">
-              Sort by:
+            <div class="flex flex-wrap items-center justify-end gap-2 text-sm text-[#64748b]">
+              <span>Filter:</span>
+              <select id="rankFilter" class="bg-[#13151a] border border-[#2a2f3a] rounded px-2 py-1 text-[#e5eaf2] text-xs outline-none" onchange="filterTable()">
+                <option value="">All Ranks</option>
+              </select>
+              <select id="pistolFilter" class="bg-[#13151a] border border-[#2a2f3a] rounded px-2 py-1 text-[#e5eaf2] text-xs outline-none" onchange="filterTable()">
+                <option value="">All Pistol Types</option>
+              </select>
+
+              <span class="ml-1">Sort by:</span>
               <select id="sortSelect" class="bg-[#13151a] border border-[#2a2f3a] rounded px-2 py-1 text-[#e5eaf2] text-xs outline-none" onchange="filterTable()">
                 <option value="newest">Date Registered (Newest)</option>
                 <option value="oldest">Date Registered (Oldest)</option>
-                <option value="name">Name A-Z</option>
+                <option value="name">Last Name A-Z</option>
+                <option value="rank">Rank A-Z</option>
               </select>
             </div>
           </div>
@@ -388,6 +451,19 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
             <label class="text-xs text-[#64748b] font-semibold block mb-1">Remarks</label>
             <textarea id="cl_remarks" rows="2" class="fi" style="resize:vertical;" placeholder="e.g. Firearm is Serviceable."></textarea>
           </div>
+
+          <div id="inspectionConditionBox" class="condition-summary condition-serviceable">
+            <div class="condition-summary-left">
+              <span class="condition-dot"></span>
+              <div>
+                <div class="condition-label">Current Firearm Condition</div>
+                <div class="condition-value" id="inspectionConditionValue">Serviceable</div>
+              </div>
+            </div>
+            <div class="condition-help" id="inspectionConditionHelp">
+              All inspected parts are serviceable or not applicable. The firearm may be marked for renewal.
+            </div>
+          </div>
         </div>
 
         <!-- Signatories -->
@@ -434,7 +510,12 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
 
       <!-- Action Buttons -->
         <div class="flex flex-wrap gap-3">
-          <button onclick="saveInspection('approved')" class="btn-renew">
+          <button onclick="saveInspection('under')" class="btn-save-under">
+            <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14" height="14"><path d="M5 13l4 4L19 7"/></svg>
+            Save Inspection
+          </button>
+
+          <button id="markRenewalBtn" onclick="saveInspection('approved')" class="btn-renew">
             <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" width="14" height="14" style="display:inline;vertical-align:middle;margin-right:4px;"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
             Mark For Renewal
           </button>
@@ -583,6 +664,7 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
       const data = await res.json();
       if (!data.success) return;
       allPersonnel = data.data;
+      populateFilterOptions();
       document.getElementById('statPending').textContent  = data.pending;
       document.getElementById('statUnder').textContent    = data.under;
       document.getElementById('statApproved').textContent = data.approved;
@@ -592,11 +674,55 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
       renderTable();
     }
 
+    function populateFilterOptions() {
+      const rankSelect = document.getElementById('rankFilter');
+      const pistolSelect = document.getElementById('pistolFilter');
+
+      if (!rankSelect || !pistolSelect) return;
+
+      const selectedRank = rankSelect.value;
+      const selectedPistol = pistolSelect.value;
+
+      const ranks = [...new Set(
+        allPersonnel
+          .map(p => (p.rank || '').trim())
+          .filter(Boolean)
+      )].sort((a, b) => a.localeCompare(b));
+
+      const pistols = [...new Set(
+        allPersonnel
+          .map(p => (p.pistolType || '').trim())
+          .filter(Boolean)
+      )].sort((a, b) => a.localeCompare(b));
+
+      rankSelect.innerHTML =
+        '<option value="">All Ranks</option>' +
+        ranks.map(rank => `<option value="${escapeHtml(rank)}">${escapeHtml(rank)}</option>`).join('');
+
+      pistolSelect.innerHTML =
+        '<option value="">All Pistol Types</option>' +
+        pistols.map(type => `<option value="${escapeHtml(type)}">${escapeHtml(type)}</option>`).join('');
+
+      if (ranks.includes(selectedRank)) rankSelect.value = selectedRank;
+      if (pistols.includes(selectedPistol)) pistolSelect.value = selectedPistol;
+    }
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
     function filterTable() { currentPage = 1; renderTable(); }
 
     function renderTable() {
       const sort   = document.getElementById('sortSelect').value;
-      const search = (document.getElementById('searchInput').value || '').toLowerCase();
+      const search = (document.getElementById('searchInput').value || '').trim().toLowerCase();
+      const rankFilter = document.getElementById('rankFilter')?.value || '';
+      const pistolFilter = document.getElementById('pistolFilter')?.value || '';
 
       const validStatuses = tabStatuses();
       let rows = allPersonnel.filter(p => {
@@ -608,16 +734,44 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
         return true;
       });
 
-      if (search) {
-        rows = rows.filter(p =>
-          (`${p.rank} ${p.lastName} ${p.firstName}`).toLowerCase().includes(search) ||
-          (p.afpSerialNumber||'').toLowerCase().includes(search)
-        );
+      if (rankFilter) {
+        rows = rows.filter(p => (p.rank || '').trim() === rankFilter);
       }
 
-      if (sort==='oldest') rows.sort((a,b)=>new Date(a.dateRegistered)-new Date(b.dateRegistered));
-      if (sort==='newest') rows.sort((a,b)=>new Date(b.dateRegistered)-new Date(a.dateRegistered));
-      if (sort==='name')   rows.sort((a,b)=>a.lastName.localeCompare(b.lastName));
+      if (pistolFilter) {
+        rows = rows.filter(p => (p.pistolType || '').trim() === pistolFilter);
+      }
+
+      if (search) {
+        rows = rows.filter(p => {
+          const searchable = [
+            p.lastName,
+            p.rank,
+            p.firstName,
+            p.middleName,
+            p.afpSerialNumber,
+            p.pistolType,
+            p.unit,
+            p.dateRegistered,
+            p.inspectionStatus
+          ]
+            .filter(v => v !== null && v !== undefined)
+            .join(' ')
+            .toLowerCase();
+
+          return searchable.includes(search);
+        });
+      }
+
+      const safeDate = value => {
+        const time = Date.parse(value || '');
+        return Number.isNaN(time) ? 0 : time;
+      };
+
+      if (sort === 'oldest') rows.sort((a,b) => safeDate(a.dateRegistered) - safeDate(b.dateRegistered));
+      if (sort === 'newest') rows.sort((a,b) => safeDate(b.dateRegistered) - safeDate(a.dateRegistered));
+      if (sort === 'name')   rows.sort((a,b) => (a.lastName || '').localeCompare(b.lastName || ''));
+      if (sort === 'rank')   rows.sort((a,b) => (a.rank || '').localeCompare(b.rank || ''));
 
       const total = rows.length;
       const pages = Math.max(1, Math.ceil(total/PER_PAGE));
@@ -627,7 +781,7 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
       const bc = {
         pending:'badge-pending',
         under:'badge-under',
-        approved:'badge-renewal',
+        approved:'badge-approved',
         needs_repair:'badge-needs_repair'
       };
       const bl = {
@@ -639,7 +793,11 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
 
       document.getElementById('inspTable').innerHTML = slice.length ? slice.map(p=>`
         <tr>
-          <td class="font-semibold text-[#e5eaf2]">${p.rank} ${p.lastName}, ${p.firstName}${p.middleName?' '+p.middleName.charAt(0)+'.':''}</td>
+          <td class="font-semibold text-[#e5eaf2]">
+            ${escapeHtml(p.lastName || '')}
+            <span class="ml-1 text-xs font-bold text-[#94a3b8]">${escapeHtml(p.rank || '')}</span>,
+            ${escapeHtml(p.firstName || '')}${p.middleName ? ' ' + escapeHtml(p.middleName.charAt(0)) + '.' : ''}
+          </td>
           <td class="font-mono text-xs">${p.afpSerialNumber||'—'}</td>
           <td>${p.pistolType||'—'}</td>
           <td class="text-xs text-[#94a3b8]">${p.dateRegistered||'—'}</td>
@@ -666,25 +824,96 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
       }
     }
 
+
+    // ── Derive firearm condition from the current checklist ──
+    // Priority:
+    // Unserviceable > For Replacement > For Repair > Serviceable
+    function getInspectionCondition() {
+      let hasRepair = false;
+      let hasReplacement = false;
+      let hasUnserviceable = false;
+
+      PARTS.forEach(key => {
+        const checked = document.querySelector(`input[name="${key}"]:checked`);
+        const value = checked ? checked.value : 'serviceable';
+
+        if (value === 'unserviceable') {
+          hasUnserviceable = true;
+        } else if (value === 'replace') {
+          hasReplacement = true;
+        } else if (['repair', 'damaged', 'missing'].includes(value)) {
+          hasRepair = true;
+        }
+      });
+
+      if (hasUnserviceable) return 'Unserviceable';
+      if (hasReplacement) return 'For Replacement';
+      if (hasRepair) return 'For Repair';
+      return 'Serviceable';
+    }
+
+    function refreshInspectionConditionUI() {
+      const box = document.getElementById('inspectionConditionBox');
+      const valueEl = document.getElementById('inspectionConditionValue');
+      const helpEl = document.getElementById('inspectionConditionHelp');
+      const renewalBtn = document.getElementById('markRenewalBtn');
+
+      if (!box || !valueEl || !helpEl) return;
+
+      const condition = getInspectionCondition();
+
+      box.classList.remove(
+        'condition-serviceable',
+        'condition-repair',
+        'condition-replacement',
+        'condition-unserviceable'
+      );
+
+      let cls = 'condition-serviceable';
+      let help = 'All inspected parts are serviceable or not applicable. The firearm may be marked for renewal.';
+
+      if (condition === 'For Repair') {
+        cls = 'condition-repair';
+        help = 'The firearm remains Under Inspection. Repair/correct the finding, then inspect the firearm again.';
+      } else if (condition === 'For Replacement') {
+        cls = 'condition-replacement';
+        help = 'A component is marked for replacement. Keep the firearm Under Inspection until corrected and re-inspected.';
+      } else if (condition === 'Unserviceable') {
+        cls = 'condition-unserviceable';
+        help = 'The firearm cannot be marked for renewal while an item is unserviceable. Correct the condition and re-inspect.';
+      }
+
+      box.classList.add(cls);
+      valueEl.textContent = condition;
+      helpEl.textContent = help;
+
+      if (renewalBtn) {
+        renewalBtn.disabled = condition !== 'Serviceable';
+        renewalBtn.title = condition === 'Serviceable'
+          ? 'Mark this firearm for renewal'
+          : `Cannot mark for renewal while condition is ${condition}.`;
+      }
+
+      return condition;
+    }
+
+    // Checklist rows are generated dynamically, so listen at document level.
+    document.addEventListener('change', function (event) {
+      if (event.target && event.target.classList.contains('check-radio')) {
+        refreshInspectionConditionUI();
+      }
+    });
+
     async function openInspect(itemNumber) {
       currentItemNumber = itemNumber;
-
-      if (activeTab === 'pending') {
-        await fetch('/admin/inspection/save', {
-          method: 'POST',
-          headers: {'Content-Type':'application/json','X-CSRF-TOKEN':CSRF},
-          body: JSON.stringify({ itemNumber, status: 'under' })
-        });
-        const rec = allPersonnel.find(p => p.itemNumber === itemNumber);
-        if (rec) rec.inspectionStatus = 'under';
-      }
 
       const res  = await fetch(`/admin/inspection/${itemNumber}/detail`);
       const data = await res.json();
       if (!data.success) return;
       const p=data.personnel, ins=data.inspection, ics=data.ics||{};
+      const activeParts = Array.isArray(data.checklistParts) ? data.checklistParts : PARTS;
 
-      document.getElementById('cl_name').textContent  = `${p.rank} ${p.lastName}, ${p.firstName}`;
+      document.getElementById('cl_name').textContent  = `${p.lastName} ${p.rank}, ${p.firstName}`;
       document.getElementById('cl_unit').textContent  = p.unit||'—';
       document.getElementById('cl_nomen').textContent = `Pistol 9mm, ${p.pistolType||'Glock 17'}`;
       document.getElementById('cl_made').textContent  = p.pistolType||'Glock 17';
@@ -695,23 +924,36 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
       function buildRows(parts, startIdx) {
         return parts.map((key,i)=>{
           const val = ins?(ins[key]||'serviceable'):'serviceable';
+          const labelIndex = PARTS.indexOf(key);
           return `<tr>
             <td class="text-center text-[#64748b] text-xs">${startIdx+i+1}.</td>
-            <td style="padding-left:6px;">${PART_LABELS[startIdx+i]}</td>
+            <td style="padding-left:6px;">${PART_LABELS[labelIndex]}</td>
             ${opts.map(o=>`<td class="text-center"><input type="radio" name="${key}" value="${o}" class="check-radio" ${val===o?'checked':''}></td>`).join('')}
           </tr>`;
         }).join('');
       }
-      document.getElementById('checklistLeft').innerHTML  = buildRows(PARTS.slice(0,15),0);
-      document.getElementById('checklistRight').innerHTML = buildRows(PARTS.slice(15,30),15);
+      const splitAt = Math.ceil(activeParts.length / 2);
+      document.getElementById('checklistLeft').innerHTML  = buildRows(activeParts.slice(0,splitAt),0);
+      document.getElementById('checklistRight').innerHTML = buildRows(activeParts.slice(splitAt),splitAt);
       document.getElementById('cl_remarks').value = ins?.remarks||'';
       currentInspectionStatus = ins?.status || 'under';
 
+      // Immediately show the derived physical condition and disable
+      // "Mark For Renewal" whenever the checklist contains a defect.
+      refreshInspectionConditionUI();
+
+      const defaultSignatories = {
+        insp: { name:'Rennan F. Maglasang Jr', rank:'Cpl (OS) PA',  pos:'Armaments NCO', img:@json(asset('images/maglasang.png')) },
+        wit:  { name:'Marcelito H. Anino',     rank:'MAJ (QMS) PA', pos:'901BDE, 9ID, PA', img:@json(asset('images/anino.png')) },
+        app:  { name:'Wenlie B. Enriola',      rank:'CPT (OS) PA',  pos:'CO, Maintenance Coy', img:@json(asset('images/enriola.png')) },
+        not:  { name:'Darrell P. Mariano',     rank:'LTC OS (GSC) PA', pos:'CO, 10FSSU, SPTCOM, PA', img:@json(asset('images/mariano.png')) },
+      };
+
       sigData = {
-        insp:{name:ins?.inspectedByName||ics.chiefOfficerName||'',rank:ins?.inspectedByRank||'',pos:ins?.inspectedByPosition||ics.chiefOfficerPosition||'',img:ins?.inspectedBySig||''},
-        wit: {name:ins?.witnessedByName||'',rank:ins?.witnessedByRank||'',pos:ins?.witnessedByPosition||'',img:ins?.witnessedBySig||''},
-        app: {name:ins?.approvedByName||ics.issuedByName||'',rank:ins?.approvedByRank||'',pos:ins?.approvedByPosition||ics.issuedByPosition||'',img:ins?.approvedBySig||''},
-        not: {name:ins?.notedByName||'',rank:ins?.notedByRank||'',pos:ins?.notedByPosition||'',img:ins?.notedBySig||''},
+        insp:{name:ins?.inspectedByName||defaultSignatories.insp.name,rank:ins?.inspectedByRank||defaultSignatories.insp.rank,pos:ins?.inspectedByPosition||defaultSignatories.insp.pos,img:ins?.inspectedBySig||defaultSignatories.insp.img},
+        wit: {name:ins?.witnessedByName||defaultSignatories.wit.name,rank:ins?.witnessedByRank||defaultSignatories.wit.rank,pos:ins?.witnessedByPosition||defaultSignatories.wit.pos,img:ins?.witnessedBySig||defaultSignatories.wit.img},
+        app: {name:ins?.approvedByName||defaultSignatories.app.name,rank:ins?.approvedByRank||defaultSignatories.app.rank,pos:ins?.approvedByPosition||defaultSignatories.app.pos,img:ins?.approvedBySig||defaultSignatories.app.img},
+        not: {name:ins?.notedByName||defaultSignatories.not.name,rank:ins?.notedByRank||defaultSignatories.not.rank,pos:ins?.notedByPosition||defaultSignatories.not.pos,img:ins?.notedBySig||defaultSignatories.not.img},
       };
       renderSigs();
 
@@ -740,6 +982,16 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
     async function saveInspection(status) {
       const errEl=document.getElementById('cl_error'), sucEl=document.getElementById('cl_success');
       errEl.classList.add('hidden'); sucEl.classList.add('hidden');
+
+      const condition = refreshInspectionConditionUI();
+
+      // UI guard. The backend also enforces this rule.
+      if (status === 'approved' && condition !== 'Serviceable') {
+        errEl.textContent = `Cannot mark for renewal. Current firearm condition: ${condition}. Save the inspection and perform re-inspection after the firearm is corrected.`;
+        errEl.classList.remove('hidden');
+        return;
+      }
+
       const body={
         itemNumber:currentItemNumber, status,
         remarks:document.getElementById('cl_remarks').value,
@@ -752,13 +1004,31 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
         notedByName:sigData.not.name,      notedByRank:sigData.not.rank,      notedByPosition:sigData.not.pos,
         notedBySig:sigData.not.img,
       };
-      PARTS.forEach(k=>{ const c=document.querySelector(`input[name="${k}"]:checked`); body[k]=c?c.value:'serviceable'; });
+      document.querySelectorAll('#checklistLeft input:checked, #checklistRight input:checked').forEach(c => { body[c.name] = c.value; });
       const res  = await fetch('/admin/inspection/save',{method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':CSRF},body:JSON.stringify(body)});
       const data = await res.json();
       if (data.success) {
-        const lbl={under:'Saved as Under Inspection ✓',needs_repair:'Flagged for Repair ✓',approved:'Marked as Renewed ✓'};
-        sucEl.textContent=lbl[status]||'Saved!'; sucEl.classList.remove('hidden');
-        currentInspectionStatus = status;
+        const savedCondition = data.rpcspRemark || condition || 'Serviceable';
+
+        let message = 'Inspection saved ✓';
+        if (status === 'approved') {
+          message = 'Inspection passed and marked for renewal ✓';
+        } else if (savedCondition === 'For Repair') {
+          message = 'Saved under inspection — firearm is For Repair ✓';
+        } else if (savedCondition === 'For Replacement') {
+          message = 'Saved under inspection — component replacement required ✓';
+        } else if (savedCondition === 'Unserviceable') {
+          message = 'Saved under inspection — firearm is Unserviceable ✓';
+        } else {
+          message = 'Inspection saved under inspection ✓';
+        }
+
+        sucEl.textContent = message;
+        sucEl.classList.remove('hidden');
+
+        // Backend keeps repair/replacement/unserviceable cases in "under".
+        currentInspectionStatus = data.status || status;
+
         setTimeout(()=>{sucEl.classList.add('hidden'); loadData();},2000);
       } else {
         errEl.textContent=data.error||'Failed.'; errEl.classList.remove('hidden');
@@ -783,9 +1053,15 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
         );
       }
 
+      const printCondition = refreshInspectionConditionUI();
+      const safePrintStatus =
+        (currentInspectionStatus === 'approved' && printCondition !== 'Serviceable')
+          ? 'under'
+          : (currentInspectionStatus || 'under');
+
       const body = {
         itemNumber: currentItemNumber,
-        status: currentInspectionStatus || 'under',
+        status: safePrintStatus,
         remarks: document.getElementById('cl_remarks').value,
         inspectedByName: sigData.insp.name, inspectedByRank: sigData.insp.rank, inspectedByPosition: sigData.insp.pos,
         inspectedBySig: sigData.insp.img,
@@ -796,10 +1072,7 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
         notedByName: sigData.not.name,      notedByRank: sigData.not.rank,      notedByPosition: sigData.not.pos,
         notedBySig: sigData.not.img,
       };
-      PARTS.forEach(k => {
-        const c = document.querySelector(`input[name="${k}"]:checked`);
-        body[k] = c ? c.value : 'serviceable';
-      });
+      document.querySelectorAll('#checklistLeft input:checked, #checklistRight input:checked').forEach(c => { body[c.name] = c.value; });
 
       try {
         const res = await fetch('/admin/inspection/save', {
@@ -849,11 +1122,11 @@ body.light-mode .bg-\[\#23272f\]{background:#fff !important;border:1px solid #e2
     function openNotifyModal(p) {
       notifyItem = p;
       document.getElementById('notifyPersonnelName').textContent =
-        `${p.rank} ${p.lastName}, ${p.firstName}${p.middleName?' '+p.middleName.charAt(0)+'.':''}`;
+        `${p.lastName} ${p.rank}, ${p.firstName}${p.middleName?' '+p.middleName.charAt(0)+'.':''}`;
       document.getElementById('notifySerial').textContent = p.afpSerialNumber || '—';
       document.getElementById('notifyPistol').textContent = p.pistolType || '—';
       document.getElementById('notifyMessage').value =
-        `Please process the ICS renewal for ${p.rank} ${p.lastName}, ${p.firstName} (AFP Serial: ${p.afpSerialNumber||'N/A'}). Firearm has been cleared for renewal.`;
+        `Please process the ICS renewal for ${p.lastName} ${p.rank}, ${p.firstName} (AFP Serial: ${p.afpSerialNumber||'N/A'}). Firearm has been cleared for renewal.`;
       document.getElementById('notifyError').classList.add('hidden');
       document.getElementById('notifySuccess').classList.add('hidden');
       document.getElementById('notifyModal').classList.add('open');

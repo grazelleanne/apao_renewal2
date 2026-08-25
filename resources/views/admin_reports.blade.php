@@ -122,6 +122,56 @@
     body.light-mode .report-summary-row td{border-bottom:1px solid #d1d9e6;}
     body.light-mode .border-\[\#2a2f3a\]{border-color:#e2e8f0!important;}
     body.light-mode .hover\:bg-\[\#1e2329\]:hover{background:#f8fafc!important;}
+  
+    /* ===== REPORT CENTER / RPCSP ===== */
+    .report-center-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:22px;}
+    .report-type-btn{display:flex;align-items:center;gap:9px;border:1px solid #363b48;background:#23272f;color:#94a3b8;border-radius:9px;padding:11px 16px;font-size:.82rem;font-weight:700;cursor:pointer;transition:.15s;}
+    .report-type-btn:hover{border-color:#3ec6ff;color:#e5eaf2;}
+    .report-type-btn.active{background:#123044;border-color:#3ec6ff;color:#55d4ff;box-shadow:0 0 0 1px rgba(62,198,255,.08) inset;}
+    body.light-mode .report-type-btn{background:#fff;border-color:#d5ddea;color:#64748b;}
+    body.light-mode .report-type-btn:hover{color:#1e293b;border-color:#38bdf8;}
+    body.light-mode .report-type-btn.active{background:#eff8ff;color:#0369a1;border-color:#38bdf8;}
+
+    .rpcsp-config-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+    .rpcsp-field label{display:block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.04em;color:#94a3b8;margin-bottom:5px;}
+    .rpcsp-field input,.rpcsp-field select{width:100%;background:#1a2025;border:1px solid #363b48;border-radius:7px;color:#e5eaf2;padding:8px 10px;font-size:.77rem;outline:none;}
+    .rpcsp-field input:focus,.rpcsp-field select:focus{border-color:#3ec6ff;box-shadow:0 0 0 2px rgba(62,198,255,.08);}
+    body.light-mode .rpcsp-field label{color:#64748b;}
+    body.light-mode .rpcsp-field input,body.light-mode .rpcsp-field select{background:#fff!important;color:#1e293b!important;border-color:#cbd5e1!important;}
+
+    .rpcsp-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+    .rpcsp-btn{border:0;border-radius:7px;padding:9px 14px;font-size:.76rem;font-weight:800;cursor:pointer;}
+    .rpcsp-btn-primary{background:#3ec6ff;color:#0f172a;}
+    .rpcsp-btn-green{background:#22c55e;color:#fff;}
+    .rpcsp-btn-amber{background:#f59e0b;color:#fff;}
+
+    .rpcsp-preview-shell{overflow:auto;background:#11161d;border:1px solid #303947;border-radius:10px;padding:18px;}
+    body.light-mode .rpcsp-preview-shell{background:#e9eef5;border-color:#d8e0eb;}
+    .rpcsp-document{width:1120px;min-height:720px;margin:0 auto;background:#fff;color:#111;padding:18px 20px 22px;font-family:Arial,Helvetica,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.24);}
+    .rpcsp-title{text-align:center;font-weight:700;font-size:15px;line-height:1.15;margin:0;}
+    .rpcsp-subtitle{text-align:center;font-size:11px;line-height:1.25;margin:1px 0;}
+    .rpcsp-asof{text-align:center;font-size:11px;margin:2px 0 12px;}
+    .rpcsp-fund{font-size:11px;text-decoration:underline;margin:0 0 12px;}
+    .rpcsp-forwhich{font-size:11px;line-height:1.35;margin:0 0 9px;}
+    .rpcsp-forwhich .accountable-name{font-weight:700;text-transform:uppercase;}
+    .rpcsp-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:9.5px;}
+    .rpcsp-table th,.rpcsp-table td{border:1px solid #333;padding:4px 5px;vertical-align:middle;}
+    .rpcsp-table th{text-align:center;font-weight:700;background:#fff;}
+    .rpcsp-table td{text-align:center;}
+    .rpcsp-table td:nth-child(1),.rpcsp-table td:nth-child(2),.rpcsp-table td:nth-child(10){text-align:left;}
+    .rpcsp-summary{display:flex;justify-content:flex-end;gap:28px;margin-top:9px;font-size:10px;}
+    .rpcsp-summary strong{font-size:11px;}
+    .rpcsp-note{font-size:9px;color:#555;margin-top:8px;}
+    .rpcsp-certification{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:52px;margin-top:42px;font-size:11px;line-height:1.35;color:#111;}
+    .rpcsp-certification-title{font-weight:700;margin:0 0 42px;}
+    .rpcsp-certification-column,.rpcsp-signatory{break-inside:avoid;page-break-inside:avoid;}
+    .rpcsp-signatory + .rpcsp-signatory{margin-top:40px;}
+    .rpcsp-signatory p{margin:0;}
+    .rpcsp-signatory-name{font-weight:700;}
+    .rpcsp-empty{text-align:center!important;padding:14px!important;color:#666;}
+    @media(max-width:1100px){.rpcsp-config-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+    @media(max-width:640px){.rpcsp-config-grid{grid-template-columns:1fr;}}
+
   </style>
 </head>
 <body class="min-h-screen font-inter main-bg bg-[#1a2025]">
@@ -183,7 +233,7 @@
     <header class="flex flex-wrap justify-between mb-8 items-center gap-4">
       <h1 class="text-2xl font-bold tracking-tight force-light-text">Reports</h1>
       <div class="flex items-center gap-4">
-        <span class="text-sm force-light-text opacity-70">Welcome, <strong>{{ $user->name ?? 'Admin' }}</strong></span>
+        @include('partials.account_dropdown')
 
         <!-- NOTIFICATION BELL -->
         <div class="relative" id="adminNotifWrapper">
@@ -201,12 +251,22 @@
           </div>
         </div>
 
-        <form method="POST" action="{{ route('logout') }}">
-          @csrf
-          <button type="submit" class="text-red-400 hover:underline text-base font-semibold tracking-tight">Logout</button>
-        </form>
       </div>
     </header>
+
+    <!-- REPORT CENTER -->
+    <div class="report-center-tabs">
+      <button type="button" id="showRenewalReportBtn" class="report-type-btn active">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/></svg>
+        Personnel Renewal Report
+      </button>
+      <button type="button" id="showRpcspBtn" class="report-type-btn">
+        <svg width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16"/></svg>
+        RPCSP
+      </button>
+    </div>
+
+    <div id="renewalReportPanel">
 
     <!-- Report Filter -->
     <section class="mb-6">
@@ -333,9 +393,186 @@
       </div>
     </div>
 
+    </div><!-- /renewalReportPanel -->
+
+    <!-- =========================================================
+         RPCSP REPORT
+         ========================================================= -->
+    <div id="rpcspPanel" style="display:none;">
+
+      <!-- RPCSP Configuration -->
+      <section class="mb-6">
+        <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10">
+          <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+            <div>
+              <h2 class="text-lg font-semibold force-light-text">Report on the Physical Count of Semi-Expendable Property (RPCSP)</h2>
+              <p class="text-xs text-[#94a3b8] mt-1">Prepare the consolidated physical-count report using the existing personnel and firearm records.</p>
+            </div>
+            <div class="text-xs text-[#94a3b8]">Admin Report Center</div>
+          </div>
+
+          <div class="rpcsp-config-grid">
+            <div class="rpcsp-field">
+              <label for="rpcspAsOfDate">As of Date</label>
+              <input type="date" id="rpcspAsOfDate">
+            </div>
+
+            <div class="rpcsp-field">
+              <label for="rpcspFundCluster">Fund Cluster</label>
+              <input type="text" id="rpcspFundCluster" value="General Fund">
+            </div>
+
+            <div class="rpcsp-field">
+              <label for="rpcspOfficer">Accountable Officer</label>
+              <input type="text" id="rpcspOfficer" value="MS ROSEMARIE O VILBAR">
+            </div>
+
+            <div class="rpcsp-field">
+              <label for="rpcspDesignation">Designation / Office</label>
+              <input type="text" id="rpcspDesignation" value="Chief, PAOGS, APAO, PA">
+            </div>
+
+            <div class="rpcsp-field">
+              <label for="rpcspAssumptionDate">Date of Assumption</label>
+              <input type="date" id="rpcspAssumptionDate" value="2022-03-24">
+            </div>
+
+            <div class="rpcsp-field">
+              <label for="rpcspUnitValue">Default Unit Value (₱)</label>
+              <input type="number" id="rpcspUnitValue" min="0" step="0.01" value="16450.00">
+            </div>
+
+            <div class="rpcsp-field">
+              <label for="rpcspUnitFilter">Unit / Organization</label>
+              <select id="rpcspUnitFilter">
+                <option value="">All Units</option>
+              </select>
+            </div>
+
+            <div class="rpcsp-field">
+              <label for="rpcspRemarks">Default Remarks</label>
+              <select id="rpcspRemarks">
+                <option value="Serviceable">Serviceable</option>
+                <option value="Unserviceable">Unserviceable</option>
+                <option value="For Repair">For Repair</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="rpcsp-actions">
+            <button type="button" id="previewRpcspBtn" class="rpcsp-btn rpcsp-btn-primary">Preview RPCSP</button>
+            <button type="button" id="printRpcspBtn" class="rpcsp-btn rpcsp-btn-green">Print / Save PDF</button>
+            <button type="button" id="exportRpcspBtn" class="rpcsp-btn rpcsp-btn-amber">Export Excel</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- RPCSP Preview -->
+      <section class="mb-10">
+        <div class="rpcsp-preview-shell">
+          <div class="rpcsp-document" id="rpcspDocument">
+            <h1 class="rpcsp-title">REPORT ON THE PHYSICAL COUNT OF SEMI-EXPENDABLE PROPERTY</h1>
+            <p class="rpcsp-subtitle">MILITARY, POLICE &amp; SECURITY EQUIPMENT (ACCOUNT CODE: 1-04-05-090-00)</p>
+            <p class="rpcsp-subtitle">(Type of Property, Plant and Equipment)</p>
+            <p class="rpcsp-asof">As of <span id="rpcspPreviewAsOf">—</span></p>
+
+            <p class="rpcsp-fund">Fund Cluster: <span id="rpcspPreviewFund">General Fund</span></p>
+
+            <p class="rpcsp-forwhich">
+              For which:
+              <span class="accountable-name" id="rpcspPreviewOfficer">MS ROSEMARIE O VILBAR</span>,
+              <span id="rpcspPreviewDesignation">Chief, PAOGS, APAO, PA</span>
+              is accountable, having assumed such accountability on
+              <span id="rpcspPreviewAssumption">24 Mar 2022</span>.
+            </p>
+
+            <table class="rpcsp-table">
+              <colgroup>
+                <col style="width:7%">
+                <col style="width:13%">
+                <col style="width:14%">
+                <col style="width:8%">
+                <col style="width:9%">
+                <col style="width:8%">
+                <col style="width:7%">
+                <col style="width:6%">
+                <col style="width:7%">
+                <col style="width:11%">
+                <col style="width:10%">
+              </colgroup>
+              <thead>
+                <tr>
+                  <th rowspan="2">ARTICLE</th>
+                  <th rowspan="2">DESCRIPTION</th>
+                  <th rowspan="2">SEMI-EXPENDABLE<br>PROPERTY NUMBER</th>
+                  <th rowspan="2">UNIT OF<br>MEASURE</th>
+                  <th rowspan="2">UNIT VALUE</th>
+                  <th rowspan="2">BALANCE PER<br>PROPERTY CARD</th>
+                  <th rowspan="2">ON HAND<br>PER COUNT</th>
+                  <th colspan="2">SHORTAGE / OVERAGE</th>
+                  <th rowspan="2">REMARKS</th>
+                  <th rowspan="2">DATE</th>
+                </tr>
+                <tr>
+                  <th>QUANTITY</th>
+                  <th>VALUE</th>
+                </tr>
+              </thead>
+              <tbody id="rpcspTableBody">
+                <tr><td colspan="11" class="rpcsp-empty">Click “Preview RPCSP” to generate the report.</td></tr>
+              </tbody>
+            </table>
+
+            <div class="rpcsp-summary">
+              <span>Total Property Count: <strong id="rpcspTotalCount">0</strong></span>
+              <span>Total Value: <strong id="rpcspTotalValue">₱0.00</strong></span>
+            </div>
+
+            <p class="rpcsp-note">
+              Generated from the active personnel/firearm records currently stored in the APAO system.
+            </p>
+
+            <section class="rpcsp-certification" aria-label="Report signatories">
+              <div class="rpcsp-certification-column">
+                <p class="rpcsp-certification-title">Certified Correct by:</p>
+                <div class="rpcsp-signatory">
+                  <p class="rpcsp-signatory-name">MS ROSEMARIE O VILBAR, MPA</p>
+                  <p>CHIEF, PAOGS, APAO, PA</p>
+                  <p>TEAM LEADER</p>
+                </div>
+                <div class="rpcsp-signatory">
+                  <p class="rpcsp-signatory-name">Mr Jan Harold C Novo CE</p>
+                  <p>UPO, 4ID, PA</p>
+                  <p>Member</p>
+                </div>
+              </div>
+              <div class="rpcsp-certification-column">
+                <p class="rpcsp-certification-title">Approved by:</p>
+                <div class="rpcsp-signatory">
+                  <p class="rpcsp-signatory-name">ANTHONY A BACUS</p>
+                  <p>LTC INF (GSC) PA</p>
+                  <p>Commanding Officer</p>
+                </div>
+              </div>
+              <div class="rpcsp-certification-column">
+                <p class="rpcsp-certification-title">Witnessed by:</p>
+                <div class="rpcsp-signatory">
+                  <p class="rpcsp-signatory-name">Mr Darrell Antoni J Wong</p>
+                  <p>Rep, COA, HPA</p>
+                  <p>Member</p>
+                </div>
+              </div>
+            </section>
+          </div>
+        </div>
+      </section>
+
+    </div><!-- /rpcspPanel -->
+
   </main>
 </div>
 
+<script src="{{ asset('js/rpcsp_excel.js') }}"></script>
 <script>
 const CSRF = document.querySelector('meta[name="csrf-token"]').content;
 const ROUTES = {
@@ -621,9 +858,256 @@ document.addEventListener("DOMContentLoaded", function () {
   document.getElementById("downloadReportBtn").onclick = function () { const rows = document.querySelectorAll("#personnelTableBody tr"); if (!rows.length || (rows.length === 1 && rows[0].querySelector("td[colspan]"))) { alert("No data. Click Preview first."); return; } const headers = ["Item #","Date of Validity","Status","Last Name","First Name","Middle Name","AFP Serial #","Date of Birth","Nomenclature of Pistol","Pistol Serial #","Qty Ammo"]; let tableRows = ""; rows.forEach(row => { const cells = row.querySelectorAll("td"); if (!cells.length) return; let r = ""; cells.forEach(cell => { r += `<td style="border:1px solid #ccc;padding:5px 8px;font-size:11px;">${cell.innerText.trim()}</td>`; }); tableRows += `<tr>${r}</tr>`; }); const today = new Date().toLocaleDateString(); const win = window.open("","_blank"); win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>APAO Report</title><style>body{font-family:Arial;margin:30px;}h2{text-align:center;}table{width:100%;border-collapse:collapse;}th{background:#1a3a2a;color:#fff;padding:6px;font-size:11px;border:1px solid #ccc;text-align:left;}</style></head><body><h2>ARMY PROPERTY ACCOUNTABILITY OFFICE</h2><h2>Personnel Renewal Report</h2><p style="text-align:center;font-size:12px;color:#555;">Generated: ${today}</p><table><thead><tr>${headers.map(h=>"<th>"+h+"</th>").join("")}</tr></thead><tbody>${tableRows}</tbody></table></body></html>`); win.document.close(); setTimeout(()=>{win.focus();win.print();},400); };
   document.getElementById("exportExcelBtn").onclick = function () { const rows = document.querySelectorAll("#personnelTableBody tr"); if (!rows.length || (rows.length === 1 && rows[0].querySelector("td[colspan]"))) { alert("No data. Click Preview first."); return; } const headers = ["Item #","Date of Validity","Status","Last Name","First Name","Middle Name","AFP Serial #","Date of Birth","Nomenclature of Pistol","Pistol Serial #","Qty Ammo"]; let csv = headers.map(h => `"${h}"`).join(",") + "\n"; rows.forEach(row => { const cells = row.querySelectorAll("td"); if (!cells.length) return; csv += Array.from(cells).map(c => `"${c.innerText.trim().replace(/"/g,"\"\"")}"` ).join(",") + "\n"; }); const blob = new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"}); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href=url; a.download="APAO_Report_"+new Date().toISOString().slice(0,10)+".csv"; a.click(); URL.revokeObjectURL(url); };
 
+
+  // ================================================================
+  // REPORT CENTER SWITCHING
+  // ================================================================
+  const renewalPanel = document.getElementById('renewalReportPanel');
+  const rpcspPanel = document.getElementById('rpcspPanel');
+  const renewalBtn = document.getElementById('showRenewalReportBtn');
+  const rpcspBtn = document.getElementById('showRpcspBtn');
+
+  function switchReport(type) {
+    const isRpcsp = type === 'rpcsp';
+    renewalPanel.style.display = isRpcsp ? 'none' : 'block';
+    rpcspPanel.style.display = isRpcsp ? 'block' : 'none';
+    renewalBtn.classList.toggle('active', !isRpcsp);
+    rpcspBtn.classList.toggle('active', isRpcsp);
+
+    if (isRpcsp) {
+      populateRpcspUnitFilter();
+      renderRpcsp();
+    }
+  }
+
+  renewalBtn.addEventListener('click', () => switchReport('renewal'));
+  rpcspBtn.addEventListener('click', () => switchReport('rpcsp'));
+
+  // ================================================================
+  // RPCSP
+  // ================================================================
+  const rpcspAsOfDate = document.getElementById('rpcspAsOfDate');
+  const rpcspFundCluster = document.getElementById('rpcspFundCluster');
+  const rpcspOfficer = document.getElementById('rpcspOfficer');
+  const rpcspDesignation = document.getElementById('rpcspDesignation');
+  const rpcspAssumptionDate = document.getElementById('rpcspAssumptionDate');
+  const rpcspUnitValue = document.getElementById('rpcspUnitValue');
+  const rpcspUnitFilter = document.getElementById('rpcspUnitFilter');
+  const rpcspRemarks = document.getElementById('rpcspRemarks');
+
+  rpcspAsOfDate.value = new Date().toISOString().slice(0, 10);
+
+  function rpcspEscape(value) {
+    return String(value ?? '')
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
+  }
+
+  function rpcspMoney(value) {
+    return new Intl.NumberFormat('en-PH', {
+      style: 'currency',
+      currency: 'PHP',
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }).format(Number(value || 0)).replace('PHP', '₱');
+  }
+
+  function rpcspLongDate(value) {
+    if (!value) return '—';
+    const d = new Date(value + (String(value).length === 10 ? 'T00:00:00' : ''));
+    if (isNaN(d)) return value;
+    return d.toLocaleDateString('en-US', {
+      day: '2-digit',
+      month: 'short',
+      year: 'numeric'
+    });
+  }
+
+  function populateRpcspUnitFilter() {
+    const current = rpcspUnitFilter.value;
+    const units = [...new Set(
+      allPersonnel.map(p => (p.unit || '').trim()).filter(Boolean)
+    )].sort((a, b) => a.localeCompare(b));
+
+    rpcspUnitFilter.innerHTML =
+      '<option value="">All Units</option>' +
+      units.map(unit => `<option value="${rpcspEscape(unit)}">${rpcspEscape(unit)}</option>`).join('');
+
+    if (units.includes(current)) rpcspUnitFilter.value = current;
+  }
+
+  function getRpcspRows() {
+    const unit = (rpcspUnitFilter.value || '').trim().toLowerCase();
+
+    return allPersonnel.filter(p => {
+      if (!unit) return true;
+      return (p.unit || '').trim().toLowerCase() === unit;
+    });
+  }
+
+  function renderRpcsp() {
+    const rows = getRpcspRows();
+    const body = document.getElementById('rpcspTableBody');
+    const unitValue = Number(rpcspUnitValue.value || 0);
+    const defaultRemarks = rpcspRemarks.value || 'Serviceable';
+
+    document.getElementById('rpcspPreviewAsOf').textContent =
+      rpcspLongDate(rpcspAsOfDate.value);
+
+    document.getElementById('rpcspPreviewFund').textContent =
+      rpcspFundCluster.value.trim() || 'General Fund';
+
+    document.getElementById('rpcspPreviewOfficer').textContent =
+      rpcspOfficer.value.trim() || '—';
+
+    document.getElementById('rpcspPreviewDesignation').textContent =
+      rpcspDesignation.value.trim() || '—';
+
+    document.getElementById('rpcspPreviewAssumption').textContent =
+      rpcspLongDate(rpcspAssumptionDate.value);
+
+    if (!rows.length) {
+      body.innerHTML =
+        '<tr><td colspan="11" class="rpcsp-empty">No personnel/firearm records match the selected filter.</td></tr>';
+      document.getElementById('rpcspTotalCount').textContent = '0';
+      document.getElementById('rpcspTotalValue').textContent = rpcspMoney(0);
+      return;
+    }
+
+    body.innerHTML = rows.map(p => {
+      const propertyNumber =
+        (p.pistolSerialNumber || '').trim() ||
+        (p.afpSerialNumber || '').trim() ||
+        '—';
+
+      const description =
+        (p.pistolNomenclature || '').trim() || 'Pistol';
+
+      const balance = 1;
+      const onHand = 1;
+      const shortageQty = Math.max(0, balance - onHand);
+      const shortageValue = shortageQty * unitValue;
+
+      return `
+        <tr>
+          <td>Pistol</td>
+          <td>${rpcspEscape(description)}</td>
+          <td>${rpcspEscape(propertyNumber)}</td>
+          <td>ea</td>
+          <td>${rpcspMoney(unitValue)}</td>
+          <td>${balance}</td>
+          <td>${onHand}</td>
+          <td>${shortageQty === 0 ? '' : shortageQty}</td>
+          <td>${shortageValue === 0 ? '' : rpcspMoney(shortageValue)}</td>
+          <td>${rpcspEscape(defaultRemarks)}</td>
+          <td>${rpcspEscape(rpcspLongDate(p.dateOfValidity))}</td>
+        </tr>
+      `;
+    }).join('');
+
+    document.getElementById('rpcspTotalCount').textContent = String(rows.length);
+    document.getElementById('rpcspTotalValue').textContent =
+      rpcspMoney(rows.length * unitValue);
+  }
+
+  document.getElementById('previewRpcspBtn').addEventListener('click', renderRpcsp);
+  rpcspUnitFilter.addEventListener('change', renderRpcsp);
+  rpcspRemarks.addEventListener('change', renderRpcsp);
+
+  document.getElementById('printRpcspBtn').addEventListener('click', function () {
+    renderRpcsp();
+
+    const report = document.getElementById('rpcspDocument').innerHTML;
+    const win = window.open('', '_blank');
+
+    if (!win) {
+      alert('Please allow pop-ups to print the RPCSP.');
+      return;
+    }
+
+    win.document.write(`<!doctype html>
+      <html>
+      <head>
+        <meta charset="utf-8">
+        <title>RPCSP - ${rpcspEscape(rpcspAsOfDate.value)}</title>
+        <style>
+          @page { size: A4 landscape; margin: 8mm; }
+          * { box-sizing: border-box; }
+          body { margin:0; font-family:Arial,Helvetica,sans-serif; color:#111; background:#fff; }
+          .rpcsp-document { width:100%; background:#fff; color:#111; padding:0; box-shadow:none; }
+          .rpcsp-title { text-align:center; font-weight:700; font-size:14px; line-height:1.15; margin:0; }
+          .rpcsp-subtitle { text-align:center; font-size:10px; line-height:1.2; margin:1px 0; }
+          .rpcsp-asof { text-align:center; font-size:10px; margin:2px 0 10px; }
+          .rpcsp-fund { font-size:10px; text-decoration:underline; margin:0 0 9px; }
+          .rpcsp-forwhich { font-size:10px; line-height:1.3; margin:0 0 8px; }
+          .accountable-name { font-weight:700; text-transform:uppercase; }
+          .rpcsp-table { width:100%; border-collapse:collapse; table-layout:fixed; font-size:8px; }
+          .rpcsp-table th,.rpcsp-table td { border:1px solid #222; padding:3px 4px; vertical-align:middle; }
+          .rpcsp-table th { text-align:center; font-weight:700; background:#fff; }
+          .rpcsp-table td { text-align:center; }
+          .rpcsp-table td:nth-child(1),.rpcsp-table td:nth-child(2),.rpcsp-table td:nth-child(10) { text-align:left; }
+          .rpcsp-summary { display:flex; justify-content:flex-end; gap:25px; margin-top:8px; font-size:9px; }
+          .rpcsp-note { font-size:8px; color:#555; margin-top:7px; }
+          .rpcsp-certification { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:36px; margin-top:30px; font-size:10px; line-height:1.3; }
+          .rpcsp-certification-title { font-weight:700; margin:0 0 34px; }
+          .rpcsp-certification-column,.rpcsp-signatory { break-inside:avoid; page-break-inside:avoid; }
+          .rpcsp-signatory + .rpcsp-signatory { margin-top:28px; }
+          .rpcsp-signatory p { margin:0; }
+          .rpcsp-signatory-name { font-weight:700; }
+        </style>
+      </head>
+      <body>
+        <div class="rpcsp-document">${report}</div>
+      </body>
+      </html>`);
+
+    win.document.close();
+    setTimeout(() => {
+      win.focus();
+      win.print();
+    }, 350);
+  });
+
+  document.getElementById('exportRpcspBtn').addEventListener('click', function () {
+    const rows = getRpcspRows();
+    if (!rows.length) {
+      alert('No RPCSP data to export.');
+      return;
+    }
+    const unitValue = Number(rpcspUnitValue.value || 0);
+    const defaultRemarks = rpcspRemarks.value || 'Serviceable';
+
+    exportRpcspExcel({
+      filename: 'RPCSP_' + (rpcspAsOfDate.value || new Date().toISOString().slice(0,10)) + '.xls',
+      asOf: rpcspLongDate(rpcspAsOfDate.value),
+      fund: rpcspFundCluster.value.trim() || 'General Fund',
+      officer: rpcspOfficer.value.trim() || '—',
+      designation: rpcspDesignation.value.trim() || '—',
+      assumption: rpcspLongDate(rpcspAssumptionDate.value),
+      totalValue: rows.length * unitValue,
+      rows: rows.map(p => ({
+        article: 'Pistol',
+        description: p.pistolNomenclature || 'Pistol',
+        propertyNumber: (p.pistolSerialNumber || '').trim() || (p.afpSerialNumber || '').trim() || '—',
+        unit: 'ea', unitValue: unitValue, balance: 1, onHand: 1,
+        shortageQuantity: '', shortageValue: '', remarks: defaultRemarks,
+        date: rpcspLongDate(p.dateOfValidity)
+      }))
+    });
+  });
+
+  // Keep RPCSP filters synchronized after personnel data loads.
+  const originalLoadPersonnel = loadPersonnel;
+  loadPersonnel = async function() {
+    await originalLoadPersonnel();
+    populateRpcspUnitFilter();
+  };
+
   loadPersonnel();
 });
 </script>
 </body>
 </html>
-

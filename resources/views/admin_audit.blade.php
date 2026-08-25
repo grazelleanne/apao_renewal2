@@ -220,7 +220,7 @@
         <p class="text-xs text-[#64748b] mt-0.5">Complete record of all system actions and user activity.</p>
       </div>
       <div class="flex items-center gap-4">
-        <span class="text-sm force-light-text opacity-70">Welcome, <strong>{{ $user->name ?? 'Admin' }}</strong></span>
+        @include('partials.account_dropdown')
         <!-- NOTIFICATION BELL -->
         <div class="relative" id="adminNotifWrapper">
           <button id="notificationBell" class="notification-bell text-cyan-400 focus:outline-none" aria-label="Notifications" type="button">
@@ -238,10 +238,6 @@
             <div class="notif-footer" id="adminNotifFooter">Auto-refreshes every 30 seconds</div>
           </div>
         </div>
-        <form method="POST" action="{{ route('logout') }}">
-          @csrf
-          <button type="submit" class="text-red-400 hover:underline text-base font-semibold tracking-tight">Logout</button>
-        </form>
       </div>
     </header>
 
@@ -400,7 +396,7 @@ document.addEventListener("DOMContentLoaded", function () {
       bell.classList.remove('has-unread');
       badge.style.display = 'none';
       badge.textContent = '';
-      fetch(ADMIN_NOTIF_READ_URL, { method:'POST', headers:{ 'X-CSRF-TOKEN':CSRF, 'Accept':'application/json' } }).finally(loadNotifications);
+      fetch(NOTIF_READ_URL, { method:'POST', headers:{ 'X-CSRF-TOKEN':CSRF, 'Accept':'application/json' } }).finally(loadNotifications);
     }
     });
     document.addEventListener('click', function(e) {
@@ -432,20 +428,31 @@ document.addEventListener("DOMContentLoaded", function () {
     user_updated:        'User Updated',
   };
 
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>'"]/g, character => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#039;', '"': '&quot;',
+    })[character]);
+  }
+
+  function safeActionClass(action) {
+    return String(action || 'unknown').replace(/[^a-z0-9_-]/gi, '-');
+  }
+
   function actionBadge(action) {
-    const cls   = `ab-${action}`;
+    const cls   = `ab-${safeActionClass(action)}`;
     const label = ACTION_LABELS[action] || action;
-    return `<span class="action-badge ${cls}">${label}</span>`;
+    return `<span class="action-badge ${cls}">${escapeHtml(label || 'Unknown')}</span>`;
   }
 
   function formatDate(str) {
     if (!str) return '—';
     const d = new Date(str);
-    if (isNaN(d)) return str;
+    if (isNaN(d)) return escapeHtml(str);
     return d.toLocaleString('en-PH', { year:'numeric', month:'short', day:'2-digit', hour:'2-digit', minute:'2-digit', second:'2-digit' });
   }
 
   function roleBadge(role) {
+    role = escapeHtml(role || '');
     const map = { admin:'<span style="color:#3ec6ff;font-weight:700;">Admin</span>', staff:'<span style="color:#33b481;font-weight:700;">Staff</span>' };
     return map[(role||'').toLowerCase()] || `<span style="color:#94a3b8;">${role||'—'}</span>`;
   }
@@ -476,7 +483,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (!res.ok || json.success === false) {
         tbody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-red-400">
-          Request failed (status ${res.status}): ${json.error || json.message || 'Unknown error'}
+          Request failed (status ${res.status}): ${escapeHtml(json.error || json.message || 'Unknown error')}
         </td></tr>`;
         return;
       }
@@ -490,12 +497,9 @@ document.addEventListener("DOMContentLoaded", function () {
       renderSummary();
       renderTable();
 
-      if (allLogs.length === 0) {
-        console.log('Audit log response was empty. Full response:', json);
-      }
     } catch(e) {
       tbody.innerHTML = `<tr><td colspan="8" class="text-center py-10 text-red-400">
-        Network/JS error: ${e.message}
+        Unable to load audit logs: ${escapeHtml(e.message)}
       </td></tr>`;
     }
   }
@@ -507,7 +511,7 @@ document.addEventListener("DOMContentLoaded", function () {
     if (!Object.keys(counts).length) { container.innerHTML = ''; return; }
     container.innerHTML = Object.entries(counts)
       .sort((a,b) => b[1]-a[1])
-      .map(([action, count]) => `<span class="action-badge ab-${action}" style="font-size:0.7rem;">${ACTION_LABELS[action]||action}: ${count}</span>`)
+      .map(([action, count]) => `<span class="action-badge ab-${safeActionClass(action)}" style="font-size:0.7rem;">${escapeHtml(ACTION_LABELS[action] || action)}: ${count}</span>`)
       .join('');
   }
 
@@ -532,11 +536,11 @@ document.addEventListener("DOMContentLoaded", function () {
       return `<tr>
         <td class="py-2 px-3 force-light-text opacity-60">${start + i + 1}</td>
         <td class="py-2 px-3 force-light-text" style="min-width:160px;">${formatDate(log.createdAt)}</td>
-        <td class="py-2 px-3 force-light-text font-semibold">${log.userName || '—'}</td>
+        <td class="py-2 px-3 force-light-text font-semibold">${escapeHtml(log.userName || '—')}</td>
         <td class="py-2 px-3">${roleBadge(log.userRole)}</td>
         <td class="py-2 px-3">${actionBadge(log.action)}</td>
-        <td class="py-2 px-3 force-light-text" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;" title="${log.target||''}">${log.target || '—'}</td>
-        <td class="py-2 px-3 force-light-text opacity-60" style="font-family:monospace;">${log.ipAddress || '—'}</td>
+        <td class="py-2 px-3 force-light-text" style="max-width:160px;overflow:hidden;text-overflow:ellipsis;" title="${escapeHtml(log.target || '')}">${escapeHtml(log.target || '—')}</td>
+        <td class="py-2 px-3 force-light-text opacity-60" style="font-family:monospace;">${escapeHtml(log.ipAddress || '—')}</td>
         <td class="py-2 px-3">
           ${hasDetails
             ? `<button class="view-details-btn text-[#3ec6ff] text-xs font-semibold hover:underline" data-idx="${start+i}">View</button>`
@@ -571,10 +575,18 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   function showDetailsModal(log) {
+    log = {
+      ...log,
+      userName: escapeHtml(log.userName || ''),
+      userRole: escapeHtml(log.userRole || ''),
+      action: escapeHtml(log.action || ''),
+      target: escapeHtml(log.target || ''),
+      ipAddress: escapeHtml(log.ipAddress || ''),
+    };
     const modal   = document.getElementById('detailsModal');
     const details = log.details || {};
     const rows    = Object.entries(details).map(([k,v]) =>
-      `<div class="detail-row"><span class="detail-label">${k}</span><span class="detail-value">${typeof v === 'object' ? JSON.stringify(v) : v}</span></div>`
+      `<div class="detail-row"><span class="detail-label">${escapeHtml(k)}</span><span class="detail-value">${escapeHtml(typeof v === 'object' ? JSON.stringify(v) : v)}</span></div>`
     ).join('');
 
     modal.innerHTML = `

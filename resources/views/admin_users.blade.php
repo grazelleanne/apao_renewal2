@@ -127,6 +127,48 @@
     .save-btn:hover{background:#12b15c;}
     .cancel-btn{background:#313743;color:#e5eaf2;padding:0.48rem 1.2rem;border-radius:3px;border:none;font-size:1rem;font-weight:500;transition:background 0.2s;cursor:pointer;}
     .cancel-btn:hover{background:#404a5e;}
+
+
+    /* ===== MANAGE USERS SECURITY IMPROVEMENTS ===== */
+    .metric-card{border:1px solid #2e3540;}
+    .user-row{border-bottom:1px solid #2e333d;transition:background .15s;}
+    .user-row:hover{background:rgba(255,255,255,.025);}
+    .role-pill,.security-pill,.account-pill{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:4px 9px;font-size:.68rem;font-weight:700;white-space:nowrap;}
+    .role-admin{background:#312e81;color:#c7d2fe;}.role-staff{background:#16352a;color:#86efac;}
+    .security-current{background:#0c4a6e;color:#bae6fd;}.security-admin{background:#3b2355;color:#e9d5ff;}.security-standard{background:#2b313b;color:#cbd5e1;}
+    .last-login-primary{font-weight:600;color:#e5eaf2;}.last-login-secondary{font-size:.66rem;color:#64748b;margin-top:2px;}
+    .actions-wrap{position:relative;display:inline-block;}
+    .actions-btn{width:30px;height:30px;border-radius:7px;border:1px solid #3a4350;background:#20262e;color:#94a3b8;display:inline-flex;align-items:center;justify-content:center;cursor:pointer;}
+    .actions-btn:hover{background:#2b333e;color:#fff;}
+    .actions-menu{display:none;position:absolute;right:0;top:34px;min-width:185px;background:#20262e;border:1px solid #39424f;border-radius:9px;box-shadow:0 12px 30px rgba(0,0,0,.35);z-index:80;padding:5px;}
+    .actions-menu.open{display:block;}
+    .actions-item{width:100%;border:0;background:transparent;color:#d8dee8;text-align:left;padding:9px 10px;border-radius:6px;font-size:.74rem;cursor:pointer;display:flex;align-items:center;gap:8px;}
+    .actions-item:hover{background:#2b333e;}.actions-item.danger{color:#fca5a5;}.actions-item:disabled{opacity:.45;cursor:not-allowed;}
+    .security-note{font-size:.7rem;line-height:1.45;color:#94a3b8;background:#1c222a;border:1px solid #303846;border-radius:8px;padding:9px 10px;margin-top:8px;}
+    .field-help{font-size:.68rem;color:#7c8798;margin-top:-3px;margin-bottom:7px;line-height:1.35;}
+    .modal-content input[type="password"],.modal-content input[type="email"]{background:#fff;color:#222;border:1.5px solid #d3d8e2;border-radius:4px;font-family:inherit;font-size:.9rem;padding:.55rem .7rem;margin-bottom:.5rem;width:100%;transition:border .14s;}
+    .modal-content input[type="password"]:focus,.modal-content input[type="email"]:focus{border-color:#3ec6ff;outline:none;}
+    .modal-content{max-height:90vh;overflow-y:auto;border:1px solid #374151;}
+    .danger-btn{background:#dc2626;color:#fff;font-weight:700;padding:.5rem 1.25rem;border-radius:5px;border:none;cursor:pointer;}.danger-btn:hover{background:#b91c1c;}
+    .warning-btn{background:#d97706;color:#fff;font-weight:700;padding:.5rem 1.25rem;border-radius:5px;border:none;cursor:pointer;}.warning-btn:hover{background:#b45309;}
+    .secondary-btn{background:#334155;color:#e2e8f0;font-weight:700;padding:.5rem 1.1rem;border-radius:5px;border:none;cursor:pointer;}
+    .generated-password-box{display:flex;gap:7px;align-items:center;margin-bottom:7px;}
+    .generated-password-box input{margin-bottom:0!important;}
+    .mini-btn{border:1px solid #475569;background:#27303a;color:#e2e8f0;border-radius:5px;padding:7px 9px;font-size:.7rem;font-weight:700;cursor:pointer;white-space:nowrap;}
+    .mini-btn:hover{background:#334155;}
+    .self-badge{display:inline-flex;margin-left:6px;padding:2px 6px;border-radius:999px;background:#0c4a6e;color:#bae6fd;font-size:.6rem;font-weight:800;vertical-align:middle;}
+    .disabled-switch{opacity:.45;pointer-events:none;}
+    .toast-secure{position:fixed;right:24px;bottom:24px;z-index:9999;padding:11px 15px;border-radius:8px;font-size:.78rem;font-weight:700;box-shadow:0 10px 30px rgba(0,0,0,.35);}
+    .toast-success{background:#064e3b;color:#d1fae5;border:1px solid #059669;}.toast-error{background:#7f1d1d;color:#fee2e2;border:1px solid #ef4444;}
+    body.light-mode .metric-card,body.light-mode .user-row{border-color:#e2e8f0!important;}
+    body.light-mode .user-row:hover{background:#f8fafc;}
+    body.light-mode .actions-btn{background:#fff;border-color:#cbd5e1;color:#64748b;}
+    body.light-mode .actions-menu{background:#fff;border-color:#cbd5e1;box-shadow:0 12px 30px rgba(15,23,42,.16);}
+    body.light-mode .actions-item{color:#334155;}body.light-mode .actions-item:hover{background:#f1f5f9;}body.light-mode .actions-item.danger{color:#dc2626;}
+    body.light-mode .security-note{background:#f8fafc;border-color:#e2e8f0;color:#64748b;}
+    body.light-mode .last-login-primary{color:#1e293b;}
+    body.light-mode .security-standard{background:#e2e8f0;color:#475569;}
+
   </style>
 </head>
 <body class="min-h-screen font-inter">
@@ -190,7 +232,7 @@
         <svg class="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-4.35-4.35M5 11a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>
       </div>
       <div class="flex items-center gap-4">
-        <span class="text-sm force-light-text opacity-70">Welcome, <strong>{{ $user->name ?? 'Admin' }}</strong></span>
+        @include('partials.account_dropdown')
 
         <!-- DYNAMIC NOTIFICATION BELL -->
         <div class="relative" id="adminNotifWrapper">
@@ -208,54 +250,63 @@
           </div>
         </div>
 
-        <form method="POST" action="{{ route('logout') }}">
-          @csrf
-          <button type="submit" class="text-red-400 hover:underline text-base font-semibold tracking-tight">Logout</button>
-        </form>
       </div>
     </header>
 
     <!-- Metrics -->
-    <div class="grid lg:grid-cols-3 md:grid-cols-2 grid-cols-1 gap-6 mb-7">
-      <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
-        <div class="text-xs uppercase font-semibold text-[#cdd6e2] tracking-wide mb-1">Total Users</div>
+    <div class="grid xl:grid-cols-4 md:grid-cols-2 grid-cols-1 gap-5 mb-7">
+      <div class="metric-card bg-[#23272f] rounded-lg p-5 shadow shadow-black/10 flex flex-col gap-2">
+        <div class="text-xs uppercase font-semibold text-[#cdd6e2] tracking-wide">Total Users</div>
         <p id="totalUsers" class="text-3xl font-extrabold text-blue-400">0</p>
-        <p class="text-xs text-gray-400">Total user accounts.</p>
+        <p class="text-xs text-gray-400">All administrator and staff accounts.</p>
       </div>
-      <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
-        <div class="text-xs uppercase font-semibold text-green-400 tracking-wide mb-1">Active Users</div>
+      <div class="metric-card bg-[#23272f] rounded-lg p-5 shadow shadow-black/10 flex flex-col gap-2">
+        <div class="text-xs uppercase font-semibold text-green-400 tracking-wide">Active Users</div>
         <p id="totalActive" class="text-3xl font-extrabold text-green-400">0</p>
-        <p class="text-xs text-gray-400">Users marked as active.</p>
+        <p class="text-xs text-gray-400">Accounts currently allowed to sign in.</p>
       </div>
-      <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
-        <div class="text-xs uppercase font-semibold text-red-400 tracking-wide mb-1">Inactive Users</div>
+      <div class="metric-card bg-[#23272f] rounded-lg p-5 shadow shadow-black/10 flex flex-col gap-2">
+        <div class="text-xs uppercase font-semibold text-red-400 tracking-wide">Inactive Users</div>
         <p id="totalInactive" class="text-3xl font-extrabold text-red-400">0</p>
-        <p class="text-xs text-gray-400">Users marked as inactive.</p>
+        <p class="text-xs text-gray-400">Accounts blocked from signing in.</p>
+      </div>
+      <div class="metric-card bg-[#23272f] rounded-lg p-5 shadow shadow-black/10 flex flex-col gap-2">
+        <div class="text-xs uppercase font-semibold text-purple-400 tracking-wide">Admin Accounts</div>
+        <p id="totalAdmins" class="text-3xl font-extrabold text-purple-400">0</p>
+        <p class="text-xs text-gray-400">Accounts with administrative privileges.</p>
       </div>
     </div>
 
     <!-- Users Table -->
     <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 mb-10">
-      <div class="flex flex-wrap items-center justify-between mb-4 gap-2">
-        <h2 class="font-semibold text-base force-light-text tracking-tight">User Accounts</h2>
+      <div class="flex flex-wrap items-center justify-between mb-4 gap-3">
+        <div>
+          <h2 class="font-semibold text-base force-light-text tracking-tight">User Accounts</h2>
+          <p class="text-[11px] text-gray-400 mt-1">Sensitive account changes require administrator password confirmation and are recorded in the Audit Log.</p>
+        </div>
         <div class="flex flex-wrap gap-2 items-center ml-auto">
           <label for="sortUsersSelect" class="text-[#b0bac7] text-xs force-light-text">Sort by:</label>
-          <select id="sortUsersSelect" class="bg-[#23272f] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
-            <option value="role-asc">Admin/Staff</option>
+          <select id="sortUsersSelect" class="bg-[#23272f] text-white border border-[#363b48] rounded px-2 py-1.5 text-xs force-light-text">
+            <option value="role-asc">Admin / Staff</option>
             <option value="fullName-asc">Full Name (A-Z)</option>
             <option value="fullName-desc">Full Name (Z-A)</option>
+            <option value="lastLogin-desc">Last Login (Recent)</option>
           </select>
-          <button id="addUserBtn" class="bg-accent text-[#111e24] rounded px-4 py-1 text-xs font-bold shadow hover:bg-[#5dd3ff] transition-colors">+ Add User</button>
+          <button id="addUserBtn" class="bg-accent text-[#111e24] rounded px-4 py-2 text-xs font-bold shadow hover:bg-[#5dd3ff] transition-colors">+ Add User</button>
         </div>
       </div>
+
       <div class="overflow-x-auto">
-        <table class="w-full text-xs text-left">
+        <table class="w-full text-xs text-left min-w-[980px]">
           <thead>
-            <tr class="border-b border-[#252b32] text-[#b0bac7]">
-              <th class="py-2 px-2 font-semibold force-light-text">Username / Email</th>
-              <th class="py-2 px-2 font-semibold force-light-text">Full Name</th>
-              <th class="py-2 px-2 font-semibold force-light-text">Role</th>
-              <th class="py-2 px-2 font-semibold force-light-text">Status</th>
+            <tr class="border-b border-[#3a424d] text-[#b0bac7]">
+              <th class="py-3 px-2 font-semibold force-light-text">Username / Email</th>
+              <th class="py-3 px-2 font-semibold force-light-text">Full Name</th>
+              <th class="py-3 px-2 font-semibold force-light-text">Role</th>
+              <th class="py-3 px-2 font-semibold force-light-text">Status</th>
+              <th class="py-3 px-2 font-semibold force-light-text">Last Login</th>
+              <th class="py-3 px-2 font-semibold force-light-text">Security</th>
+              <th class="py-3 px-2 font-semibold force-light-text text-center">Actions</th>
             </tr>
           </thead>
           <tbody id="usersTableBody"></tbody>
@@ -265,41 +316,153 @@
 
     <!-- Add User Modal -->
     <div id="userModal" style="display:none;" class="modal-bg">
-      <form id="userForm" class="modal-content">
+      <form id="userForm" class="modal-content" style="width:470px;">
         <button type="button" class="modal-close" id="closeModalBtn">&times;</button>
-        <h3 id="userModalTitle" class="text-lg font-bold mb-4">Add User</h3>
+        <h3 class="text-lg font-bold mb-1">Add User</h3>
+        <p class="text-xs text-gray-400 mb-4">Create only accounts required for official system access.</p>
+
         <div class="mb-1">
-          <label for="userEmail" class="block mb-0.5 text-sm font-semibold">Email (Username)</label>
-          <input id="userEmail" name="email" type="text" required autocomplete="off" placeholder="user@example.com" />
+          <label for="userEmail" class="block mb-1 text-sm font-semibold">Email / Username</label>
+          <input id="userEmail" name="email" type="email" required autocomplete="off" placeholder="staff@apao.mil.ph" />
         </div>
+
         <div class="mb-1">
-          <label for="userFullName" class="block mb-0.5 text-sm font-semibold">Full Name</label>
+          <label for="userFullName" class="block mb-1 text-sm font-semibold">Full Name</label>
           <input id="userFullName" name="fullName" type="text" required autocomplete="off" placeholder="Juan Dela Cruz" />
         </div>
+
         <div class="mb-1">
-          <label for="userRole" class="block mb-0.5 text-sm font-semibold">Role</label>
+          <label for="userRole" class="block mb-1 text-sm font-semibold">Role</label>
           <select id="userRole" name="role" required>
-            <option value="admin">Admin</option>
             <option value="staff" selected>Staff</option>
+            <option value="admin">Admin</option>
           </select>
+          <div class="field-help">Admin accounts can manage users, inspections, reports, and audit records. Assign Admin only when necessary.</div>
         </div>
+
         <div class="mb-1">
-          <label for="userPassword" class="block mb-0.5 text-sm font-semibold">Password</label>
-          <input id="userPassword" name="password" type="password" required autocomplete="off" placeholder="Min 8 chars, uppercase, number, symbol" />
+          <label for="userPassword" class="block mb-1 text-sm font-semibold">Initial Password</label>
+          <div class="generated-password-box">
+            <input id="userPassword" name="password" type="password" required autocomplete="new-password" placeholder="Min 10 chars, uppercase, number, symbol" />
+            <button id="generatePasswordBtn" type="button" class="mini-btn">Generate</button>
+            <button id="showAddPasswordBtn" type="button" class="mini-btn">Show</button>
+          </div>
           <div class="pw-strength-bar-wrap"><div class="pw-strength-bar" id="modalStrengthBar"></div></div>
           <div class="pw-strength-text" id="modalStrengthText"></div>
         </div>
+
         <div class="mb-2">
-          <label class="block mb-1 text-sm font-semibold">Status</label>
+          <label class="block mb-1 text-sm font-semibold">Initial Status</label>
           <label class="switch-tgl">
             <input id="userStatusToggle" name="statusToggle" type="checkbox" checked />
             <span class="slider-tgl"></span>
           </label>
           <span id="userStatusLabel" class="status-switch-label force-light-text">Active</span>
         </div>
+
+        <div class="mb-1">
+          <label for="createAdminPassword" class="block mb-1 text-sm font-semibold">Your Admin Password</label>
+          <input id="createAdminPassword" type="password" required autocomplete="current-password" placeholder="Confirm your administrator password" />
+          <div class="field-help">Required to authorize creation of another system account.</div>
+        </div>
+
+        <div class="security-note">For security, passwords are never displayed after the account is created. Share the initial password through an approved office channel.</div>
+
         <div class="modal-actions">
-          <button type="submit" class="save-btn">Save</button>
+          <button type="submit" class="save-btn">Create User</button>
           <button type="button" class="cancel-btn" id="cancelUserBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Edit User Modal -->
+    <div id="editUserModal" style="display:none;" class="modal-bg">
+      <form id="editUserForm" class="modal-content" style="width:470px;">
+        <button type="button" class="modal-close" id="closeEditModalBtn">&times;</button>
+        <h3 class="text-lg font-bold mb-1">Manage Account</h3>
+        <p class="text-xs text-gray-400 mb-4">Role and account-status changes are privileged actions.</p>
+        <input id="editOriginalEmail" type="hidden" />
+
+        <div class="mb-1">
+          <label for="editEmail" class="block mb-1 text-sm font-semibold">Email / Username</label>
+          <input id="editEmail" type="email" readonly />
+        </div>
+        <div class="mb-1">
+          <label for="editFullName" class="block mb-1 text-sm font-semibold">Full Name</label>
+          <input id="editFullName" type="text" required />
+        </div>
+        <div class="mb-1">
+          <label for="editRole" class="block mb-1 text-sm font-semibold">Role</label>
+          <select id="editRole" required>
+            <option value="staff">Staff</option>
+            <option value="admin">Admin</option>
+          </select>
+        </div>
+        <div class="mb-2">
+          <label class="block mb-1 text-sm font-semibold">Account Status</label>
+          <label class="switch-tgl">
+            <input id="editStatusToggle" type="checkbox" />
+            <span class="slider-tgl"></span>
+          </label>
+          <span id="editStatusLabel" class="status-switch-label force-light-text">Active</span>
+        </div>
+        <div class="mb-1">
+          <label for="editAdminPassword" class="block mb-1 text-sm font-semibold">Your Admin Password</label>
+          <input id="editAdminPassword" type="password" autocomplete="current-password" placeholder="Required for role/status changes" />
+        </div>
+        <div id="editProtectionNote" class="security-note" style="display:none;"></div>
+        <div class="modal-actions">
+          <button type="submit" class="save-btn">Save Changes</button>
+          <button type="button" class="cancel-btn" id="cancelEditUserBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Status Confirmation Modal -->
+    <div id="statusConfirmModal" style="display:none;" class="modal-bg">
+      <form id="statusConfirmForm" class="modal-content" style="width:440px;">
+        <button type="button" class="modal-close" id="closeStatusModalBtn">&times;</button>
+        <h3 id="statusConfirmTitle" class="text-lg font-bold mb-2">Confirm Account Status</h3>
+        <p id="statusConfirmMessage" class="text-sm text-gray-300 mb-3"></p>
+        <div class="mb-1">
+          <label for="statusAdminPassword" class="block mb-1 text-sm font-semibold">Your Admin Password</label>
+          <input id="statusAdminPassword" type="password" required autocomplete="current-password" placeholder="Enter administrator password" />
+        </div>
+        <div class="security-note">This action is checked again on the server. You cannot deactivate your own account or remove the last active administrator.</div>
+        <div class="modal-actions">
+          <button id="statusConfirmBtn" type="submit" class="warning-btn">Confirm</button>
+          <button type="button" class="cancel-btn" id="cancelStatusBtn">Cancel</button>
+        </div>
+      </form>
+    </div>
+
+    <!-- Reset Password Modal -->
+    <div id="resetPasswordModal" style="display:none;" class="modal-bg">
+      <form id="resetPasswordForm" class="modal-content" style="width:460px;">
+        <button type="button" class="modal-close" id="closeResetModalBtn">&times;</button>
+        <h3 class="text-lg font-bold mb-1">Reset User Password</h3>
+        <p id="resetPasswordTarget" class="text-xs text-gray-400 mb-4"></p>
+        <input id="resetUsername" type="hidden" />
+
+        <label for="resetNewPassword" class="block mb-1 text-sm font-semibold">New Password</label>
+        <div class="generated-password-box">
+          <input id="resetNewPassword" type="password" required autocomplete="new-password" placeholder="New strong password" />
+          <button id="generateResetPasswordBtn" type="button" class="mini-btn">Generate</button>
+          <button id="showResetPasswordBtn" type="button" class="mini-btn">Show</button>
+        </div>
+        <div class="pw-strength-bar-wrap"><div class="pw-strength-bar" id="resetStrengthBar"></div></div>
+        <div class="pw-strength-text" id="resetStrengthText"></div>
+
+        <label for="resetConfirmPassword" class="block mb-1 mt-2 text-sm font-semibold">Confirm New Password</label>
+        <input id="resetConfirmPassword" type="password" required autocomplete="new-password" />
+
+        <label for="resetAdminPassword" class="block mb-1 mt-2 text-sm font-semibold">Your Admin Password</label>
+        <input id="resetAdminPassword" type="password" required autocomplete="current-password" placeholder="Authorize password reset" />
+
+        <div class="security-note">The existing password cannot be viewed. Resetting replaces the stored password hash and creates an Audit Log entry.</div>
+        <div class="modal-actions">
+          <button type="submit" class="warning-btn">Reset Password</button>
+          <button type="button" class="cancel-btn" id="cancelResetBtn">Cancel</button>
         </div>
       </form>
     </div>
@@ -315,37 +478,152 @@ const ROUTES = {
   usersUpdate: "{{ route('admin.users.update') }}",
 };
 
+const CURRENT_ADMIN = {
+  id: @json($user->id ?? null),
+  email: @json($user->email ?? ''),
+  role: @json(strtolower($user->role ?? 'admin')),
+};
+
 let users = [];
-let currentSort = "role-asc";
+let currentSort = 'role-asc';
+let pendingStatusUser = null;
+let pendingStatusValue = null;
+let openActionMenu = null;
 
-document.addEventListener("DOMContentLoaded", function () {
+function escapeHtml(value) {
+  return String(value ?? '')
+    .replaceAll('&', '&amp;')
+    .replaceAll('<', '&lt;')
+    .replaceAll('>', '&gt;')
+    .replaceAll('"', '&quot;')
+    .replaceAll("'", '&#039;');
+}
 
+function normalizeRole(role) {
+  return String(role || 'staff').toLowerCase();
+}
+
+function isStrongPassword(value) {
+  return value.length >= 10 && /[A-Z]/.test(value) && /[a-z]/.test(value) && /[0-9]/.test(value) && /[^A-Za-z0-9]/.test(value);
+}
+
+function generateStrongPassword(length = 14) {
+  const upper = 'ABCDEFGHJKLMNPQRSTUVWXYZ';
+  const lower = 'abcdefghijkmnopqrstuvwxyz';
+  const nums  = '23456789';
+  const symbols = '!@#$%&*?';
+  const all = upper + lower + nums + symbols;
+  const rnd = max => crypto.getRandomValues(new Uint32Array(1))[0] % max;
+  let chars = [upper[rnd(upper.length)], lower[rnd(lower.length)], nums[rnd(nums.length)], symbols[rnd(symbols.length)]];
+  while (chars.length < length) chars.push(all[rnd(all.length)]);
+  for (let i = chars.length - 1; i > 0; i--) {
+    const j = rnd(i + 1);
+    [chars[i], chars[j]] = [chars[j], chars[i]];
+  }
+  return chars.join('');
+}
+
+function showToast(message, type = 'success') {
+  const old = document.getElementById('secureToast');
+  if (old) old.remove();
+  const div = document.createElement('div');
+  div.id = 'secureToast';
+  div.className = `toast-secure ${type === 'error' ? 'toast-error' : 'toast-success'}`;
+  div.textContent = message;
+  document.body.appendChild(div);
+  setTimeout(() => div.remove(), 3200);
+}
+
+function parseJsonSafely(res) {
+  return res.json().catch(() => ({ success:false, message:'Unexpected server response.' }));
+}
+
+async function secureFetch(url, options = {}) {
+  options.headers = {
+    'Accept': 'application/json',
+    'X-CSRF-TOKEN': CSRF,
+    ...(options.headers || {})
+  };
+  const res = await fetch(url, options);
+  const json = await parseJsonSafely(res);
+  if (!res.ok || !json.success) {
+    throw new Error(json.message || (json.errors ? Object.values(json.errors).flat()[0] : 'Request failed.'));
+  }
+  return json;
+}
+
+function formatLastLogin(value) {
+  if (!value) return '<div class="last-login-primary">Never</div><div class="last-login-secondary">No recorded login</div>';
+  const d = new Date(value);
+  if (Number.isNaN(d.getTime())) return `<div class="last-login-primary">${escapeHtml(value)}</div>`;
+  const date = d.toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+  const time = d.toLocaleTimeString('en-US', {hour:'numeric', minute:'2-digit'});
+  return `<div class="last-login-primary">${date}</div><div class="last-login-secondary">${time}</div>`;
+}
+
+function updatePasswordStrength(inputId, barId, textId) {
+  const val = document.getElementById(inputId).value;
+  const bar = document.getElementById(barId);
+  const text = document.getElementById(textId);
+  let score = 0;
+  if (val.length >= 10) score++;
+  if (/[A-Z]/.test(val) && /[a-z]/.test(val)) score++;
+  if (/[0-9]/.test(val)) score++;
+  if (/[^A-Za-z0-9]/.test(val)) score++;
+  const levels = [
+    {pct:'25%', cls:'strength-weak', label:'Weak', color:'#e53e3e'},
+    {pct:'50%', cls:'strength-fair', label:'Fair', color:'#ecc94b'},
+    {pct:'75%', cls:'strength-good', label:'Good', color:'#3ec6ff'},
+    {pct:'100%', cls:'strength-strong', label:'Strong', color:'#33b481'},
+  ];
+  if (!val) { bar.style.width='0'; text.textContent=''; return; }
+  const lvl = levels[Math.max(0, score - 1)];
+  bar.style.width = lvl.pct;
+  bar.className = 'pw-strength-bar ' + lvl.cls;
+  text.textContent = lvl.label + (score === 4 ? ' password' : ' — use 10+ characters with uppercase, lowercase, number and symbol');
+  text.style.color = lvl.color;
+}
+
+function activeAdminCount() {
+  return users.filter(u => normalizeRole(u.role) === 'admin' && u.status === 'Active').length;
+}
+
+function isCurrentUser(user) {
+  if (CURRENT_ADMIN.id != null && user.id != null) return String(CURRENT_ADMIN.id) === String(user.id);
+  return String(user.username || '').toLowerCase() === String(CURRENT_ADMIN.email || '').toLowerCase();
+}
+
+function isLastActiveAdmin(user) {
+  return normalizeRole(user.role) === 'admin' && user.status === 'Active' && activeAdminCount() <= 1;
+}
+
+document.addEventListener('DOMContentLoaded', function () {
   // ===== SIDEBAR =====
-  const sidebar     = document.getElementById('sidebar');
-  const toggleBtn   = document.getElementById('sidebarToggleBtn');
-  const sbIconMenu  = document.getElementById('sb-icon-menu');
+  const sidebar = document.getElementById('sidebar');
+  const toggleBtn = document.getElementById('sidebarToggleBtn');
+  const sbIconMenu = document.getElementById('sb-icon-menu');
   const sbIconClose = document.getElementById('sb-icon-close');
   if (localStorage.getItem('sb') === '1') {
     sidebar.classList.add('sidebar-collapsed');
-    sbIconMenu.style.display  = '';
+    sbIconMenu.style.display = '';
     sbIconClose.style.display = 'none';
   } else {
-    sbIconMenu.style.display  = 'none';
+    sbIconMenu.style.display = 'none';
     sbIconClose.style.display = '';
   }
   toggleBtn.addEventListener('click', function () {
     const collapsed = sidebar.classList.toggle('sidebar-collapsed');
     localStorage.setItem('sb', collapsed ? '1' : '0');
-    sbIconMenu.style.display  = collapsed ? '' : 'none';
+    sbIconMenu.style.display = collapsed ? '' : 'none';
     sbIconClose.style.display = collapsed ? 'none' : '';
   });
 
   // ===== THEME =====
-  const iconSun  = document.getElementById('icon-sun');
+  const iconSun = document.getElementById('icon-sun');
   const iconMoon = document.getElementById('icon-moon');
   function applyTheme(t) {
     document.body.classList.toggle('light-mode', t === 'light');
-    iconSun.style.display  = t === 'light' ? 'none' : '';
+    iconSun.style.display = t === 'light' ? 'none' : '';
     iconMoon.style.display = t === 'light' ? '' : 'none';
   }
   applyTheme(localStorage.getItem('theme') || 'dark');
@@ -356,295 +634,251 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   // ===== DYNAMIC NOTIFICATION BELL =====
-  const bell        = document.getElementById('notificationBell');
-  const badge       = document.getElementById('notificationBadge');
-  const dropdown    = document.getElementById('adminNotifDropdown');
-  const notifList   = document.getElementById('adminNotifList');
+  const bell = document.getElementById('notificationBell');
+  const badge = document.getElementById('notificationBadge');
+  const dropdown = document.getElementById('adminNotifDropdown');
+  const notifList = document.getElementById('adminNotifList');
   const notifFooter = document.getElementById('adminNotifFooter');
   const markAllRead = document.getElementById('adminMarkAllRead');
-  const ADMIN_NOTIF_URL      = "{{ route('admin.notifications') }}";
+  const ADMIN_NOTIF_URL = "{{ route('admin.notifications') }}";
   const ADMIN_NOTIF_READ_URL = "{{ route('admin.notifications.read') }}";
 
   function timeAgo(dateStr) {
     const diff = Math.floor((new Date() - new Date(dateStr)) / 1000);
-    if (diff < 60)    return "Just now";
-    if (diff < 3600)  return `${Math.floor(diff / 60)}m ago`;
+    if (diff < 60) return 'Just now';
+    if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
     if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
-    return new Date(dateStr).toLocaleDateString('en-US', { month:'short', day:'numeric', year:'numeric' });
+    return new Date(dateStr).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
   }
 
   function getNotifIcon(type) {
     const icons = {
-      approval_changed:   `<svg class="w-4 h-4" style="color:#3ec6ff" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
-      email_sent:         `<svg class="w-4 h-4" style="color:#33b481" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`,
-      personnel_added:    `<svg class="w-4 h-4" style="color:#33b481" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 4v16m8-8H4"/></svg>`,
-      personnel_updated:  `<svg class="w-4 h-4" style="color:#ecc94b" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/></svg>`,
-      personnel_archived: `<svg class="w-4 h-4" style="color:#fc8181" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M5 8h14M5 8a2 2 0 110-4h14a2 2 0 110 4M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8m-9 4h4"/></svg>`,
+      approval_changed:`<svg class="w-4 h-4" style="color:#3ec6ff" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>`,
+      email_sent:`<svg class="w-4 h-4" style="color:#33b481" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>`,
+      personnel_added:`<svg class="w-4 h-4" style="color:#33b481" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M12 4v16m8-8H4"/></svg>`,
+      personnel_updated:`<svg class="w-4 h-4" style="color:#ecc94b" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5"/></svg>`,
+      personnel_archived:`<svg class="w-4 h-4" style="color:#fc8181" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M5 8h14M5 8v10a2 2 0 002 2h10a2 2 0 002-2V8"/></svg>`
     };
-    return icons[type] || `<svg class="w-4 h-4" style="color:#94a3b8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M12 2a10 10 0 100 20A10 10 0 0012 2z"/></svg>`;
+    return icons[type] || `<svg class="w-4 h-4" style="color:#94a3b8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10" stroke-width="2"/><path d="M12 8v4m0 4h.01" stroke-width="2"/></svg>`;
   }
 
   async function loadNotifications() {
     try {
-      const res  = await fetch(ADMIN_NOTIF_URL, { headers: { 'Accept': 'application/json', 'X-CSRF-TOKEN': CSRF } });
+      const res = await fetch(ADMIN_NOTIF_URL, {headers:{'Accept':'application/json','X-CSRF-TOKEN':CSRF}});
       const json = await res.json();
       if (!json.success) return;
       const count = json.unreadCount || 0;
       if (count > 0) {
-        bell.classList.add('has-unread');
-        badge.style.display = 'flex';
-        badge.textContent   = count > 99 ? '99+' : String(count);
+        bell.classList.add('has-unread'); badge.style.display='flex'; badge.textContent=count>99?'99+':String(count);
       } else {
-        bell.classList.remove('has-unread');
-        badge.style.display = 'none';
+        bell.classList.remove('has-unread'); badge.style.display='none';
       }
       notifFooter.textContent = count > 0 ? `${count} unread notification${count > 1 ? 's' : ''}` : 'All caught up!';
       if (!json.notifications || !json.notifications.length) {
-        notifList.innerHTML = `<div class="notif-empty">No notifications yet.</div>`;
-        return;
+        notifList.innerHTML = '<div class="notif-empty">No notifications yet.</div>'; return;
       }
-      notifList.innerHTML = json.notifications.map(n => `
-        <div class="notif-item ${!n.read ? 'unread' : ''}">
-          <div class="notif-icon">${getNotifIcon(n.type)}</div>
-          <div class="notif-content">
-            <div class="notif-title">${n.title}</div>
-            <div class="notif-message">${n.message}</div>
-            <div class="notif-time">${timeAgo(n.createdAt)}</div>
-          </div>
-          ${!n.read ? `<div class="notif-dot"></div>` : ''}
-        </div>`).join('');
+      notifList.innerHTML = json.notifications.map(n => `<div class="notif-item ${!n.read?'unread':''}"><div class="notif-icon">${getNotifIcon(n.type)}</div><div class="notif-content"><div class="notif-title">${escapeHtml(n.title)}</div><div class="notif-message">${escapeHtml(n.message)}</div><div class="notif-time">${timeAgo(n.createdAt)}</div></div>${!n.read?'<div class="notif-dot"></div>':''}</div>`).join('');
     } catch (e) {
-      notifList.innerHTML = `<div class="notif-empty" style="color:#fc8181;">Failed to load notifications.</div>`;
+      notifList.innerHTML = '<div class="notif-empty" style="color:#fc8181;">Failed to load notifications.</div>';
     }
   }
 
-  bell.addEventListener('click', function (e) {
-    e.stopPropagation();
-    const isOpen = dropdown.classList.contains('open');
-    dropdown.classList.toggle('open');
-    if (!isOpen) {
-      bell.classList.remove('has-unread');
-      badge.style.display = 'none';
-      badge.textContent = '';
-      fetch(ADMIN_NOTIF_READ_URL, { method:'POST', headers:{ 'X-CSRF-TOKEN':CSRF, 'Accept':'application/json' } }).finally(loadNotifications);
-    }
+  bell.addEventListener('click', function(e){
+    e.stopPropagation(); const isOpen=dropdown.classList.contains('open'); dropdown.classList.toggle('open');
+    if(!isOpen){bell.classList.remove('has-unread');badge.style.display='none';badge.textContent='';fetch(ADMIN_NOTIF_READ_URL,{method:'POST',headers:{'X-CSRF-TOKEN':CSRF,'Accept':'application/json'}}).finally(loadNotifications);}
   });
-  document.addEventListener('click', function (e) {
-    if (!document.getElementById('adminNotifWrapper').contains(e.target)) {
-      dropdown.classList.remove('open');
-    }
+  markAllRead.addEventListener('click', async function(){
+    try{await fetch(ADMIN_NOTIF_READ_URL,{method:'POST',headers:{'X-CSRF-TOKEN':CSRF,'Accept':'application/json'}});await loadNotifications();dropdown.classList.remove('open');}catch(e){}
   });
-  markAllRead.addEventListener('click', async function () {
-    try {
-      await fetch(ADMIN_NOTIF_READ_URL, { method: 'POST', headers: { 'X-CSRF-TOKEN': CSRF, 'Accept': 'application/json' } });
-      await loadNotifications();
-      dropdown.classList.remove('open');
-    } catch (e) {}
+  loadNotifications(); setInterval(loadNotifications,30000);
+
+  document.addEventListener('click', function(e){
+    if (!document.getElementById('adminNotifWrapper').contains(e.target)) dropdown.classList.remove('open');
+    if (openActionMenu && !e.target.closest('.actions-wrap')) { openActionMenu.classList.remove('open'); openActionMenu=null; }
   });
-  loadNotifications();
-  setInterval(loadNotifications, 30000);
 
   // ===== USERS =====
-  loadUsers();
+  document.getElementById('searchInput').placeholder = 'Search by name / email / role...';
   document.getElementById('searchInput').addEventListener('input', renderUsersTable);
-  document.getElementById('sortUsersSelect').addEventListener('change', function (e) { currentSort = e.target.value; renderUsersTable(); });
+  document.getElementById('sortUsersSelect').addEventListener('change', e => {currentSort=e.target.value;renderUsersTable();});
+  loadUsers();
 
-  // ===== MODAL =====
-  const userModal     = document.getElementById('userModal');
-  const userForm      = document.getElementById('userForm');
-  const statusToggle  = document.getElementById('userStatusToggle');
-  const statusLabel   = document.getElementById('userStatusLabel');
+  // ===== ADD USER =====
+  const userModal = document.getElementById('userModal');
+  const userForm = document.getElementById('userForm');
+  const statusToggle = document.getElementById('userStatusToggle');
+  const statusLabel = document.getElementById('userStatusLabel');
+  function closeAddModal(){userModal.style.display='none';userForm.reset();document.getElementById('modalStrengthBar').style.width='0';document.getElementById('modalStrengthText').textContent='';}
+  document.getElementById('addUserBtn').addEventListener('click',()=>{userForm.reset();statusToggle.checked=true;statusLabel.textContent='Active';userModal.style.display='flex';setTimeout(()=>document.getElementById('userEmail').focus(),100);});
+  statusToggle.addEventListener('change',()=>statusLabel.textContent=statusToggle.checked?'Active':'Inactive');
+  document.getElementById('closeModalBtn').addEventListener('click',closeAddModal); document.getElementById('cancelUserBtn').addEventListener('click',closeAddModal);
+  userModal.addEventListener('mousedown',e=>{if(e.target===userModal)closeAddModal();});
+  document.getElementById('generatePasswordBtn').addEventListener('click',()=>{const p=generateStrongPassword();document.getElementById('userPassword').value=p;updatePasswordStrength('userPassword','modalStrengthBar','modalStrengthText');});
+  document.getElementById('showAddPasswordBtn').addEventListener('click',function(){const i=document.getElementById('userPassword');i.type=i.type==='password'?'text':'password';this.textContent=i.type==='password'?'Show':'Hide';});
+  document.getElementById('userPassword').addEventListener('input',()=>updatePasswordStrength('userPassword','modalStrengthBar','modalStrengthText'));
 
-  function openAddModal() {
-    userForm.reset();
-    statusToggle.checked = true;
-    statusLabel.innerText = "Active";
-    userModal.style.display = 'flex';
-    setTimeout(() => document.getElementById('userEmail').focus(), 150);
-  }
-  function closeModal() { userModal.style.display = 'none'; userForm.reset(); }
-
-  statusToggle.addEventListener('change', function () { statusLabel.innerText = this.checked ? "Active" : "Inactive"; });
-  document.getElementById('addUserBtn').addEventListener('click', openAddModal);
-  document.getElementById('closeModalBtn').addEventListener('click', closeModal);
-  document.getElementById('cancelUserBtn').addEventListener('click', closeModal);
-  userModal.addEventListener('mousedown', function (e) { if (e.target === userModal) closeModal(); });
-
-  userForm.addEventListener('submit', async function (e) {
+  userForm.addEventListener('submit', async function(e){
     e.preventDefault();
-    const email    = document.getElementById('userEmail').value.trim();
-    const fullName = document.getElementById('userFullName').value.trim();
-    const role     = document.getElementById('userRole').value;
-    const password = document.getElementById('userPassword').value.trim();
-    const status   = statusToggle.checked ? "Active" : "Inactive";
-    if (!email || !fullName || !password) { alert('All fields are required.'); return; }
-    if (password.length < 8) { alert('Password must be at least 8 characters.'); return; }
-    if (!/[A-Z]/.test(password)) { alert('Password must contain at least one uppercase letter.'); return; }
-    if (!/[0-9]/.test(password)) { alert('Password must contain at least one number.'); return; }
-    if (!/[^A-Za-z0-9]/.test(password)) { alert('Password must contain at least one special character (e.g. @, #, !).'); return; }
-    try {
-      const res  = await fetch(ROUTES.usersStore, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
-        body: JSON.stringify({ username: email, fullName, role, password, status })
-      });
-      const json = await res.json();
-      if (json.success) { closeModal(); loadUsers(); }
-      else alert(json.message || 'Failed to add user.');
-    } catch (err) { alert('Something went wrong.'); }
+    const payload={
+      username:document.getElementById('userEmail').value.trim(),
+      fullName:document.getElementById('userFullName').value.trim(),
+      role:document.getElementById('userRole').value,
+      password:document.getElementById('userPassword').value,
+      status:statusToggle.checked?'Active':'Inactive',
+      adminPassword:document.getElementById('createAdminPassword').value
+    };
+    if(!payload.username||!payload.fullName||!payload.password||!payload.adminPassword){showToast('Complete all required fields.','error');return;}
+    if(!isStrongPassword(payload.password)){showToast('Use a password with at least 10 characters, uppercase, lowercase, number, and symbol.','error');return;}
+    try{
+      await secureFetch(ROUTES.usersStore,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});
+      closeAddModal(); await loadUsers(); showToast('User account created and recorded in the Audit Log.');
+    }catch(err){showToast(err.message,'error');}
   });
 
+  // ===== EDIT USER =====
+  const editModal=document.getElementById('editUserModal');
+  const editForm=document.getElementById('editUserForm');
+  const editStatus=document.getElementById('editStatusToggle');
+  editStatus.addEventListener('change',()=>document.getElementById('editStatusLabel').textContent=editStatus.checked?'Active':'Inactive');
+  function closeEdit(){editModal.style.display='none';editForm.reset();}
+  document.getElementById('closeEditModalBtn').addEventListener('click',closeEdit); document.getElementById('cancelEditUserBtn').addEventListener('click',closeEdit);
+  editModal.addEventListener('mousedown',e=>{if(e.target===editModal)closeEdit();});
+
+  window.openEditUser=function(index){
+    const u=users[index];if(!u)return;
+    document.getElementById('editOriginalEmail').value=u.username;
+    document.getElementById('editEmail').value=u.username;
+    document.getElementById('editFullName').value=u.fullName||'';
+    document.getElementById('editRole').value=normalizeRole(u.role);
+    editStatus.checked=u.status==='Active';document.getElementById('editStatusLabel').textContent=editStatus.checked?'Active':'Inactive';
+    document.getElementById('editAdminPassword').value='';
+    const note=document.getElementById('editProtectionNote');
+    if(isCurrentUser(u)){note.style.display='block';note.textContent='Your current administrator account cannot deactivate or demote itself.';}else if(isLastActiveAdmin(u)){note.style.display='block';note.textContent='This is the last active administrator. The server will block deactivation or demotion until another administrator is active.';}else note.style.display='none';
+    editModal.style.display='flex'; closeAllActionMenus();
+  };
+
+  editForm.addEventListener('submit',async function(e){
+    e.preventDefault();
+    const username=document.getElementById('editOriginalEmail').value;
+    const old=users.find(u=>u.username===username); if(!old)return;
+    const payload={username,fullName:document.getElementById('editFullName').value.trim(),role:document.getElementById('editRole').value,status:editStatus.checked?'Active':'Inactive',adminPassword:document.getElementById('editAdminPassword').value};
+    const sensitive=normalizeRole(old.role)!==normalizeRole(payload.role)||old.status!==payload.status;
+    if(sensitive&&!payload.adminPassword){showToast('Enter your admin password to change role or status.','error');return;}
+    try{await secureFetch(ROUTES.usersUpdate,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)});closeEdit();await loadUsers();showToast('User account updated securely.');}catch(err){showToast(err.message,'error');}
+  });
+
+  // ===== STATUS CONFIRMATION =====
+  const statusModal=document.getElementById('statusConfirmModal');
+  function closeStatus(){statusModal.style.display='none';document.getElementById('statusConfirmForm').reset();pendingStatusUser=null;pendingStatusValue=null;}
+  document.getElementById('closeStatusModalBtn').addEventListener('click',closeStatus); document.getElementById('cancelStatusBtn').addEventListener('click',closeStatus);
+  statusModal.addEventListener('mousedown',e=>{if(e.target===statusModal)closeStatus();});
+  document.getElementById('statusConfirmForm').addEventListener('submit',async function(e){
+    e.preventDefault(); if(!pendingStatusUser)return;
+    const adminPassword=document.getElementById('statusAdminPassword').value;if(!adminPassword){showToast('Enter your admin password.','error');return;}
+    const u=pendingStatusUser;
+    try{await secureFetch(ROUTES.usersUpdate,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u.username,fullName:u.fullName,role:normalizeRole(u.role),status:pendingStatusValue,adminPassword})});closeStatus();await loadUsers();showToast(`Account ${pendingStatusValue.toLowerCase()} successfully.`);}catch(err){closeStatus();await loadUsers();showToast(err.message,'error');}
+  });
+
+  // ===== RESET PASSWORD =====
+  const resetModal=document.getElementById('resetPasswordModal');
+  function closeReset(){resetModal.style.display='none';document.getElementById('resetPasswordForm').reset();document.getElementById('resetStrengthBar').style.width='0';document.getElementById('resetStrengthText').textContent='';}
+  document.getElementById('closeResetModalBtn').addEventListener('click',closeReset); document.getElementById('cancelResetBtn').addEventListener('click',closeReset);
+  resetModal.addEventListener('mousedown',e=>{if(e.target===resetModal)closeReset();});
+  document.getElementById('generateResetPasswordBtn').addEventListener('click',()=>{const p=generateStrongPassword();document.getElementById('resetNewPassword').value=p;document.getElementById('resetConfirmPassword').value=p;updatePasswordStrength('resetNewPassword','resetStrengthBar','resetStrengthText');});
+  document.getElementById('showResetPasswordBtn').addEventListener('click',function(){const a=document.getElementById('resetNewPassword'),b=document.getElementById('resetConfirmPassword');const show=a.type==='password';a.type=show?'text':'password';b.type=show?'text':'password';this.textContent=show?'Hide':'Show';});
+  document.getElementById('resetNewPassword').addEventListener('input',()=>updatePasswordStrength('resetNewPassword','resetStrengthBar','resetStrengthText'));
+
+  window.openResetPassword=function(index){
+    const u=users[index];if(!u)return;
+    document.getElementById('resetUsername').value=u.username;
+    document.getElementById('resetPasswordTarget').textContent=`Reset password for ${u.fullName} (${u.username}).`;
+    resetModal.style.display='flex';closeAllActionMenus();
+  };
+
+  document.getElementById('resetPasswordForm').addEventListener('submit',async function(e){
+    e.preventDefault();
+    const username=document.getElementById('resetUsername').value; const u=users.find(x=>x.username===username); if(!u)return;
+    const newPassword=document.getElementById('resetNewPassword').value; const confirm=document.getElementById('resetConfirmPassword').value; const adminPassword=document.getElementById('resetAdminPassword').value;
+    if(newPassword!==confirm){showToast('New passwords do not match.','error');return;}
+    if(!isStrongPassword(newPassword)){showToast('New password must be at least 10 characters with uppercase, lowercase, number, and symbol.','error');return;}
+    try{await secureFetch(ROUTES.usersUpdate,{method:'PUT',headers:{'Content-Type':'application/json'},body:JSON.stringify({username:u.username,fullName:u.fullName,role:normalizeRole(u.role),status:u.status,newPassword,adminPassword})});closeReset();showToast('Password reset successfully.');}catch(err){showToast(err.message,'error');}
+  });
 });
 
-async function loadUsers() {
-  try {
-    const res  = await fetch("{{ route('admin.users.data') }}");
-    const json = await res.json();
-    users = (json.success && json.data) ? json.data : [];
-  } catch (e) { users = []; }
+async function loadUsers(){
+  try{const json=await secureFetch(ROUTES.usersData);users=Array.isArray(json.data)?json.data:[];}catch(e){users=[];showToast(e.message,'error');}
   renderUsersTable();
 }
 
-function updateStats() {
-  document.getElementById('totalUsers').innerText    = users.length;
-  document.getElementById('totalActive').innerText   = users.filter(u => u.status === "Active").length;
-  document.getElementById('totalInactive').innerText = users.filter(u => u.status === "Inactive").length;
+function updateStats(){
+  document.getElementById('totalUsers').textContent=users.length;
+  document.getElementById('totalActive').textContent=users.filter(u=>u.status==='Active').length;
+  document.getElementById('totalInactive').textContent=users.filter(u=>u.status==='Inactive').length;
+  document.getElementById('totalAdmins').textContent=users.filter(u=>normalizeRole(u.role)==='admin').length;
 }
 
-function renderUsersTable() {
+function closeAllActionMenus(){document.querySelectorAll('.actions-menu.open').forEach(m=>m.classList.remove('open'));openActionMenu=null;}
+
+window.toggleUserActions=function(event,index){
+  event.stopPropagation(); const menu=document.getElementById(`actions-${index}`); if(!menu)return;
+  const wasOpen=menu.classList.contains('open');closeAllActionMenus();if(!wasOpen){menu.classList.add('open');openActionMenu=menu;}
+};
+
+window.requestStatusChange=function(index,newStatus){
+  const u=users[index];if(!u)return;
+  if(isCurrentUser(u)){showToast('You cannot change the status of your own administrator account.','error');renderUsersTable();return;}
+  if(newStatus==='Inactive'&&isLastActiveAdmin(u)){showToast('You cannot deactivate the last active administrator account.','error');renderUsersTable();return;}
+  pendingStatusUser=u;pendingStatusValue=newStatus;
+  document.getElementById('statusConfirmTitle').textContent=newStatus==='Active'?'Reactivate User?':'Deactivate User?';
+  document.getElementById('statusConfirmMessage').textContent=newStatus==='Active'?`${u.fullName} will be allowed to sign in again.`:`${u.fullName} will be blocked from signing in until reactivated.`;
+  document.getElementById('statusConfirmBtn').className=newStatus==='Active'?'save-btn':'danger-btn';
+  document.getElementById('statusConfirmBtn').textContent=newStatus==='Active'?'Reactivate':'Deactivate';
+  document.getElementById('statusAdminPassword').value=''; document.getElementById('statusConfirmModal').style.display='flex';
+};
+
+function renderUsersTable(){
   updateStats();
-  const filterValue = (document.getElementById('searchInput').value || "").toLowerCase();
-  let list = users.filter(u =>
-    (u.username || "").toLowerCase().includes(filterValue) ||
-    (u.fullName  || "").toLowerCase().includes(filterValue) ||
-    (u.role      || "").toLowerCase().includes(filterValue)
-  );
-  const [field, dir] = currentSort.split('-');
-  list.sort((a, b) => {
-    let aVal = field === "role" ? (a.role || "").toLowerCase() : (a.fullName || "").toLowerCase();
-    let bVal = field === "role" ? (b.role || "").toLowerCase() : (b.fullName || "").toLowerCase();
-    if (aVal < bVal) return dir === "asc" ? -1 : 1;
-    if (aVal > bVal) return dir === "asc" ? 1  : -1;
-    return 0;
+  const filter=(document.getElementById('searchInput').value||'').toLowerCase();
+  let list=users.map((u,index)=>({...u,_index:index})).filter(u=>(u.username||'').toLowerCase().includes(filter)||(u.fullName||'').toLowerCase().includes(filter)||(u.role||'').toLowerCase().includes(filter));
+  const [field,dir]=currentSort.split('-');
+  list.sort((a,b)=>{
+    let av,bv;
+    if(field==='lastLogin'){av=a.lastLoginAt?new Date(a.lastLoginAt).getTime():0;bv=b.lastLoginAt?new Date(b.lastLoginAt).getTime():0;}
+    else if(field==='role'){av=normalizeRole(a.role);bv=normalizeRole(b.role);}
+    else{av=(a.fullName||'').toLowerCase();bv=(b.fullName||'').toLowerCase();}
+    return av<bv?(dir==='asc'?-1:1):av>bv?(dir==='asc'?1:-1):0;
   });
-  const tbody = document.getElementById("usersTableBody");
-  tbody.innerHTML = list.length ? "" : `<tr><td colspan="4" class="text-center py-4 text-gray-400 force-light-text">No users found.</td></tr>`;
-  list.forEach(user => {
-    const isActive  = user.status === "Active";
-    const trueIndex = users.findIndex(u => u.username === user.username);
-    tbody.innerHTML += `<tr>
-      <td class="py-2 px-2 force-light-text">${user.username}</td>
-      <td class="py-2 px-2 force-light-text">${user.fullName}</td>
-      <td class="py-2 px-2 force-light-text">${user.role}</td>
-      <td class="py-2 px-2">
-        <label class="switch-tgl" title="Toggle status">
-          <input type="checkbox" class="toggle-status-switch" data-index="${trueIndex}" ${isActive ? "checked" : ""}/>
-          <span class="slider-tgl"></span>
-        </label>
-        <span class="status-switch-label force-light-text">${isActive ? 'Active' : 'Inactive'}</span>
-      </td>
+
+  const tbody=document.getElementById('usersTableBody');
+  if(!list.length){tbody.innerHTML='<tr><td colspan="7" class="text-center py-8 text-gray-400 force-light-text">No users found.</td></tr>';return;}
+  tbody.innerHTML=list.map(u=>{
+    const idx=u._index;const active=u.status==='Active';const current=isCurrentUser(u);const lastAdmin=isLastActiveAdmin(u);const role=normalizeRole(u.role);
+    const security=current?'<span class="security-pill security-current">Current session</span>':role==='admin'?'<span class="security-pill security-admin">Admin privileged</span>':'<span class="security-pill security-standard">Standard</span>';
+    const rolePill=`<span class="role-pill ${role==='admin'?'role-admin':'role-staff'}">${role==='admin'?'Admin':'Staff'}</span>`;
+    const disabled=current?'disabled-switch':'';
+    return `<tr class="user-row">
+      <td class="py-3 px-2 force-light-text font-medium">${escapeHtml(u.username)}${current?'<span class="self-badge">YOU</span>':''}</td>
+      <td class="py-3 px-2 force-light-text">${escapeHtml(u.fullName)}</td>
+      <td class="py-3 px-2">${rolePill}</td>
+      <td class="py-3 px-2"><label class="switch-tgl ${disabled}" title="${current?'You cannot deactivate your own account':'Change account status'}"><input type="checkbox" ${active?'checked':''} ${current?'disabled':''} onchange="requestStatusChange(${idx}, this.checked ? 'Active' : 'Inactive')"><span class="slider-tgl"></span></label><span class="status-switch-label force-light-text">${active?'Active':'Inactive'}</span>${lastAdmin?'<div class="text-[10px] text-amber-400 mt-1">Last active Admin</div>':''}</td>
+      <td class="py-3 px-2">${formatLastLogin(u.lastLoginAt)}</td>
+      <td class="py-3 px-2">${security}</td>
+      <td class="py-3 px-2 text-center"><div class="actions-wrap"><button type="button" class="actions-btn" onclick="toggleUserActions(event,${idx})" aria-label="User actions">⋮</button><div id="actions-${idx}" class="actions-menu"><button type="button" class="actions-item" onclick="openEditUser(${idx})">Manage account</button><button type="button" class="actions-item" onclick="openResetPassword(${idx})">Reset password</button>${current?'<button type="button" class="actions-item danger" disabled>Deactivate current account</button>':''}</div></div></td>
     </tr>`;
-  });
-  document.querySelectorAll('.toggle-status-switch').forEach(input => {
-    input.onchange = async function () {
-      const idx    = Number(input.dataset.index);
-      const status = input.checked ? "Active" : "Inactive";
-      const u      = users[idx];
-      if (!u) return;
-      try {
-        const res = await fetch("{{ route('admin.users.update') }}", {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json', 'X-CSRF-TOKEN': CSRF },
-          body: JSON.stringify({ username: u.username, fullName: u.fullName, role: u.role, status })
-        });
-        const json = await res.json();
-        if (json.success) {
-          users[idx].status = status;
-          renderUsersTable();
-        } else {
-          alert('Failed to update status.');
-          input.checked = !input.checked; // revert toggle
-        }
-      } catch (e) { alert('Network error.'); input.checked = !input.checked; }
-    };
-  });
+  }).join('');
 }
-// PASSWORD STRENGTH
-document.getElementById('userPassword').addEventListener('input', function () {
-  const val  = this.value;
-  const bar  = document.getElementById('modalStrengthBar');
-  const text = document.getElementById('modalStrengthText');
-  let score = 0;
-  if (val.length >= 8)           score++;
-  if (/[A-Z]/.test(val))         score++;
-  if (/[0-9]/.test(val))         score++;
-  if (/[^A-Za-z0-9]/.test(val))  score++;
-  const levels = [
-    { pct:'25%', cls:'strength-weak',   label:'Weak',   color:'#e53e3e' },
-    { pct:'50%', cls:'strength-fair',   label:'Fair',   color:'#ecc94b' },
-    { pct:'75%', cls:'strength-good',   label:'Good',   color:'#3ec6ff' },
-    { pct:'100%',cls:'strength-strong', label:'Strong', color:'#33b481' },
-  ];
-  if (!val) { bar.style.width='0'; text.textContent=''; return; }
-  const lvl = levels[Math.max(0, score - 1)];
-  bar.style.width = lvl.pct;
-  bar.className   = 'pw-strength-bar ' + lvl.cls;
-  text.textContent = lvl.label;
-  text.style.color = lvl.color;
-});
 
-  // ===== SESSION TIMEOUT — 15 minutes =====
-  (function() {
-    const TIMEOUT_MS = 15 * 60 * 1000; // 15 minutes
-    const WARN_MS    = 60 * 1000;       // warn 1 minute before
-    let timer, warnTimer;
-
-    // Create warning banner
-    const banner = document.createElement('div');
-    banner.id = 'session-timeout-banner';
-    banner.style.cssText = 'display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;background:#92400e;color:#fef3c7;padding:12px 24px;border-radius:10px;font-size:0.85rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,0.4);text-align:center;min-width:320px;';
-    banner.innerHTML = '⚠ Your session will expire in <span id="session-countdown">60</span> seconds due to inactivity. <button onclick="resetSessionTimer()" style="margin-left:12px;background:#fde68a;color:#92400e;border:none;border-radius:5px;padding:4px 12px;font-weight:700;cursor:pointer;">Stay Logged In</button>';
-    document.body.appendChild(banner);
-
-    window.resetSessionTimer = function() {
-      clearTimeout(timer);
-      clearTimeout(warnTimer);
-      banner.style.display = 'none';
-      warnTimer = setTimeout(showWarning, TIMEOUT_MS - WARN_MS);
-      timer     = setTimeout(doLogout, TIMEOUT_MS);
-    };
-
-    function showWarning() {
-      banner.style.display = 'block';
-      let secs = 60;
-      document.getElementById('session-countdown').textContent = secs;
-      const cd = setInterval(() => {
-        secs--;
-        const el = document.getElementById('session-countdown');
-        if (el) el.textContent = secs;
-        if (secs <= 0) clearInterval(cd);
-      }, 1000);
-    }
-
-    function doLogout() {
-      banner.style.display = 'none';
-      // Submit logout form
-      const form = document.getElementById('logoutForm') || document.querySelector('form[action*="logout"]');
-      if (form) { form.submit(); return; }
-      fetch('/logout', { method:'POST', headers:{'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content} })
-        .finally(() => { window.location.href = '/login'; });
-    }
-
-    // Reset on any user activity
-    ['mousemove','keydown','click','scroll','touchstart'].forEach(evt =>
-      document.addEventListener(evt, window.resetSessionTimer, { passive: true })
-    );
-
-    // Start timers
-    window.resetSessionTimer();
-  })();
-
+// ===== SESSION TIMEOUT — 15 minutes =====
+(function(){
+  const TIMEOUT_MS=15*60*1000,WARN_MS=60*1000;let timer,warnTimer,countdownTimer;
+  const banner=document.createElement('div');banner.id='session-timeout-banner';banner.style.cssText='display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;background:#92400e;color:#fef3c7;padding:12px 24px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.4);text-align:center;min-width:320px;';
+  banner.innerHTML='Your session will expire in <span id="session-countdown">60</span> seconds due to inactivity. <button id="stayLoggedInBtn" style="margin-left:12px;background:#fde68a;color:#92400e;border:none;border-radius:5px;padding:4px 12px;font-weight:700;cursor:pointer;">Stay Logged In</button>';document.body.appendChild(banner);
+  function showWarning(){banner.style.display='block';let secs=60;const el=document.getElementById('session-countdown');el.textContent=secs;clearInterval(countdownTimer);countdownTimer=setInterval(()=>{secs--;el.textContent=Math.max(0,secs);if(secs<=0)clearInterval(countdownTimer);},1000);}
+  function doLogout(){banner.style.display='none';const form=document.querySelector('form[action*="logout"]');if(form){form.submit();return;}fetch('/logout',{method:'POST',headers:{'X-CSRF-TOKEN':CSRF}}).finally(()=>location.href='/login');}
+  window.resetSessionTimer=function(){clearTimeout(timer);clearTimeout(warnTimer);clearInterval(countdownTimer);banner.style.display='none';warnTimer=setTimeout(showWarning,TIMEOUT_MS-WARN_MS);timer=setTimeout(doLogout,TIMEOUT_MS);};
+  document.getElementById('stayLoggedInBtn').addEventListener('click',window.resetSessionTimer);
+  ['mousemove','keydown','click','scroll','touchstart'].forEach(evt=>document.addEventListener(evt,window.resetSessionTimer,{passive:true}));window.resetSessionTimer();
+})();
 </script>
 </body>
 </html>
-

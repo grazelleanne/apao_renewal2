@@ -191,7 +191,7 @@
 
     <header class="flex flex-wrap justify-end mb-8 items-center gap-4">
       <div class="flex items-center gap-4">
-        <span class="text-sm force-light-text opacity-70">Welcome, <strong>{{ $user->name ?? 'Admin' }}</strong></span>
+        @include('partials.account_dropdown')
         <div class="relative" id="adminNotifWrapper">
           <button id="notificationBell" class="notification-bell text-cyan-400 focus:outline-none" aria-label="Notifications" type="button">
             <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11c0-3.074-1.64-5.64-5-5.996V5a2 2 0 10-4 0v.004C6.64 5.36 5 7.926 5 11v3.159c0 .538-.214 1.055-.595 1.436L3 17h5m7 0v1a3 3 0 01-6 0v-1m7 0H8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -206,10 +206,6 @@
             <div class="notif-footer" id="adminNotifFooter">Auto-refreshes every 30 seconds</div>
           </div>
         </div>
-        <form method="POST" action="{{ route('logout') }}">
-          @csrf
-          <button type="submit" class="text-red-400 hover:underline text-base font-semibold tracking-tight">Logout</button>
-        </form>
       </div>
     </header>
 
@@ -220,19 +216,19 @@
         <p id="totalUsers" class="text-3xl font-extrabold card-main-text">--</p>
         <p class="text-xs card-desc">Total users managed on the platform. <span class="underline text-accent font-medium">View all users</span></p>
       </a>
-      <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
+      <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2" style="border-left:4px solid #33b481;">
         <div class="text-xs uppercase font-semibold card-label tracking-wide mb-1">Total Renewed</div>
-        <p id="totalRenewed" class="text-3xl font-extrabold card-main-text">--</p>
+        <p id="totalRenewed" class="text-3xl font-extrabold" style="color:#33b481;">--</p>
         <p class="text-xs card-desc">Personnel with up-to-date renewal.</p>
       </div>
-      <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
+      <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2" style="border-left:4px solid #ecc94b;">
         <div class="text-xs uppercase font-semibold card-label tracking-wide mb-1">Within Renewal Period</div>
-        <p id="withinRenewal" class="text-3xl font-extrabold card-main-text">--</p>
+        <p id="withinRenewal" class="text-3xl font-extrabold" style="color:#ecc94b;">--</p>
         <p class="text-xs card-desc">Personnel within the current renewal window.</p>
       </div>
-      <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
+      <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2" style="border-left:4px solid #e53e3e;">
         <div class="text-xs uppercase font-semibold card-label tracking-wide mb-1">Expired</div>
-        <p id="expired" class="text-3xl font-extrabold card-main-text">--</p>
+        <p id="expired" class="text-3xl font-extrabold" style="color:#e53e3e;">--</p>
         <p class="text-xs card-desc">Personnel with expired renewal.</p>
       </div>
     </div>
@@ -592,4 +588,3 @@ loadRecentActivity();
 </script>
 </body>
 </html>
-

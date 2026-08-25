@@ -119,8 +119,6 @@
       body.light-mode .system-modal-box{background:#ffffff!important;border-color:#d1d9e6!important;}
       body.light-mode .system-modal-title{color:#1e293b!important;}
       body.light-mode .system-modal-message{color:#475569!important;}
-      body.light-mode #profileDropdown{background:#ffffff!important;border-color:#d0d7e4!important;}
-      body.light-mode #profileDropdownLink{color:#1e293b!important;}
       .register-modal-overlay{position:fixed;inset:0;background:rgba(10,14,20,0.85);z-index:1000;display:none;align-items:center;justify-content:center;padding:1rem;}
       .register-modal-box{background:#1a2330;border:1px solid #2e3d52;border-radius:14px;padding:1.6rem;width:min(760px,96vw);max-height:90vh;overflow-y:auto;box-shadow:0 24px 48px rgba(0,0,0,0.5);position:relative;animation:slideUp 0.18s ease;}
       .register-modal-close{position:absolute;right:1rem;top:1rem;background:none;border:none;color:#64748b;font-size:1.3rem;cursor:pointer;line-height:1;transition:color 0.15s;}
@@ -160,6 +158,77 @@
       .chart-legend{display:flex;flex-wrap:wrap;gap:12px;margin-bottom:12px;}
       .chart-legend-item{display:flex;align-items:center;gap:6px;font-size:0.72rem;color:#94a3b8;}
       .chart-legend-dot{width:10px;height:10px;border-radius:2px;flex-shrink:0;}
+
+      /* ===== DASHBOARD STATUS CARD COLOR CODING ===== */
+      .dashboard-status-card{
+        position:relative;
+        overflow:hidden;
+        border:1px solid #2f3540;
+      }
+      .dashboard-status-card::before{
+        content:'';
+        position:absolute;
+        top:0;
+        left:0;
+        right:0;
+        height:4px;
+        border-radius:8px 8px 0 0;
+      }
+
+      /* New = Blue */
+      .dashboard-status-new::before{background:#3ec6ff;}
+      .dashboard-status-new .dashboard-status-label{color:#3ec6ff!important;}
+      .dashboard-status-new .dashboard-status-count{color:#3ec6ff!important;}
+      .dashboard-status-new .dashboard-status-desc{color:#7dd3fc!important;}
+
+      /* Renewed = Green */
+      .dashboard-status-renewed::before{background:#33b481;}
+      .dashboard-status-renewed .dashboard-status-label{color:#33b481!important;}
+      .dashboard-status-renewed .dashboard-status-count{color:#33b481!important;}
+      .dashboard-status-renewed .dashboard-status-desc{color:#68d391!important;}
+
+      /* Within Renewal = Yellow */
+      .dashboard-status-within::before{background:#ecc94b;}
+      .dashboard-status-within .dashboard-status-label{color:#ecc94b!important;}
+      .dashboard-status-within .dashboard-status-count{color:#ecc94b!important;}
+      .dashboard-status-within .dashboard-status-desc{color:#f6e05e!important;}
+
+      /* Expired = Red */
+      .dashboard-status-expired::before{background:#e53e3e;}
+      .dashboard-status-expired .dashboard-status-label{color:#e53e3e!important;}
+      .dashboard-status-expired .dashboard-status-count{color:#e53e3e!important;}
+      .dashboard-status-expired .dashboard-status-desc{color:#fc8181!important;}
+
+      /* Pending = Gray */
+      .dashboard-status-pending::before{background:#64748b;}
+      .dashboard-status-pending .dashboard-status-label{color:#94a3b8!important;}
+      .dashboard-status-pending .dashboard-status-count{color:#94a3b8!important;}
+      .dashboard-status-pending .dashboard-status-desc{color:#64748b!important;}
+
+      body.light-mode .dashboard-status-card{
+        background:#ffffff!important;
+        border-color:#e2e8f0!important;
+      }
+      body.light-mode .dashboard-status-new .dashboard-status-label,
+      body.light-mode .dashboard-status-new .dashboard-status-count{color:#0284c7!important;}
+      body.light-mode .dashboard-status-new .dashboard-status-desc{color:#0369a1!important;}
+
+      body.light-mode .dashboard-status-renewed .dashboard-status-label,
+      body.light-mode .dashboard-status-renewed .dashboard-status-count{color:#047857!important;}
+      body.light-mode .dashboard-status-renewed .dashboard-status-desc{color:#15803d!important;}
+
+      body.light-mode .dashboard-status-within .dashboard-status-label,
+      body.light-mode .dashboard-status-within .dashboard-status-count{color:#a16207!important;}
+      body.light-mode .dashboard-status-within .dashboard-status-desc{color:#b7791f!important;}
+
+      body.light-mode .dashboard-status-expired .dashboard-status-label,
+      body.light-mode .dashboard-status-expired .dashboard-status-count{color:#dc2626!important;}
+      body.light-mode .dashboard-status-expired .dashboard-status-desc{color:#b91c1c!important;}
+
+      body.light-mode .dashboard-status-pending .dashboard-status-label,
+      body.light-mode .dashboard-status-pending .dashboard-status-count{color:#475569!important;}
+      body.light-mode .dashboard-status-pending .dashboard-status-desc{color:#64748b!important;}
+
       body.light-mode{background:#f1f5fa!important;color:#1e293b!important;}
       body.light-mode .main-bg,body.light-mode main{background:#f1f5fa!important;}
       body.light-mode .bg-\[\#23272f\],body.light-mode .bg-\[\#1d232d\]{background-color:#ffffff!important;border:1px solid #e2e8f0!important;box-shadow:0 1px 4px rgba(0,0,0,0.06)!important;}
@@ -445,6 +514,11 @@
       body.light-mode #rp_sigModal > div {background:#ffffff!important;border-color:#cbd5e1!important;}
       body.light-mode #rp_sigModal h3 {color:#1e293b!important;}
       body.light-mode #rp_sigCanvas {background:#f8fafc!important;border-color:#cbd5e1!important;}
+      body.light-mode #rp_cameraModal > div {background:#ffffff!important;border-color:#cbd5e1!important;}
+      body.light-mode #rp_cameraModal h3 {color:#1e293b!important;}
+      body.light-mode #rpAttachPhotoBtn {background:#e2e8f0!important;border-color:#94a3b8!important;color:#1e293b!important;}
+      #rpAttachPhotoBtn:hover {background:#475569!important;border-color:#94a3b8!important;}
+      body.light-mode #rpAttachPhotoBtn:hover {background:#cbd5e1!important;border-color:#64748b!important;}
 
       /* Modals: headings, helper boxes, buttons and read-only content */
       body.light-mode .register-modal-box h3,
@@ -471,9 +545,66 @@
       body.light-mode #ics-doc-view .no-print button[style*="background:#1a2025"] {background:#ffffff!important;color:#475569!important;border-color:#cbd5e1!important;}
 
       /* Profile and generic card headings */
-      body.light-mode #page-profile [style*="border-top:1px solid #2e3748"] {border-color:#e2e8f0!important;}
       body.light-mode .chart-legend-item {color:#475569!important;}
       body.light-mode .text-gray-400 {color:#64748b!important;}
+
+      /* ===== STAFF REPORT CENTER / RPCSP ===== */
+      .staff-report-tabs{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:18px;}
+      .staff-report-tab{display:inline-flex;align-items:center;gap:8px;border:1px solid #363b48;background:#23272f;color:#94a3b8;border-radius:8px;padding:10px 15px;font-size:.78rem;font-weight:700;cursor:pointer;transition:.15s;}
+      .staff-report-tab:hover{border-color:#3ec6ff;color:#e5eaf2;}
+      .staff-report-tab.active{background:#0d2d3a;border-color:#3ec6ff;color:#3ec6ff;}
+      .staff-report-panel{display:none;}
+      .staff-report-panel.active{display:block;}
+
+      .rpcsp-config-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;}
+      .rpcsp-field label{display:block;font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.05em;color:#94a3b8;margin-bottom:5px;}
+      .rpcsp-field input,.rpcsp-field select{width:100%;background:#1a2025;color:#e5eaf2;border:1px solid #363b48;border-radius:7px;padding:8px 10px;font-size:.78rem;outline:none;}
+      .rpcsp-field input:focus,.rpcsp-field select:focus{border-color:#3ec6ff;box-shadow:0 0 0 2px rgba(62,198,255,.08);}
+      .rpcsp-actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;}
+      .rpcsp-btn{border-radius:7px;padding:9px 14px;font-size:.76rem;font-weight:800;cursor:pointer;border:1px solid transparent;transition:.15s;}
+      .rpcsp-btn-preview{background:#0a1f2d;color:#3ec6ff;border-color:#1a3a4f;}
+      .rpcsp-btn-preview:hover{background:#112840;}
+      .rpcsp-btn-print{background:#0d3325;color:#33b481;border-color:#1a5c3a;}
+      .rpcsp-btn-print:hover{background:#154d32;}
+      .rpcsp-btn-export{background:#2d2208;color:#ecc94b;border-color:#6b5515;}
+      .rpcsp-btn-export:hover{background:#3b2d0a;}
+
+      .rpcsp-preview-shell{overflow:auto;background:#11161d;border:1px solid #303947;border-radius:10px;padding:18px;}
+      .rpcsp-document{width:1120px;min-height:710px;margin:0 auto;background:#fff;color:#111;padding:18px 20px 22px;font-family:Arial,Helvetica,sans-serif;box-shadow:0 8px 30px rgba(0,0,0,.24);}
+      .rpcsp-title{text-align:center;font-weight:700;font-size:15px;line-height:1.15;margin:0;}
+      .rpcsp-subtitle{text-align:center;font-size:11px;line-height:1.25;margin:1px 0;}
+      .rpcsp-asof{text-align:center;font-size:11px;margin:2px 0 12px;}
+      .rpcsp-fund{font-size:11px;text-decoration:underline;margin:0 0 12px;}
+      .rpcsp-forwhich{font-size:11px;line-height:1.35;margin:0 0 9px;}
+      .rpcsp-forwhich .accountable-name{font-weight:700;text-transform:uppercase;}
+      .rpcsp-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:9.5px;}
+      .rpcsp-table th,.rpcsp-table td{border:1px solid #333;padding:4px 5px;vertical-align:middle;}
+      .rpcsp-table th{text-align:center;font-weight:700;background:#fff;color:#111;}
+      .rpcsp-table td{text-align:center;background:#fff;color:#111;}
+      .rpcsp-table td:nth-child(1),.rpcsp-table td:nth-child(2),.rpcsp-table td:nth-child(10){text-align:left;}
+      .rpcsp-empty{text-align:center!important;padding:14px!important;color:#666!important;}
+      .rpcsp-summary{display:flex;justify-content:flex-end;gap:28px;margin-top:9px;font-size:10px;color:#111;}
+      .rpcsp-summary strong{font-size:11px;}
+      .rpcsp-note{font-size:9px;color:#555;margin-top:8px;}
+      .rpcsp-certification{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:52px;margin-top:42px;font-size:11px;line-height:1.35;color:#111;}
+      .rpcsp-certification-title{font-weight:700;margin:0 0 42px;}
+      .rpcsp-certification-column{break-inside:avoid;page-break-inside:avoid;}
+      .rpcsp-signatory{break-inside:avoid;page-break-inside:avoid;}
+      .rpcsp-signatory + .rpcsp-signatory{margin-top:40px;}
+      .rpcsp-signatory p{margin:0;}
+      .rpcsp-signatory-name{font-weight:700;}
+
+      body.light-mode .staff-report-tab{background:#fff!important;border-color:#cbd5e1!important;color:#64748b!important;}
+      body.light-mode .staff-report-tab.active{background:#eaf6ff!important;border-color:#38bdf8!important;color:#0369a1!important;}
+      body.light-mode .rpcsp-field label{color:#475569!important;}
+      body.light-mode .rpcsp-field input,body.light-mode .rpcsp-field select{background:#f8fafc!important;color:#1e293b!important;border-color:#cbd5e1!important;}
+      body.light-mode .rpcsp-preview-shell{background:#e9eef5!important;border-color:#d8e0eb!important;}
+      body.light-mode .rpcsp-document,body.light-mode .rpcsp-document *{color:#111!important;}
+      body.light-mode .rpcsp-document,.rpcsp-document{background:#fff!important;}
+
+      @media(max-width:1100px){.rpcsp-config-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
+      @media(max-width:640px){.rpcsp-config-grid{grid-template-columns:1fr;}}
+
 </style>
   </head>
   <body class="min-h-screen font-inter main-bg bg-[#1a2025]">
@@ -524,10 +655,6 @@
           <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M21 8v13H3V8"/><path d="M23 3H1v5h22V3z"/><path d="M10 12h4"/></svg>
           <span class="nav-label">Archive Data</span>
         </button>
-        <button data-page="profile" class="nav-link nav-item">
-          <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1"/></svg>
-          <span class="nav-label">Profile Settings</span>
-        </button>
       </nav>
       <div class="sb-bottom">
         <button class="theme-btn" id="themeToggle" title="Toggle theme">
@@ -554,25 +681,10 @@
     </div>
   </div>
 
-  <div class="relative" id="profileWrapper">
-    <button id="profileTrigger" class="flex items-center gap-2 text-sm force-light-text opacity-70 hover:opacity-100 transition-opacity" type="button">
-      <span>Welcome, <strong id="headerStaffName">{{ $user->name }}</strong></span>
-      <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9l6 6 6-6"/></svg>
-    </button>
-    <div id="profileDropdown" style="display:none;position:absolute;top:calc(100% + 10px);right:0;width:200px;background:#23272f;border:1px solid #363b48;border-radius:10px;box-shadow:0 12px 32px rgba(0,0,0,0.4);z-index:200;overflow:hidden;">
-      <button id="profileDropdownLink" class="nav-link" style="width:100%;text-align:left;padding:11px 14px;font-size:0.82rem;color:#e5eaf2;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;">
-        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a6 6 0 016-6h4a6 6 0 016 6v1"/></svg>
-        Profile Settings
-      </button>
-      <form method="POST" action="{{ route('logout') }}" id="logoutForm" style="border-top:1px solid #2e333d;">
-        @csrf
-        <button type="submit" style="width:100%;text-align:left;padding:11px 14px;font-size:0.82rem;color:#fc8181;background:none;border:none;cursor:pointer;display:flex;align-items:center;gap:8px;">
-          <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 21H5a2 2 0 01-2-2V5a2 2 0 012-2h4M16 17l5-5-5-5M21 12H9"/></svg>
-          Logout
-        </button>
-      </form>
-    </div>
-  </div>
+  @include('partials.account_dropdown', [
+    'profileUrl' => route('staff.profile.update'),
+    'passwordUrl' => route('staff.profile.password'),
+  ])
       </header>
 
       {{-- ===== DASHBOARD PAGE ===== --}}
@@ -583,30 +695,30 @@
             <p id="totalPersonnel" class="text-3xl font-extrabold card-main-text">--</p>
             <p class="text-xs card-desc">All personnel records.</p>
           </div>
-          <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
-            <div class="text-xs uppercase font-semibold tracking-wide mb-1" style="color:#1a6090!important;">New</div>
-            <p id="totalNew" class="text-3xl font-extrabold" style="color:#3ec6ff!important;">--</p>
-            <p class="text-xs" style="color:#7dd3fc!important;">Awaiting admin inspection.</p>
+          <div class="dashboard-status-card dashboard-status-new bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
+            <div class="dashboard-status-label text-xs uppercase font-semibold tracking-wide mb-1">New</div>
+            <p id="totalNew" class="dashboard-status-count text-3xl font-extrabold">--</p>
+            <p class="dashboard-status-desc text-xs">Awaiting admin inspection.</p>
           </div>
-          <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
-            <div class="text-xs uppercase font-semibold card-label tracking-wide mb-1">Renewed</div>
-            <p id="totalRenewed" class="text-3xl font-extrabold card-main-text">--</p>
-            <p class="text-xs card-desc">Approved as renewed.</p>
+          <div class="dashboard-status-card dashboard-status-renewed bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
+            <div class="dashboard-status-label text-xs uppercase font-semibold tracking-wide mb-1">Renewed</div>
+            <p id="totalRenewed" class="dashboard-status-count text-3xl font-extrabold">--</p>
+            <p class="dashboard-status-desc text-xs">Approved as renewed.</p>
           </div>
-          <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
-            <div class="text-xs uppercase font-semibold card-label tracking-wide mb-1">Within Renewal</div>
-            <p id="withinRenewal" class="text-3xl font-extrabold card-main-text">--</p>
-            <p class="text-xs card-desc">Within renewal period.</p>
+          <div class="dashboard-status-card dashboard-status-within bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
+            <div class="dashboard-status-label text-xs uppercase font-semibold tracking-wide mb-1">Within Renewal</div>
+            <p id="withinRenewal" class="dashboard-status-count text-3xl font-extrabold">--</p>
+            <p class="dashboard-status-desc text-xs">Within renewal period.</p>
           </div>
-          <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
-            <div class="text-xs uppercase font-semibold card-label tracking-wide mb-1">Expired</div>
-            <p id="expired" class="text-3xl font-extrabold card-main-text">--</p>
-            <p class="text-xs card-desc">Approved as expired.</p>
+          <div class="dashboard-status-card dashboard-status-expired bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
+            <div class="dashboard-status-label text-xs uppercase font-semibold tracking-wide mb-1">Expired</div>
+            <p id="expired" class="dashboard-status-count text-3xl font-extrabold">--</p>
+            <p class="dashboard-status-desc text-xs">Approved as expired.</p>
           </div>
-          <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
-            <div class="text-xs uppercase font-semibold card-label tracking-wide mb-1">Pending</div>
-            <p id="pending" class="text-3xl font-extrabold card-main-text">--</p>
-            <p class="text-xs card-desc">Awaiting admin approval.</p>
+          <div class="dashboard-status-card dashboard-status-pending bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2">
+            <div class="dashboard-status-label text-xs uppercase font-semibold tracking-wide mb-1">Pending</div>
+            <p id="pending" class="dashboard-status-count text-3xl font-extrabold">--</p>
+            <p class="dashboard-status-desc text-xs">Awaiting admin approval.</p>
           </div>
         </div>
 
@@ -661,6 +773,9 @@
           <div class="flex flex-wrap items-center justify-between mb-4 gap-2">
             <h2 class="font-semibold text-base force-light-text tracking-tight">List of Personnel</h2>
             <div class="flex gap-2 items-center flex-wrap">
+              <input id="personnelNameFilter" type="search" placeholder="Name" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
+              <input id="personnelRankFilter" type="search" placeholder="Rank" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
+              <input id="personnelUnitFilter" type="search" placeholder="Unit / Office" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
               <label for="approvalFilter" class="text-[#b0bac7] text-xs">Status:</label>
               <select id="approvalFilter" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
                 <option value="">All</option>
@@ -670,6 +785,7 @@
                 <option value="within">Within Renewal</option>
                 <option value="expired">Expired</option>
               </select>
+              <button id="personnelClearFilters" type="button" class="bg-[#1a2025] text-[#94a3b8] border border-[#363b48] rounded px-3 py-1 text-xs">Clear Filters</button>
               <label for="sortSelect" class="text-[#b0bac7] text-xs">Sort:</label>
               <select id="sortSelect" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
                 <option value="itemNumber-desc" selected>Item # (Desc)</option>
@@ -691,7 +807,7 @@
                 <tr class="border-b border-[#252b32] text-[#b0bac7]">
                   <th class="py-2 px-2 font-semibold">Item #</th>
                   <th class="py-2 px-2 font-semibold">Date of Validity</th>
-                  <th class="py-2 px-2 font-semibold">Last Name</th>
+                  <th class="py-2 px-2 font-semibold">Last Name | Rank</th>
                   <th class="py-2 px-2 font-semibold">First Name</th>
                   <th class="py-2 px-2 font-semibold">Middle Name</th>
                   <th class="py-2 px-2 font-semibold">AFP Serial #</th>
@@ -864,7 +980,7 @@
                   <table class="ics-signatures">
                     <tr>
                       <td><div class="ics-sign-wrap"><div style="font-size:0.74rem;font-weight:700;color:#101826;">Received by:</div><div style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:4px 0;"><div id="previewCustodianSigWrap" style="width:100%;max-height:52px;display:none;align-items:center;justify-content:center;margin-bottom:2px;"><img id="previewCustodianSig" src="" alt="Custodian Signature" style="max-height:52px;max-width:90%;object-fit:contain;" /></div><div class="ics-sign-name" id="previewReceivedBy">JOHN DOE</div><div class="ics-sign-sub">Signature Over Printed Name</div><div class="ics-sign-sub" id="previewReceivedOffice">8IB, 4ID, PA</div></div><div class="ics-sign-date" id="previewSignDateLeft">—</div></div></td>
-                      <td><div class="ics-sign-wrap"><div style="font-size:0.74rem;font-weight:700;color:#101826;">Received from:</div><div style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:4px 0;"><div id="previewIssuingSigWrap" style="width:100%;max-height:52px;display:none;align-items:center;justify-content:center;margin-bottom:2px;"><img id="previewIssuingSig" src="" alt="Issuing Signature" style="max-height:52px;max-width:90%;object-fit:contain;" /></div><div class="ics-sign-name" id="previewIssuedBy">JUAN D. LA CRUZ</div><div class="ics-sign-sub">Signature Over Printed Name</div><div class="ics-sign-sub" id="previewIssuedOffice">Chief, PAO GS, APAO, PA</div></div><div class="ics-sign-date" id="previewSignDateRight">—</div></div></td>
+                      <td><div class="ics-sign-wrap"><div style="font-size:0.74rem;font-weight:700;color:#101826;">Received from:</div><div style="display:flex;flex-direction:column;align-items:center;flex:1;justify-content:center;padding:4px 0;"><div id="previewIssuingSigWrap" style="width:100%;max-height:52px;display:none;align-items:center;justify-content:center;margin-bottom:2px;"><img id="previewIssuingSig" src="" alt="Rosemarie O. Vilbar Signature" style="max-height:52px;max-width:90%;object-fit:contain;" /></div><div class="ics-sign-name" id="previewIssuedBy">MS ROSEMARIE O VILBAR</div><div class="ics-sign-sub">Signature Over Printed Name</div><div class="ics-sign-sub" id="previewIssuedOffice">Chief, PAOGS, APAO, PA</div></div><div class="ics-sign-date" id="previewSignDateRight">—</div></div></td>
                     </tr>
                   </table>
                 </div>
@@ -882,7 +998,7 @@
                 <label class="ics-label">AFP Serial # <input id="icsSerialField" class="ics-mini-input" type="text" placeholder="AFP023947" /></label>
                 <label class="ics-label">Ammo Qty (rds) <input id="icsAmmoField" class="ics-mini-input" type="number" min="0" placeholder="68" /></label>
                 <label class="ics-label">Received By <input id="receivedByField" class="ics-mini-input" type="text" placeholder="John Doe" /></label>
-                <label class="ics-label">Issued By <input id="issuedByField" class="ics-mini-input" type="text" placeholder="Juan D. la Cruz" /></label>
+                <label class="ics-label">Issued By <input id="issuedByField" class="ics-mini-input" type="text" value="MS ROSEMARIE O VILBAR" placeholder="MS ROSEMARIE O VILBAR" /></label>
                 <button id="icsResetBtn" class="ics-btn-secondary">Reset to Defaults</button>
               </div>
               <div class="ics-side-box">
@@ -952,9 +1068,9 @@
     <div class="bg-[#23272f] rounded-lg shadow shadow-black/10 p-5">
       <div class="flex flex-wrap items-center justify-between gap-3 mb-4">
         <h2 class="font-semibold text-base force-light-text tracking-tight">Renewal List</h2>
-        <button id="renewalNotifyAllBtn" onclick="renewalNotifyAll()" style="display:none;align-items:center;gap:6px;background:#241b07;color:#f4b63f;border:1px solid #b77913;border-radius:7px;padding:7px 14px;font-size:0.78rem;font-weight:700;cursor:pointer;">
+        <button id="renewalNotifyAllBtn" onclick="renewalNotifyAll()" disabled style="display:none;align-items:center;gap:6px;background:#241b07;color:#f4b63f;border:1px solid #b77913;border-radius:7px;padding:7px 14px;font-size:0.78rem;font-weight:700;cursor:pointer;">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="display:inline;vertical-align:middle;margin-right:2px;"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
-          Notify All
+          Notify Selected (<span id="renewalSelectedCount">0</span>)
         </button>
       </div>
 
@@ -977,6 +1093,11 @@
         <select id="renewalUnitFilter" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-2 py-1.5 text-xs force-light-text">
           <option value="">All Units</option>
         </select>
+        <select id="renewalDurationSort" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-2 py-1.5 text-xs force-light-text" aria-label="Sort by duration">
+          <option value="soonest">Duration: Soonest first</option>
+          <option value="latest">Duration: Latest first</option>
+          <option value="name">Name: A to Z</option>
+        </select>
         <div class="relative flex-1 min-w-[180px]">
           <input id="renewalSearch" type="text" placeholder="Search personnel..." class="bg-[#1a2025] text-white border border-[#363b48] rounded px-3 py-1.5 text-xs w-full focus:outline-none focus:ring-2 focus:ring-accent force-light-text" />
         </div>
@@ -986,12 +1107,13 @@
         <table class="w-full text-xs text-left force-light-text" style="border-collapse:collapse;">
           <thead>
             <tr class="border-b border-[#252b32] text-[#b0bac7]">
+              <th class="py-2 px-2 font-semibold" style="width:34px;"><input id="renewalSelectAll" type="checkbox" aria-label="Select all filtered personnel" style="accent-color:#33b481;"></th>
               <th class="py-2 px-2 font-semibold">No.</th>
               <th class="py-2 px-2 font-semibold">Name</th>
               <th class="py-2 px-2 font-semibold">Rank</th>
               <th class="py-2 px-2 font-semibold">AFP Serial #</th>
               <th class="py-2 px-2 font-semibold">Unit / Organization</th>
-              <th class="py-2 px-2 font-semibold">Status</th>
+              <th class="py-2 px-2 font-semibold">Duration</th>
               <th class="py-2 px-2 font-semibold">Action</th>
             </tr>
           </thead>
@@ -1012,30 +1134,270 @@
   </div>{{-- /page-renewal --}}
       {{-- ===== REPORT PAGE ===== --}}
       <div id="page-report" class="page-section">
-        <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 mb-6">
-          <h2 class="font-semibold text-base force-light-text tracking-tight mb-1">Report</h2>
-          <p class="text-xs card-desc mb-6">Generate and export renewal status reports.</p>
-          <div class="grid md:grid-cols-3 gap-4 mb-6">
-            <div><label class="text-xs text-[#94a3b8] mb-1 block">Date From</label><input type="date" id="reportFrom" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-3 py-2 text-xs w-full force-light-text"></div>
-            <div><label class="text-xs text-[#94a3b8] mb-1 block">Date To</label><input type="date" id="reportTo" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-3 py-2 text-xs w-full force-light-text"></div>
-            <div><label class="text-xs text-[#94a3b8] mb-1 block">Status Filter</label>
-              <select id="reportStatus" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-3 py-2 text-xs w-full force-light-text">
-                <option value="">All</option><option value="new">New</option><option value="renewed">Renewed</option><option value="within">Within Renewal</option><option value="expired">Expired</option><option value="pending">Pending</option>
-              </select>
+
+        <div class="mb-5">
+          <h2 class="font-semibold text-base force-light-text tracking-tight">Report Center</h2>
+          <p class="text-xs text-[#64748b] mt-0.5">Generate renewal reports and the Report on the Physical Count of Semi-Expendable Property (RPCSP).</p>
+        </div>
+
+        {{-- Report Type Tabs --}}
+        <div class="staff-report-tabs">
+          <button type="button" id="staffReportRenewalTab" class="staff-report-tab active">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M3 3v18h18"/><path d="M7 15l4-4 3 3 5-6"/>
+            </svg>
+            Personnel Renewal Report
+          </button>
+
+          <button type="button" id="staffReportRpcspTab" class="staff-report-tab">
+            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+              <path d="M4 4h16v16H4z"/><path d="M4 9h16M9 4v16"/>
+            </svg>
+            RPCSP
+          </button>
+        </div>
+
+        {{-- ============================================================
+             PERSONNEL RENEWAL REPORT
+             ============================================================ --}}
+        <div id="staffRenewalReportPanel" class="staff-report-panel active">
+          <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 mb-6">
+            <h3 class="font-semibold text-base force-light-text tracking-tight mb-1">Personnel Renewal Report</h3>
+            <p class="text-xs card-desc mb-6">Generate and export personnel renewal status reports.</p>
+
+            <div class="grid md:grid-cols-3 gap-4 mb-6">
+              <div>
+                <label class="text-xs text-[#94a3b8] mb-1 block">Date From</label>
+                <input type="date" id="reportFrom" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-3 py-2 text-xs w-full force-light-text">
+              </div>
+
+              <div>
+                <label class="text-xs text-[#94a3b8] mb-1 block">Date To</label>
+                <input type="date" id="reportTo" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-3 py-2 text-xs w-full force-light-text">
+              </div>
+
+              <div>
+                <label class="text-xs text-[#94a3b8] mb-1 block">Status Filter</label>
+                <select id="reportStatus" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-3 py-2 text-xs w-full force-light-text">
+                  <option value="">All</option>
+                  <option value="new">New</option>
+                  <option value="renewed">Renewed</option>
+                  <option value="within">Within Renewal</option>
+                  <option value="expired">Expired</option>
+                  <option value="pending">Pending</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="flex gap-2 mb-6 flex-wrap">
+              <button id="generateReportBtn" class="bg-[#0d3325] text-[#33b481] border border-[#1a5c3a] rounded px-4 py-2 text-xs font-semibold hover:bg-[#154d32] transition-colors">
+                Generate Report
+              </button>
+
+              <button id="exportReportBtn" class="bg-[#0a1f2d] text-[#3ec6ff] border border-[#1a3a4f] rounded px-4 py-2 text-xs font-semibold hover:bg-[#112840] transition-colors">
+                Export CSV
+              </button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-xs text-left force-light-text">
+                <thead>
+                  <tr class="border-b border-[#252b32] text-[#b0bac7]">
+                    <th class="py-2 px-2 font-semibold">Item #</th>
+                    <th class="py-2 px-2 font-semibold">Name</th>
+                    <th class="py-2 px-2 font-semibold">AFP Serial #</th>
+                    <th class="py-2 px-2 font-semibold">Date of Validity</th>
+                    <th class="py-2 px-2 font-semibold">Status</th>
+                  </tr>
+                </thead>
+                <tbody id="reportTableBody">
+                  <tr>
+                    <td colspan="5" class="text-center py-8 text-[#64748b]">Set filters and click "Generate Report".</td>
+                  </tr>
+                </tbody>
+              </table>
             </div>
           </div>
-          <div class="flex gap-2 mb-6">
-            <button id="generateReportBtn" class="bg-[#0d3325] text-[#33b481] border border-[#1a5c3a] rounded px-4 py-2 text-xs font-semibold hover:bg-[#154d32] transition-colors">Generate Report</button>
-            <button id="exportReportBtn" class="bg-[#0a1f2d] text-[#3ec6ff] border border-[#1a3a4f] rounded px-4 py-2 text-xs font-semibold hover:bg-[#112840] transition-colors">Export CSV</button>
-          </div>
-          <div class="overflow-x-auto">
-            <table class="w-full text-xs text-left force-light-text">
-              <thead><tr class="border-b border-[#252b32] text-[#b0bac7]"><th class="py-2 px-2 font-semibold">Item #</th><th class="py-2 px-2 font-semibold">Name</th><th class="py-2 px-2 font-semibold">AFP Serial #</th><th class="py-2 px-2 font-semibold">Date of Validity</th><th class="py-2 px-2 font-semibold">Status</th></tr></thead>
-              <tbody id="reportTableBody"><tr><td colspan="5" class="text-center py-8 text-[#64748b]">Set filters and click "Generate Report".</td></tr></tbody>
-            </table>
-          </div>
         </div>
-      </div>
+
+        {{-- ============================================================
+             RPCSP REPORT
+             ============================================================ --}}
+        <div id="staffRpcspReportPanel" class="staff-report-panel">
+
+          <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 mb-6">
+            <div class="flex flex-wrap items-start justify-between gap-3 mb-4">
+              <div>
+                <h3 class="font-semibold text-base force-light-text tracking-tight">Report on the Physical Count of Semi-Expendable Property</h3>
+                <p class="text-xs text-[#64748b] mt-1">Prepare the consolidated RPCSP from the personnel firearm records stored in the system.</p>
+              </div>
+              <span class="text-xs text-[#64748b]">Staff Report Center</span>
+            </div>
+
+            <div class="rpcsp-config-grid">
+              <div class="rpcsp-field">
+                <label for="staffRpcspAsOfDate">As of Date</label>
+                <input type="date" id="staffRpcspAsOfDate">
+              </div>
+
+              <div class="rpcsp-field">
+                <label for="staffRpcspFundCluster">Fund Cluster</label>
+                <input type="text" id="staffRpcspFundCluster" value="General Fund">
+              </div>
+
+              <div class="rpcsp-field">
+                <label for="staffRpcspOfficer">Accountable Officer</label>
+                <input type="text" id="staffRpcspOfficer" value="MS ROSEMARIE O VILBAR">
+              </div>
+
+              <div class="rpcsp-field">
+                <label for="staffRpcspDesignation">Designation / Office</label>
+                <input type="text" id="staffRpcspDesignation" value="Chief, PAOGS, APAO, PA">
+              </div>
+
+              <div class="rpcsp-field">
+                <label for="staffRpcspAssumptionDate">Date of Assumption</label>
+                <input type="date" id="staffRpcspAssumptionDate" value="2022-03-24">
+              </div>
+
+              <div class="rpcsp-field">
+                <label for="staffRpcspUnitValue">Default Unit Value (₱)</label>
+                <input type="number" id="staffRpcspUnitValue" min="0" step="0.01" value="16450.00">
+              </div>
+
+              <div class="rpcsp-field">
+                <label for="staffRpcspUnitFilter">Unit / Organization</label>
+                <select id="staffRpcspUnitFilter">
+                  <option value="">All Units</option>
+                </select>
+              </div>
+
+              <div class="rpcsp-field">
+                <label for="staffRpcspRemarks">Default Remarks</label>
+                <select id="staffRpcspRemarks">
+                  <option value="Serviceable">Serviceable</option>
+                  <option value="Unserviceable">Unserviceable</option>
+                  <option value="For Repair">For Repair</option>
+                </select>
+              </div>
+            </div>
+
+            <div class="rpcsp-actions">
+              <button type="button" id="staffPreviewRpcspBtn" class="rpcsp-btn rpcsp-btn-preview">Preview RPCSP</button>
+              <button type="button" id="staffPrintRpcspBtn" class="rpcsp-btn rpcsp-btn-print">Print / Save PDF</button>
+              <button type="button" id="staffExportRpcspBtn" class="rpcsp-btn rpcsp-btn-export">Export Excel</button>
+            </div>
+          </div>
+
+          <div class="rpcsp-preview-shell mb-10">
+            <div class="rpcsp-document" id="staffRpcspDocument">
+              <h1 class="rpcsp-title">REPORT ON THE PHYSICAL COUNT OF SEMI-EXPENDABLE PROPERTY</h1>
+              <p class="rpcsp-subtitle">MILITARY, POLICE &amp; SECURITY EQUIPMENT (ACCOUNT CODE: 1-04-05-090-00)</p>
+              <p class="rpcsp-subtitle">(Type of Property, Plant and Equipment)</p>
+              <p class="rpcsp-asof">As of <span id="staffRpcspPreviewAsOf">—</span></p>
+
+              <p class="rpcsp-fund">Fund Cluster: <span id="staffRpcspPreviewFund">General Fund</span></p>
+
+              <p class="rpcsp-forwhich">
+                For which:
+                <span class="accountable-name" id="staffRpcspPreviewOfficer">MS ROSEMARIE O VILBAR</span>,
+                <span id="staffRpcspPreviewDesignation">Chief, PAOGS, APAO, PA</span>
+                is accountable, having assumed such accountability on
+                <span id="staffRpcspPreviewAssumption">24 Mar 2022</span>.
+              </p>
+
+              <table class="rpcsp-table">
+                <colgroup>
+                  <col style="width:7%">
+                  <col style="width:13%">
+                  <col style="width:14%">
+                  <col style="width:8%">
+                  <col style="width:9%">
+                  <col style="width:8%">
+                  <col style="width:7%">
+                  <col style="width:6%">
+                  <col style="width:7%">
+                  <col style="width:11%">
+                  <col style="width:10%">
+                </colgroup>
+                <thead>
+                  <tr>
+                    <th rowspan="2">ARTICLE</th>
+                    <th rowspan="2">DESCRIPTION</th>
+                    <th rowspan="2">SEMI-EXPENDABLE<br>PROPERTY NUMBER</th>
+                    <th rowspan="2">UNIT OF<br>MEASURE</th>
+                    <th rowspan="2">UNIT VALUE</th>
+                    <th rowspan="2">BALANCE PER<br>PROPERTY CARD</th>
+                    <th rowspan="2">ON HAND<br>PER COUNT</th>
+                    <th colspan="2">SHORTAGE / OVERAGE</th>
+                    <th rowspan="2">REMARKS</th>
+                    <th rowspan="2">DATE</th>
+                  </tr>
+                  <tr>
+                    <th>QUANTITY</th>
+                    <th>VALUE</th>
+                  </tr>
+                </thead>
+                <tbody id="staffRpcspTableBody">
+                  <tr>
+                    <td colspan="11" class="rpcsp-empty">Click “Preview RPCSP” to generate the report.</td>
+                  </tr>
+                </tbody>
+              </table>
+
+              <div class="rpcsp-summary">
+                <span>Total Property Count: <strong id="staffRpcspTotalCount">0</strong></span>
+                <span>Total Value: <strong id="staffRpcspTotalValue">₱0.00</strong></span>
+              </div>
+
+              <p class="rpcsp-note">
+                Generated from the current personnel/firearm records stored in the APAO system.
+              </p>
+
+              <section class="rpcsp-certification" aria-label="Report signatories">
+                <div class="rpcsp-certification-column">
+                  <p class="rpcsp-certification-title">Certified Correct by:</p>
+
+                  <div class="rpcsp-signatory">
+                    <p class="rpcsp-signatory-name">MS ROSEMARIE O VILBAR, MPA</p>
+                    <p>CHIEF, PAOGS, APAO, PA</p>
+                    <p>TEAM LEADER</p>
+                  </div>
+
+                  <div class="rpcsp-signatory">
+                    <p class="rpcsp-signatory-name">Mr Jan Harold C Novo CE</p>
+                    <p>UPO, 4ID, PA</p>
+                    <p>Member</p>
+                  </div>
+                </div>
+
+                <div class="rpcsp-certification-column">
+                  <p class="rpcsp-certification-title">Approved by:</p>
+
+                  <div class="rpcsp-signatory">
+                    <p class="rpcsp-signatory-name">ANTHONY A BACUS</p>
+                    <p>LTC INF (GSC) PA</p>
+                    <p>Commanding Officer</p>
+                  </div>
+                </div>
+
+                <div class="rpcsp-certification-column">
+                  <p class="rpcsp-certification-title">Witnessed by:</p>
+
+                  <div class="rpcsp-signatory">
+                    <p class="rpcsp-signatory-name">Mr Darrell Antoni J Wong</p>
+                    <p>Rep, COA, HPA</p>
+                    <p>Member</p>
+                  </div>
+                </div>
+              </section>
+
+            </div>
+          </div>
+
+        </div>{{-- /staffRpcspReportPanel --}}
+
+      </div>{{-- /page-report --}}
 
       {{-- ===== ARCHIVE PAGE ===== --}}
       <div id="page-archive" class="page-section">
@@ -1057,82 +1419,6 @@
           </div>
         </div>
       </div>
-      {{-- ===== PROFILE SETTINGS PAGE ===== --}}
-  <div id="page-profile" class="page-section">
-
-    <div class="mb-5">
-      <h2 class="font-semibold text-base force-light-text tracking-tight">Profile Settings</h2>
-      <p class="text-xs text-[#64748b] mt-0.5">Manage your account information and password.</p>
-    </div>
-
-    {{-- SECTION 1: PROFILE INFORMATION --}}
-    <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 mb-6">
-      <h3 class="font-semibold text-base force-light-text tracking-tight mb-4">Profile Information</h3>
-
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:18px;">
-        <div>
-          <label class="reg-label">Full Name <span style="color:#ef4444;">*</span></label>
-          <input type="text" id="pf_name" class="reg-input" placeholder="Full name" value="{{ $user->name }}">
-        </div>
-        <div>
-          <label class="reg-label">Email Address <span style="color:#ef4444;">*</span></label>
-          <input type="email" id="pf_email" class="reg-input" placeholder="Email address" value="{{ $user->email }}">
-        </div>
-        <div>
-          <label class="reg-label">Contact Number</label>
-          <input type="text" id="pf_contact" class="reg-input" placeholder="Contact number" value="{{ $user->contact_number ?? '' }}">
-        </div>
-        <div></div>
-      </div>
-
-      <div style="border-top:1px solid #2e3748;padding-top:16px;margin-bottom:18px;">
-        <p class="reg-label" style="margin-bottom:10px;">Account Details (read-only)</p>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;">
-          <div>
-            <label class="reg-label">Username</label>
-            <p id="pf_username" class="force-light-text" style="font-size:0.85rem;font-weight:600;margin:0;padding:8px 0;">{{ $user->email }}</p>
-          </div>
-          <div>
-            <label class="reg-label">Role</label>
-            <p id="pf_role" class="force-light-text" style="font-size:0.85rem;font-weight:600;margin:0;padding:8px 0;">{{ ucfirst($user->role) }}</p>
-          </div>
-          <div>
-            <label class="reg-label">Account Status</label>
-            <p id="pf_status" style="font-size:0.85rem;font-weight:600;margin:0;padding:8px 0;color:{{ $user->is_active ? '#33b481' : '#ef4444' }};">{{ $user->is_active ? 'Active' : 'Inactive' }}</p>
-          </div>
-        </div>
-      </div>
-
-      <div id="pf_profileFeedback" style="font-size:0.78rem;min-height:1.2rem;margin-bottom:10px;"></div>
-      <button id="pf_saveProfileBtn" class="reg-submit-btn">Save Changes</button>
-    </div>
-
-    {{-- SECTION 2: CHANGE PASSWORD --}}
-    <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 mb-6">
-      <h3 class="font-semibold text-base force-light-text tracking-tight mb-1">Change Password</h3>
-      <p class="text-xs text-[#64748b] mb-4">Use a strong password you don't use elsewhere.</p>
-
-      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;max-width:640px;">
-        <div style="grid-column:1/-1;">
-          <label class="reg-label">Current Password <span style="color:#ef4444;">*</span></label>
-          <input type="password" id="pf_currentPassword" class="reg-input" placeholder="Enter current password" autocomplete="current-password">
-        </div>
-        <div>
-          <label class="reg-label">New Password <span style="color:#ef4444;">*</span></label>
-          <input type="password" id="pf_newPassword" class="reg-input" placeholder="At least 8 characters" autocomplete="new-password">
-        </div>
-        <div>
-          <label class="reg-label">Confirm New Password <span style="color:#ef4444;">*</span></label>
-          <input type="password" id="pf_confirmPassword" class="reg-input" placeholder="Re-enter new password" autocomplete="new-password">
-        </div>
-      </div>
-
-      <div id="pf_passwordFeedback" style="font-size:0.78rem;min-height:1.2rem;margin:12px 0;"></div>
-      <button id="pf_savePasswordBtn" class="reg-submit-btn">Update Password</button>
-    </div>
-
-  </div>{{-- /page-profile --}}
-
       {{-- ===== NEW REGISTRATION PAGE ===== --}}
       <input type="hidden" id="rpStoreUrl" value="{{ route('staff.personnel.store') }}">
       <div id="page-registration" class="page-section">
@@ -1200,7 +1486,19 @@
               <div class="bg-[#23272f] rounded-xl border border-[#2a2d35] p-6 mb-5">
                 <div style="display:flex;align-items:center;gap:10px;font-weight:700;font-size:.85rem;color:#e5eaf2;margin-bottom:18px;text-transform:uppercase;letter-spacing:.04em;">Documents & Uploads</div>
                 <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:20px;">
-                  <div><label class="reg-label" style="margin-bottom:8px;display:block;">2x2 Photo <span style="color:#ef4444;">*</span></label><div onclick="document.getElementById('rp_photo').click()" style="border:2px dashed #2a2d35;border-radius:8px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;background:#13151a;text-align:center;"><p style="font-size:.75rem;color:#64748b;margin:0;">Click to capture or upload</p><p style="font-size:.7rem;color:#4b5563;margin:0;">2x2 ID Picture</p></div><input type="file" id="rp_photo" accept="image/*" style="display:none;" onchange="rpPreviewPhoto(this)"><div id="rp_photoPreview" style="display:none;margin-top:8px;text-align:center;"><img id="rp_photoImg" src="" style="width:80px;height:80px;object-fit:cover;border-radius:8px;border:1px solid #2a2d35;"></div></div>
+                  <div>
+                    <label class="reg-label" style="margin-bottom:8px;display:block;">2x2 Photo <span style="color:#ef4444;">*</span></label>
+                    <div style="border:2px dashed #2a2d35;border-radius:8px;padding:16px;background:#13151a;text-align:center;">
+                      <p style="font-size:.75rem;color:#64748b;margin:0 0 10px;">Upload a softcopy or take a photo now</p>
+                      <div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">
+                        <button type="button" id="rpAttachPhotoBtn" onclick="document.getElementById('rp_photo').click()" style="border:1px solid #64748b;background:#334155;color:#ffffff;border-radius:7px;padding:8px 12px;font-size:.72rem;font-weight:700;cursor:pointer;transition:background .15s,border-color .15s;">Attach Photo</button>
+                        <button type="button" onclick="rpOpenCamera()" style="border:none;background:#d4a017;color:#13151a;border-radius:7px;padding:8px 12px;font-size:.72rem;font-weight:800;cursor:pointer;">Capture Photo</button>
+                      </div>
+                      <p style="font-size:.68rem;color:#4b5563;margin:9px 0 0;">Use a clear, front-facing 2x2 ID photo</p>
+                    </div>
+                    <input type="file" id="rp_photo" accept="image/*" style="display:none;" onchange="rpPreviewPhoto(this)">
+                    <div id="rp_photoPreview" style="display:none;margin-top:8px;text-align:center;"><img id="rp_photoImg" src="" alt="2x2 personnel photo preview" style="width:100px;height:100px;object-fit:cover;border-radius:8px;border:1px solid #2a2d35;"><p id="rp_photoSource" style="font-size:.68rem;color:#33b481;margin:5px 0 0;"></p></div>
+                  </div>
                   <div><label class="reg-label" style="margin-bottom:8px;display:block;">Digital Signature <span style="color:#ef4444;">*</span></label><div id="rp_sigBox" onclick="rpOpenSig()" style="border:2px dashed #2a2d35;border-radius:8px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;background:#13151a;text-align:center;"><p style="font-size:.75rem;color:#64748b;margin:0;">Click to capture signature</p></div></div>
                   <div><label class="reg-label" style="margin-bottom:8px;display:block;">Supporting Documents</label><div onclick="document.getElementById('rp_docs').click()" style="border:2px dashed #2a2d35;border-radius:8px;padding:20px;display:flex;flex-direction:column;align-items:center;gap:8px;cursor:pointer;background:#13151a;text-align:center;"><p style="font-size:.75rem;color:#64748b;margin:0;">Click to upload files</p><p style="font-size:.7rem;color:#4b5563;margin:0;">PDF, JPG, PNG (Max 5MB)</p></div><input type="file" id="rp_docs" accept=".pdf,.jpg,.jpeg,.png" multiple style="display:none;" onchange="document.getElementById('rp_docNames').textContent=Array.from(this.files).map(f=>f.name).join(', ')"><div id="rp_docNames" style="font-size:.7rem;color:#64748b;margin-top:4px;"></div></div>
                 </div>
@@ -1261,6 +1559,21 @@
             <div style="display:flex;gap:10px;margin-top:12px;">
               <button type="button" onclick="rpClearSig()" style="flex:1;background:transparent;border:1px solid #2a2d35;color:#64748b;border-radius:7px;padding:8px;font-size:.82rem;cursor:pointer;">Clear</button>
               <button type="button" onclick="rpSaveSig()" style="flex:1;background:#d4a017;color:#13151a;border:none;border-radius:7px;padding:8px;font-size:.82rem;font-weight:700;cursor:pointer;">Save Signature</button>
+            </div>
+          </div>
+        </div>
+        <div id="rp_cameraModal" style="display:none;position:fixed;inset:0;z-index:2100;background:rgba(0,0,0,.82);align-items:center;justify-content:center;padding:16px;">
+          <div style="background:#1e2128;border:1px solid #2a2d35;border-radius:12px;padding:20px;width:100%;max-width:520px;">
+            <h3 style="font-weight:700;font-size:.95rem;color:#e5eaf2;margin:0 0 6px;">Capture 2x2 Photo</h3>
+            <p id="rp_cameraStatus" style="font-size:.75rem;color:#94a3b8;margin:0 0 12px;">Allow camera access, then center the personnel's face.</p>
+            <div style="aspect-ratio:1/1;background:#090b0f;border:1px solid #2a2d35;border-radius:10px;overflow:hidden;position:relative;">
+              <video id="rp_cameraVideo" autoplay muted playsinline style="width:100%;height:100%;object-fit:cover;"></video>
+              <div style="position:absolute;inset:8%;border:2px solid rgba(255,255,255,.7);border-radius:50%;pointer-events:none;"></div>
+            </div>
+            <canvas id="rp_cameraCanvas" width="600" height="600" style="display:none;"></canvas>
+            <div style="display:flex;gap:10px;margin-top:14px;">
+              <button type="button" onclick="rpCloseCamera()" style="flex:1;background:transparent;border:1px solid #465164;color:#94a3b8;border-radius:7px;padding:9px;cursor:pointer;">Cancel</button>
+              <button type="button" id="rp_cameraCaptureBtn" onclick="rpCapturePhoto()" style="flex:1;background:#d4a017;border:none;color:#13151a;border-radius:7px;padding:9px;font-weight:800;cursor:pointer;">Take Photo</button>
             </div>
           </div>
         </div>
@@ -1434,13 +1747,12 @@
       </div>
     </div>
   </div>
-  <script>
+<script src="{{ asset('js/rpcsp_excel.js') }}"></script>
+<script>
   document.addEventListener("DOMContentLoaded", function () {
 
     const CSRF       = document.querySelector('meta[name="csrf-token"]').content;
     const STORE_URL  = "{{ route('staff.personnel.store') }}";
-    const PROFILE_URL = "{{ route('staff.profile.update') }}";
-    const PASSWORD_URL = "{{ route('staff.profile.password') }}";
     const NOTIFY_URL = (id) => `/staff/personnel/${id}/notify`;
 
     // ── THEME ──────────────────────────────────────────────────────────────
@@ -1491,6 +1803,7 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
       if (page === "personnel") renderTable();
       if (page === "renewal" && window.renewalRenderAll) window.renewalRenderAll();
+      if (page === "report" && typeof staffPrepareReports === "function") staffPrepareReports();
     }
     document.addEventListener('rp-navigate', function(e) { navigateTo(e.detail); });
     document.querySelectorAll(".nav-link, .nav-item").forEach(btn => {
@@ -1498,104 +1811,6 @@
     });
     document.querySelectorAll(".quick-nav").forEach(btn => {
       btn.addEventListener("click", function () { navigateTo(this.dataset.page); });
-    });
-
-    const profileTrigger = document.getElementById('profileTrigger');
-    const profileDropdown = document.getElementById('profileDropdown');
-    const profileWrapper = document.getElementById('profileWrapper');
-
-    profileTrigger?.addEventListener('click', function (event) {
-      event.preventDefault();
-      event.stopPropagation();
-      profileDropdown.style.display = profileDropdown.style.display === 'block' ? 'none' : 'block';
-    });
-
-    profileDropdown?.addEventListener('click', function (event) {
-      event.stopPropagation();
-    });
-
-    document.addEventListener('click', function (event) {
-      if (profileWrapper && !profileWrapper.contains(event.target)) {
-        profileDropdown.style.display = 'none';
-      }
-    });
-
-    const profileDropdownLink = document.getElementById('profileDropdownLink');
-    profileDropdownLink?.addEventListener('click', function () {
-      navigateTo('profile');
-      profileDropdown.style.display = 'none';
-    });
-
-    function profileFeedback(element, message, success) {
-      element.textContent = message;
-      element.style.color = success ? '#33b481' : '#ef4444';
-    }
-
-    function validationMessage(json, fallback) {
-      if (json.errors) {
-        const firstError = Object.values(json.errors).flat()[0];
-        if (firstError) return firstError;
-      }
-      return json.message || fallback;
-    }
-
-    document.getElementById('pf_saveProfileBtn')?.addEventListener('click', async function () {
-      const feedback = document.getElementById('pf_profileFeedback');
-      const button = this;
-      feedback.textContent = '';
-      button.disabled = true;
-
-      try {
-        const response = await fetch(PROFILE_URL, {
-          method: 'PUT',
-          headers: {'Content-Type':'application/json', 'Accept':'application/json', 'X-CSRF-TOKEN':CSRF},
-          body: JSON.stringify({
-            name: document.getElementById('pf_name').value.trim(),
-            email: document.getElementById('pf_email').value.trim(),
-            contact_number: document.getElementById('pf_contact').value.trim()
-          })
-        });
-        const json = await response.json();
-        if (!response.ok) throw json;
-
-        document.getElementById('pf_username').textContent = json.user.email;
-        document.getElementById('headerStaffName').textContent = json.user.name;
-        profileFeedback(feedback, json.message, true);
-      } catch (error) {
-        profileFeedback(feedback, validationMessage(error, 'Unable to update profile.'), false);
-      } finally {
-        button.disabled = false;
-      }
-    });
-
-    document.getElementById('pf_savePasswordBtn')?.addEventListener('click', async function () {
-      const feedback = document.getElementById('pf_passwordFeedback');
-      const button = this;
-      feedback.textContent = '';
-      button.disabled = true;
-
-      try {
-        const response = await fetch(PASSWORD_URL, {
-          method: 'PUT',
-          headers: {'Content-Type':'application/json', 'Accept':'application/json', 'X-CSRF-TOKEN':CSRF},
-          body: JSON.stringify({
-            current_password: document.getElementById('pf_currentPassword').value,
-            password: document.getElementById('pf_newPassword').value,
-            password_confirmation: document.getElementById('pf_confirmPassword').value
-          })
-        });
-        const json = await response.json();
-        if (!response.ok) throw json;
-
-        document.getElementById('pf_currentPassword').value = '';
-        document.getElementById('pf_newPassword').value = '';
-        document.getElementById('pf_confirmPassword').value = '';
-        profileFeedback(feedback, json.message, true);
-      } catch (error) {
-        profileFeedback(feedback, validationMessage(error, 'Unable to change password.'), false);
-      } finally {
-        button.disabled = false;
-      }
     });
 
     // ── NOTIFICATIONS ──────────────────────────────────────────────────────
@@ -1681,6 +1896,7 @@
         document.getElementById("pending").innerText       = m.pending       ?? '0';
         personnel = json.personnel || [];
         document.getElementById("totalPersonnel").innerText = personnel.length;
+        if (typeof staffPrepareReports === 'function') staffPrepareReports();
         if (!chartsInitialized) {
           initCharts(m.totalNew??0, m.totalRenewed??0, m.withinRenewal??0, m.expired??0, m.pending??0);
           chartsInitialized = true;
@@ -1751,12 +1967,16 @@
     }
 
     function renderTable() {
-      const q       = "";
+      const q       = (document.getElementById('personnelNameFilter')?.value || '').trim().toLowerCase();
+      const rankF   = (document.getElementById('personnelRankFilter')?.value || '').trim().toLowerCase();
+      const unitF   = (document.getElementById('personnelUnitFilter')?.value || '').trim().toLowerCase();
       const statusF = document.getElementById("approvalFilter")?.value || "";
-      let filtered  = personnel.filter(p => {
+      let filtered  = [...new Map(personnel.map(p => [p.itemNumber, p])).values()].filter(p => {
         const nameMatch   = [p.firstName, p.middleName, p.lastName].some(v => (v||"").toLowerCase().includes(q));
         const statusMatch = statusF ? (p.approvedStatus||'pending').toLowerCase() === statusF.toLowerCase() : true;
-        return nameMatch && statusMatch;
+        const rankMatch = !rankF || (p.rank || '').toLowerCase().includes(rankF);
+        const unitMatch = !unitF || (p.unit || '').toLowerCase().includes(unitF);
+        return nameMatch && statusMatch && rankMatch && unitMatch;
       });
       filtered = sortList(filtered);
       const totalPages = Math.max(1, Math.ceil(filtered.length / ROWS_PER_PAGE));
@@ -1777,7 +1997,7 @@
     return `<tr class="border-b border-[#1a2025] hover:bg-[#1a2025] transition-colors">
       <td class="py-2 px-2 force-light-text">${r.itemNumber??''}</td>
       <td class="py-2 px-2 force-light-text">${r.dateOfValidity??''}</td>
-      <td class="py-2 px-2 force-light-text">${r.lastName??''}</td>
+      <td class="py-2 px-2 force-light-text">${(r.lastName??'').toUpperCase()} <span class="text-[#64748b]">|</span> ${r.rank??''}</td>
       <td class="py-2 px-2 force-light-text">${r.firstName??''}</td>
       <td class="py-2 px-2 force-light-text">${r.middleName??''}</td>
       <td class="py-2 px-2 force-light-text">${r.afpSerialNumber??''}</td>
@@ -1809,6 +2029,12 @@
 
     document.getElementById("sortSelect")?.addEventListener("change", e => { currentSort = e.target.value; renderTable(); });
     document.getElementById("approvalFilter")?.addEventListener("change", () => { currentTablePage = 1; renderTable(); });
+    ['personnelNameFilter','personnelRankFilter','personnelUnitFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', () => { currentTablePage = 1; renderTable(); }));
+    document.getElementById('personnelClearFilters')?.addEventListener('click', () => {
+      ['personnelNameFilter','personnelRankFilter','personnelUnitFilter','approvalFilter'].forEach(id => { document.getElementById(id).value = ''; });
+      currentTablePage = 1;
+      renderTable();
+    });
 
     // ── REGISTER MODAL ─────────────────────────────────────────────────────
     const registerOverlay  = document.getElementById('registerModalOverlay');
@@ -2113,11 +2339,281 @@
       let filtered = personnel.filter(p => { const ap=p.approvedStatus||'pending'; return (status?ap===status:true)&&(!from||(p.dateOfValidity&&p.dateOfValidity>=from))&&(!to||(p.dateOfValidity&&p.dateOfValidity<=to)); });
       exportCSV(filtered.map(r=>({itemNumber:r.itemNumber??'',lastName:r.lastName??'',firstName:r.firstName??'',middleName:r.middleName??'',afpSerialNumber:r.afpSerialNumber??'',dateOfValidity:r.dateOfValidity??'',approvedStatus:r.approvedStatus||'pending'})),"report_export.csv");
     });
+
+
+    // ── STAFF REPORT CENTER / RPCSP ────────────────────────────────────────
+    const staffReportRenewalTab = document.getElementById('staffReportRenewalTab');
+    const staffReportRpcspTab = document.getElementById('staffReportRpcspTab');
+    const staffRenewalReportPanel = document.getElementById('staffRenewalReportPanel');
+    const staffRpcspReportPanel = document.getElementById('staffRpcspReportPanel');
+
+    const staffRpcspAsOfDate = document.getElementById('staffRpcspAsOfDate');
+    const staffRpcspFundCluster = document.getElementById('staffRpcspFundCluster');
+    const staffRpcspOfficer = document.getElementById('staffRpcspOfficer');
+    const staffRpcspDesignation = document.getElementById('staffRpcspDesignation');
+    const staffRpcspAssumptionDate = document.getElementById('staffRpcspAssumptionDate');
+    const staffRpcspUnitValue = document.getElementById('staffRpcspUnitValue');
+    const staffRpcspUnitFilter = document.getElementById('staffRpcspUnitFilter');
+    const staffRpcspRemarks = document.getElementById('staffRpcspRemarks');
+
+    if (staffRpcspAsOfDate && !staffRpcspAsOfDate.value) {
+      staffRpcspAsOfDate.value = new Date().toISOString().slice(0, 10);
+    }
+
+    function staffSwitchReport(type) {
+      const rpcsp = type === 'rpcsp';
+
+      staffReportRenewalTab?.classList.toggle('active', !rpcsp);
+      staffReportRpcspTab?.classList.toggle('active', rpcsp);
+      staffRenewalReportPanel?.classList.toggle('active', !rpcsp);
+      staffRpcspReportPanel?.classList.toggle('active', rpcsp);
+
+      if (rpcsp) {
+        staffPrepareReports();
+        staffRenderRpcsp();
+      }
+    }
+
+    staffReportRenewalTab?.addEventListener('click', () => staffSwitchReport('renewal'));
+    staffReportRpcspTab?.addEventListener('click', () => staffSwitchReport('rpcsp'));
+
+    function staffRpcspEscape(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    function staffRpcspMoney(value) {
+      const amount = Number(value || 0);
+      return '₱' + amount.toLocaleString('en-PH', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+      });
+    }
+
+    function staffRpcspDate(value) {
+      if (!value) return '—';
+
+      const raw = String(value);
+      const d = new Date(raw.length === 10 ? raw + 'T00:00:00' : raw);
+
+      if (isNaN(d.getTime())) return raw;
+
+      return d.toLocaleDateString('en-US', {
+        day: '2-digit',
+        month: 'short',
+        year: 'numeric'
+      });
+    }
+
+    function staffPopulateRpcspUnits() {
+      if (!staffRpcspUnitFilter) return;
+
+      const current = staffRpcspUnitFilter.value;
+
+      const units = [...new Set(
+        personnel
+          .map(p => (p.unit || '').trim())
+          .filter(Boolean)
+      )].sort((a, b) => a.localeCompare(b));
+
+      staffRpcspUnitFilter.innerHTML =
+        '<option value="">All Units</option>' +
+        units.map(unit =>
+          `<option value="${staffRpcspEscape(unit)}">${staffRpcspEscape(unit)}</option>`
+        ).join('');
+
+      if (units.includes(current)) {
+        staffRpcspUnitFilter.value = current;
+      }
+    }
+
+    function staffPrepareReports() {
+      staffPopulateRpcspUnits();
+    }
+
+    function staffGetRpcspRows() {
+      const selectedUnit = (staffRpcspUnitFilter?.value || '').trim().toLowerCase();
+
+      return personnel.filter(p => {
+        if (!selectedUnit) return true;
+        return (p.unit || '').trim().toLowerCase() === selectedUnit;
+      });
+    }
+
+    function staffRenderRpcsp() {
+      const body = document.getElementById('staffRpcspTableBody');
+      if (!body) return;
+
+      const rows = staffGetRpcspRows();
+      const unitValue = Number(staffRpcspUnitValue?.value || 0);
+      const defaultRemarks = staffRpcspRemarks?.value || 'Serviceable';
+
+      document.getElementById('staffRpcspPreviewAsOf').textContent =
+        staffRpcspDate(staffRpcspAsOfDate?.value);
+
+      document.getElementById('staffRpcspPreviewFund').textContent =
+        staffRpcspFundCluster?.value.trim() || 'General Fund';
+
+      document.getElementById('staffRpcspPreviewOfficer').textContent =
+        staffRpcspOfficer?.value.trim() || '—';
+
+      document.getElementById('staffRpcspPreviewDesignation').textContent =
+        staffRpcspDesignation?.value.trim() || '—';
+
+      document.getElementById('staffRpcspPreviewAssumption').textContent =
+        staffRpcspDate(staffRpcspAssumptionDate?.value);
+
+      if (!rows.length) {
+        body.innerHTML =
+          '<tr><td colspan="11" class="rpcsp-empty">No personnel/firearm records match the selected filter.</td></tr>';
+
+        document.getElementById('staffRpcspTotalCount').textContent = '0';
+        document.getElementById('staffRpcspTotalValue').textContent = staffRpcspMoney(0);
+        return;
+      }
+
+      body.innerHTML = rows.map(p => {
+        const description =
+          (p.pistolNomenclature || '').trim() || 'Pistol';
+
+        // The current system does not yet have a dedicated
+        // semi_expendable_property_number field.
+        // Use firearm/pistol serial number first, then AFP serial as fallback.
+        const propertyNumber =
+          (p.pistolSerialNumber || '').trim() ||
+          (p.afpSerialNumber || '').trim() ||
+          '—';
+
+        const balance = 1;
+        const onHand = 1;
+        const shortageQuantity = Math.max(0, balance - onHand);
+        const shortageValue = shortageQuantity * unitValue;
+
+        return `
+          <tr>
+            <td>Pistol</td>
+            <td>${staffRpcspEscape(description)}</td>
+            <td>${staffRpcspEscape(propertyNumber)}</td>
+            <td>ea</td>
+            <td>${staffRpcspMoney(unitValue)}</td>
+            <td>${balance}</td>
+            <td>${onHand}</td>
+            <td>${shortageQuantity ? shortageQuantity : ''}</td>
+            <td>${shortageValue ? staffRpcspMoney(shortageValue) : ''}</td>
+            <td>${staffRpcspEscape(defaultRemarks)}</td>
+            <td>${staffRpcspEscape(staffRpcspDate(p.dateOfValidity))}</td>
+          </tr>
+        `;
+      }).join('');
+
+      document.getElementById('staffRpcspTotalCount').textContent =
+        String(rows.length);
+
+      document.getElementById('staffRpcspTotalValue').textContent =
+        staffRpcspMoney(rows.length * unitValue);
+    }
+
+    document.getElementById('staffPreviewRpcspBtn')?.addEventListener('click', staffRenderRpcsp);
+    staffRpcspUnitFilter?.addEventListener('change', staffRenderRpcsp);
+    staffRpcspRemarks?.addEventListener('change', staffRenderRpcsp);
+
+    document.getElementById('staffPrintRpcspBtn')?.addEventListener('click', function () {
+      staffRenderRpcsp();
+
+      const documentEl = document.getElementById('staffRpcspDocument');
+      if (!documentEl) return;
+
+      const printWindow = window.open('', '_blank');
+
+      if (!printWindow) {
+        showSystemMessage?.('Please allow pop-ups to print the RPCSP.', 'RPCSP');
+        return;
+      }
+
+      printWindow.document.write(`<!doctype html>
+        <html>
+        <head>
+          <meta charset="utf-8">
+          <title>RPCSP - ${staffRpcspEscape(staffRpcspAsOfDate?.value || '')}</title>
+          <style>
+            @page{size:A4 landscape;margin:8mm;}
+            *{box-sizing:border-box;}
+            body{margin:0;background:#fff;color:#111;font-family:Arial,Helvetica,sans-serif;}
+            .rpcsp-document{width:100%;background:#fff;color:#111;padding:0;}
+            .rpcsp-title{text-align:center;font-weight:700;font-size:14px;line-height:1.15;margin:0;}
+            .rpcsp-subtitle{text-align:center;font-size:10px;line-height:1.2;margin:1px 0;}
+            .rpcsp-asof{text-align:center;font-size:10px;margin:2px 0 10px;}
+            .rpcsp-fund{font-size:10px;text-decoration:underline;margin:0 0 9px;}
+            .rpcsp-forwhich{font-size:10px;line-height:1.3;margin:0 0 8px;}
+            .accountable-name{font-weight:700;text-transform:uppercase;}
+            .rpcsp-table{width:100%;border-collapse:collapse;table-layout:fixed;font-size:8px;}
+            .rpcsp-table th,.rpcsp-table td{border:1px solid #222;padding:3px 4px;vertical-align:middle;}
+            .rpcsp-table th{text-align:center;font-weight:700;}
+            .rpcsp-table td{text-align:center;}
+            .rpcsp-table td:nth-child(1),.rpcsp-table td:nth-child(2),.rpcsp-table td:nth-child(10){text-align:left;}
+            .rpcsp-summary{display:flex;justify-content:flex-end;gap:25px;margin-top:8px;font-size:9px;}
+            .rpcsp-note{font-size:8px;color:#555;margin-top:7px;}
+            .rpcsp-certification{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:36px;margin-top:30px;font-size:10px;line-height:1.3;}
+            .rpcsp-certification-title{font-weight:700;margin:0 0 34px;}
+            .rpcsp-certification-column{break-inside:avoid;page-break-inside:avoid;}
+            .rpcsp-signatory{break-inside:avoid;page-break-inside:avoid;}
+            .rpcsp-signatory + .rpcsp-signatory{margin-top:28px;}
+            .rpcsp-signatory p{margin:0;}
+            .rpcsp-signatory-name{font-weight:700;}
+          </style>
+        </head>
+        <body>
+          <div class="rpcsp-document">${documentEl.innerHTML}</div>
+        </body>
+        </html>`);
+
+      printWindow.document.close();
+
+      setTimeout(() => {
+        printWindow.focus();
+        printWindow.print();
+      }, 350);
+    });
+
+    document.getElementById('staffExportRpcspBtn')?.addEventListener('click', function () {
+      const rows = staffGetRpcspRows();
+      if (!rows.length) {
+        showSystemMessage?.('No RPCSP records are available to export.', 'RPCSP');
+        return;
+      }
+      const unitValue = Number(staffRpcspUnitValue?.value || 0);
+      const defaultRemarks = staffRpcspRemarks?.value || 'Serviceable';
+
+      exportRpcspExcel({
+        filename: 'RPCSP_' + (staffRpcspAsOfDate?.value || new Date().toISOString().slice(0, 10)) + '.xls',
+        asOf: staffRpcspDate(staffRpcspAsOfDate?.value),
+        fund: staffRpcspFundCluster?.value.trim() || 'General Fund',
+        officer: staffRpcspOfficer?.value.trim() || '—',
+        designation: staffRpcspDesignation?.value.trim() || '—',
+        assumption: staffRpcspDate(staffRpcspAssumptionDate?.value),
+        totalValue: rows.length * unitValue,
+        rows: rows.map(p => ({
+          article: 'Pistol',
+          description: p.pistolNomenclature || 'Pistol',
+          propertyNumber: (p.pistolSerialNumber || '').trim() || (p.afpSerialNumber || '').trim() || '—',
+          unit: 'ea', unitValue: unitValue, balance: 1, onHand: 1,
+          shortageQuantity: '', shortageValue: '', remarks: defaultRemarks,
+          date: staffRpcspDate(p.dateOfValidity)
+        }))
+      });
+    });
+
   // ── RENEWAL MODULE ──────────────────────────────────────────────────────
     (function initRenewal() {
       var renewalTab = 'renewed';
       var renewalPage = 1;
       var RENEWAL_PER_PAGE = 10;
+      var renewalSelected = new Set();
+      var renewalFiltered = [];
       var TAB_STYLES = {
         renewed: { border:'#1a5c3a', bg:'#0c2418', color:'#33b481' },
         within:  { border:'#5c4a1a', bg:'#241c06', color:'#f6e05e' },
@@ -2126,6 +2622,7 @@
 
       window.renewalSetTab = function(tab) {
         renewalTab = tab; renewalPage = 1;
+        renewalSelected.clear();
         ['renewed','within','expired'].forEach(function(t) {
           var el = document.getElementById('renewaltab-' + t);
           if (!el) return;
@@ -2168,10 +2665,44 @@
 
       function daysRemaining(dateStr) {
         if (!dateStr) return null;
-        var target = new Date(dateStr);
+        var parts = String(dateStr).slice(0, 10).split('-');
+        var target = parts.length === 3
+          ? new Date(Number(parts[0]), Number(parts[1]) - 1, Number(parts[2]))
+          : new Date(dateStr);
         if (isNaN(target)) return null;
-        return Math.ceil((target - new Date()) / (1000*60*60*24));
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        return Math.round((target - today) / (1000*60*60*24));
       }
+
+      function renewalDurationBadge(r) {
+        var days = daysRemaining(r.dateOfValidity);
+        if (days === null) return '<span class="text-[#94a3b8]">No validity date</span>';
+        if (days < 0) return '<span class="badge badge-text badge-expired">' + Math.abs(days) + ' day' + (Math.abs(days) === 1 ? '' : 's') + ' overdue</span>';
+        if (days === 0) return '<span class="badge badge-text badge-within">Expires today</span>';
+        return '<span class="badge badge-text ' + (renewalTab === 'within' ? 'badge-within' : 'badge-renewed') + '">' + days + ' day' + (days === 1 ? '' : 's') + ' remaining</span>';
+      }
+
+      function renewalUpdateSelection() {
+        var count = document.getElementById('renewalSelectedCount');
+        var button = document.getElementById('renewalNotifyAllBtn');
+        var selectedCount = renewalSelected.size;
+        if (count) count.textContent = selectedCount;
+        if (button) { button.disabled = selectedCount === 0; button.style.opacity = selectedCount === 0 ? '0.55' : '1'; }
+        var selectAll = document.getElementById('renewalSelectAll');
+        if (selectAll) {
+          var ids = renewalFiltered.map(function(p){ return String(p.itemNumber); });
+          selectAll.checked = ids.length > 0 && ids.every(function(id){ return renewalSelected.has(id); });
+          selectAll.indeterminate = ids.some(function(id){ return renewalSelected.has(id); }) && !selectAll.checked;
+          selectAll.disabled = renewalTab === 'renewed' || ids.length === 0;
+        }
+      }
+
+      window.renewalToggleSelection = function(itemNum, checked) {
+        var id = String(itemNum);
+        if (checked) renewalSelected.add(id); else renewalSelected.delete(id);
+        renewalUpdateSelection();
+      };
 
       function fmtDateShort(dateStr) {
         if (!dateStr) return '—';
@@ -2203,6 +2734,15 @@
           if (!q) return true;
           return [p.lastName, p.firstName, p.middleName, p.afpSerialNumber].some(function(v){ return (v||'').toLowerCase().includes(q); });
         });
+        var sort = (document.getElementById('renewalDurationSort')||{}).value || 'soonest';
+        filtered.sort(function(a, b) {
+          if (sort === 'name') return String(a.lastName||'').localeCompare(String(b.lastName||''));
+          var ad = daysRemaining(a.dateOfValidity), bd = daysRemaining(b.dateOfValidity);
+          ad = ad === null ? Number.POSITIVE_INFINITY : ad;
+          bd = bd === null ? Number.POSITIVE_INFINITY : bd;
+          return sort === 'latest' ? bd - ad : ad - bd;
+        });
+        renewalFiltered = filtered;
         var total = filtered.length;
         var pages = Math.max(1, Math.ceil(total / RENEWAL_PER_PAGE));
         if (renewalPage > pages) renewalPage = 1;
@@ -2212,30 +2752,21 @@
         var info = document.getElementById('renewalTblInfo');
 
         if (!pageData.length) {
-          tbody.innerHTML = '<tr><td colspan="7" class="text-center py-6 text-gray-400">No records found.</td></tr>';
+          tbody.innerHTML = '<tr><td colspan="8" class="text-center py-6 text-gray-400">No records found.</td></tr>';
           if (info) info.textContent = 'Showing 0 records';
           renewalPagination(0);
+          renewalUpdateSelection();
           return;
         }
 
       tbody.innerHTML = pageData.map(function(r, i) {
     var name = (r.lastName||'') + ', ' + (r.firstName||'') + (r.middleName ? ' ' + r.middleName : '');
 
-    var badge;
-    if (renewalTab === 'renewed') {
-      badge = '<span class="badge badge-text badge-renewed">Renewed</span>';
-    } else {
-      var dr = daysRemaining(r.dateOfValidity); // may return null, negative, or positive
-      if (renewalTab === 'within') {
-        var leftText = (dr !== null) ? (dr + ' days left') : '—';
-        badge = '<span class="badge badge-text badge-within">Within Renewal Period</span>';
-      } else { // expired
-        var agoText = (dr !== null) ? (Math.abs(dr) + ' days ago') : '—';
-        badge = '<span class="badge badge-text badge-expired">Expired</span>';
-      }
-    }
+    var badge = renewalDurationBadge(r);
+    var checkbox = renewalTab === 'renewed' ? '' : '<input type="checkbox" aria-label="Select personnel" onchange="renewalToggleSelection(' + JSON.stringify(r.itemNumber) + ', this.checked)" ' + (renewalSelected.has(String(r.itemNumber)) ? 'checked' : '') + ' style="accent-color:#33b481;">';
 
     return '<tr class="border-b border-[#1a2025] hover:bg-[#1a2025] transition-colors">'
+      + '<td class="py-2 px-2">' + checkbox + '</td>'
       + '<td class="py-2 px-2 force-light-text">' + (start + i + 1) + '</td>'
       + '<td class="py-2 px-2 force-light-text">' + name + '</td>'
       + '<td class="py-2 px-2 force-light-text">' + (r.rank||'—') + '</td>'
@@ -2248,6 +2779,7 @@
 
         if (info) info.textContent = 'Showing ' + (start+1) + '–' + Math.min(start+RENEWAL_PER_PAGE, total) + ' of ' + total + ' entries';
         renewalPagination(pages);
+        renewalUpdateSelection();
       }
 
       function renewalPagination(pages) {
@@ -2265,6 +2797,15 @@
 
       document.getElementById('renewalSearch')?.addEventListener('input', function(){ renewalPage = 1; renewalRenderTable(); });
       document.getElementById('renewalUnitFilter')?.addEventListener('change', function(){ renewalPage = 1; renewalRenderTable(); });
+      document.getElementById('renewalDurationSort')?.addEventListener('change', function(){ renewalPage = 1; renewalRenderTable(); });
+      document.getElementById('renewalSelectAll')?.addEventListener('change', function() {
+        var checked = this.checked;
+        renewalFiltered.forEach(function(p) {
+          var id = String(p.itemNumber);
+          if (checked) renewalSelected.add(id); else renewalSelected.delete(id);
+        });
+        renewalRenderTable();
+      });
 
       window.renewalOpenDetails = function(itemNum) {
         var r = personnel.find(function(x){ return x.itemNumber == itemNum; });
@@ -2339,14 +2880,14 @@
       window.renewalNotifyAll = function() {
         var status = renewalTab;
         if (status !== 'within' && status !== 'expired') return;
-        var list = personnel.filter(function(p){ return (p.approvedStatus||'pending') === status; });
+        var list = personnel.filter(function(p){ return (p.approvedStatus||'pending') === status && renewalSelected.has(String(p.itemNumber)); });
         var withEmail = list.filter(function(p){ return p.email && p.email !== 'undefined' && p.email !== 'null'; });
         var withoutEmail = list.length - withEmail.length;
         if (!withEmail.length) {
           showSystemModal('No email addresses', 'No personnel in this list have an email on record.', false);
           return;
         }
-        var confirmation = 'Send notification email to ' + withEmail.length + ' personnel (' + status + ')?' +
+        var confirmation = 'Send notification email to the ' + withEmail.length + ' selected personnel?' +
           (withoutEmail ? ' ' + withoutEmail + ' record(s) will be skipped (no email).' : '');
         showSystemModal('Confirm notification', confirmation, true).then(function(confirmed) {
           if (!confirmed) return;
@@ -2378,7 +2919,9 @@
 
         chain.then(function() {
           btn.disabled = false; btn.innerHTML = origHtml;
-          showSystemModal('Notify All complete', 'Notify All complete: ' + sent + ' sent, ' + failed + ' failed' + (withoutEmail ? ', ' + withoutEmail + ' skipped (no email)' : '') + '.', false);
+          renewalSelected.clear();
+          renewalRenderTable();
+          showSystemModal('Notifications complete', 'Selected notifications: ' + sent + ' sent, ' + failed + ' failed' + (withoutEmail ? ', ' + withoutEmail + ' skipped (no email)' : '') + '.', false);
         });
         });
       };
@@ -2400,6 +2943,15 @@
       var ICS_PER_PAGE = 10;
 
       function getIcsStatus(p) { return p.icsStatus || 'inspection'; }
+
+      function personnelSignatureSrc(signature) {
+        if (!signature) return null;
+        var value = String(signature).trim().replace(/^['"]|['"]$/g, '');
+        if (!value) return null;
+        if (/^(data:image\/|https?:\/\/|\/)/i.test(value)) return value;
+        if (/^(storage|images)\//i.test(value)) return '/' + value;
+        return 'data:image/png;base64,' + value.replace(/\s/g, '');
+      }
 
       window.icsSetTab = function(tab) {
         icsActiveTab = tab; icsPage = 1;
@@ -2539,7 +3091,7 @@
     set('icsSerialField',     p.afpSerialNumber || '');
     set('icsAmmoField',       p.qtyAmmo != null ? String(p.qtyAmmo) : '');
     set('receivedByField',    ln.toUpperCase() + ', ' + fn.toUpperCase());
-    set('issuedByField',      'Juan D. la Cruz');
+    set('issuedByField',      'MS ROSEMARIE O VILBAR');
 
   // ── Auto-load personnel photo from DB (base64) ──
     var paperPhoto = document.getElementById('previewPaperPhoto');
@@ -2556,12 +3108,8 @@
     }
 
     // ── Auto-load personnel's own signature from registration (base64) ──
-    if (p.signature && p.signature.trim() !== '') {
-      var sigSrc = p.signature.startsWith('data:') ? p.signature : 'data:image/png;base64,' + p.signature;
-      applySig('custodian', sigSrc);
-    } else {
-      applySig('custodian', null);
-    }
+    applySig('custodian', personnelSignatureSrc(p.signature));
+    applySig('issuing', ICS_DEFAULT_ISSUER_SIGNATURE);
 
     var crumb = document.getElementById('ics-doc-crumb');
     if (crumb) crumb.textContent = '→ ICS for ' + ln + ', ' + fn + ' (' + (p.afpSerialNumber || '') + ')';
@@ -2611,16 +3159,18 @@
 
       const ICS_KEY="staff_ics_details_v1", PHOTO_KEY="staff_ics_photo_v1", AMMO_COST=15.07;
       const PLACEHOLDER="{{ asset('images/logo.png') }}";
-      const defaults={icsNo:"ICS-0001",icsValidity:"",rank:"CPT",personnelName:"Juan D. Cruz",unit:"8IB, 4ID, PA",firearm:"9mm Glock17",serial:"AFP023947",ammo:"68",receivedBy:"John Doe",issuedBy:"Juan D. la Cruz"};
+      const ICS_DEFAULT_ISSUER="MS ROSEMARIE O VILBAR";
+      const ICS_DEFAULT_ISSUER_SIGNATURE=@json(asset('images/ROSEMARIE VILBAR.png'));
+      const defaults={icsNo:"ICS-0001",icsValidity:"",rank:"CPT",personnelName:"Juan D. Cruz",unit:"8IB, 4ID, PA",firearm:"9mm Glock17",serial:"AFP023947",ammo:"68",receivedBy:"John Doe",issuedBy:ICS_DEFAULT_ISSUER};
       const fieldMap={icsNo:"icsNoField",icsValidity:"icsValidityField",rank:"rankField",personnelName:"personnelNameField",unit:"unitField",firearm:"icsFirearmField",serial:"icsSerialField",ammo:"icsAmmoField",receivedBy:"receivedByField",issuedBy:"issuedByField"};
       function fmtDate(val){if(!val)return"";const d=new Date(val);if(isNaN(d))return val;const mo=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return`${String(d.getDate()).padStart(2,"0")}/${mo[d.getMonth()]}/${d.getFullYear()}`;}
       function todayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
       function setText(id,v){const el=document.getElementById(id);if(el)el.textContent=v||"";}
-      function renderICSPreview(d){const rank=(d.rank||"").trim().toUpperCase(),name=(d.personnelName||"").trim(),serial=(d.serial||"").trim();const ammoQty=parseInt(d.ammo)||0,ammoTotal=(ammoQty*AMMO_COST).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2});setText("previewIcsNo",d.icsNo||"");setText("previewIcsValidity",fmtDate(d.icsValidity));setText("previewRank",rank);setText("previewPersonnelName",name);setText("previewUnit",d.unit||"");setText("previewSerial",serial);setText("previewFirearm",d.firearm||"");setText("previewSerialDesc",serial||"—");setText("previewInventoryItem",serial||"—");setText("previewRankName",`${rank} ${name}`.trim()||"—");setText("previewAmmo",String(ammoQty));setText("previewAmmoTotal",`P ${ammoTotal}`);setText("previewReceivedBy",(d.receivedBy||"").toUpperCase()||"—");setText("previewIssuedBy",(d.issuedBy||"").toUpperCase()||"—");setText("previewReceivedOffice",d.unit||"—");setText("previewIssuedOffice","Chief, PAO GS, APAO, PA");const sd=fmtDate(todayStr());setText("previewSignDateLeft",sd);setText("previewSignDateRight",sd);}
+      function renderICSPreview(d){const rank=(d.rank||"").trim().toUpperCase(),name=(d.personnelName||"").trim(),serial=(d.serial||"").trim();const ammoQty=parseInt(d.ammo)||0,ammoTotal=(ammoQty*AMMO_COST).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2});setText("previewIcsNo",d.icsNo||"");setText("previewIcsValidity",fmtDate(d.icsValidity));setText("previewRank",rank);setText("previewPersonnelName",name);setText("previewUnit",d.unit||"");setText("previewSerial",serial);setText("previewFirearm",d.firearm||"");setText("previewSerialDesc",serial||"—");setText("previewInventoryItem",serial||"—");setText("previewRankName",`${rank} ${name}`.trim()||"—");setText("previewAmmo",String(ammoQty));setText("previewAmmoTotal",`P ${ammoTotal}`);setText("previewReceivedBy",(d.receivedBy||"").toUpperCase()||"—");setText("previewIssuedBy",(d.issuedBy||"").toUpperCase()||"—");setText("previewReceivedOffice",d.unit||"—");setText("previewIssuedOffice","Chief, PAOGS, APAO, PA");const sd=fmtDate(todayStr());setText("previewSignDateLeft",sd);setText("previewSignDateRight",sd);}
       function fillForm(d){Object.entries(fieldMap).forEach(([key,fId])=>{const el=document.getElementById(fId);if(el)el.value=d[key]!=null?String(d[key]):"";});}
       function collectForm(){const d={};Object.entries(fieldMap).forEach(([key,fId])=>{const el=document.getElementById(fId);d[key]=el?el.value.trim():"";});return d;}
       function saveICS(d){try{localStorage.setItem(ICS_KEY,JSON.stringify(d));}catch(e){}}
-      function loadICS(){try{const r=localStorage.getItem(ICS_KEY);if(r)return{...defaults,...JSON.parse(r)};}catch(e){}return{...defaults};}
+      function loadICS(){try{const r=localStorage.getItem(ICS_KEY);if(r){const saved=JSON.parse(r);if(!saved.issuedBy||/juan\s+d\.?\s*(la\s*)?cruz/i.test(saved.issuedBy))saved.issuedBy=ICS_DEFAULT_ISSUER;return{...defaults,...saved};}}catch(e){}return{...defaults};}
       let icsData=loadICS();fillForm(icsData);renderICSPreview(icsData);
       Object.values(fieldMap).forEach(fId=>{const el=document.getElementById(fId);if(!el)return;el.addEventListener(el.type==="date"?"change":"input",()=>{icsData=collectForm();renderICSPreview(icsData);saveICS(icsData);});});
       document.getElementById("icsResetBtn")?.addEventListener("click",()=>{icsData={...defaults};fillForm(icsData);renderICSPreview(icsData);saveICS(icsData);});
@@ -2632,12 +3182,12 @@
       new MutationObserver(()=>{if(icsSection.classList.contains("active")){populateICSSelect();icsRenderTable();}}).observe(icsSection,{attributes:true,attributeFilter:["class"]});
       if(icsSection.classList.contains("active")){populateICSSelect();icsRenderTable();}
 
-      document.getElementById("icsAutoFillBtn")?.addEventListener("click",()=>{const sel=document.getElementById("icsPersonnelSelect");if(!sel||sel.value==="")return;const p=personnel[parseInt(sel.value)];if(!p)return;icsData={...icsData,personnelName:`${p.firstName||""} ${p.middleName?p.middleName[0]+".":""} ${p.lastName||""}`.replace(/\s+/g," ").trim(),serial:p.afpSerialNumber||icsData.serial,icsValidity:p.dateOfValidity||icsData.icsValidity,ammo:p.qtyAmmo!=null?String(p.qtyAmmo):icsData.ammo,firearm:p.pistolNomenclature||icsData.firearm};fillForm(icsData);renderICSPreview(icsData);saveICS(icsData);});
+      document.getElementById("icsAutoFillBtn")?.addEventListener("click",()=>{const sel=document.getElementById("icsPersonnelSelect");if(!sel||sel.value==="")return;const p=personnel[parseInt(sel.value)];if(!p)return;icsData={...icsData,personnelName:`${p.firstName||""} ${p.middleName?p.middleName[0]+".":""} ${p.lastName||""}`.replace(/\s+/g," ").trim(),serial:p.afpSerialNumber||icsData.serial,icsValidity:p.dateOfValidity||icsData.icsValidity,ammo:p.qtyAmmo!=null?String(p.qtyAmmo):icsData.ammo,firearm:p.pistolNomenclature||icsData.firearm};fillForm(icsData);renderICSPreview(icsData);applySig("custodian",personnelSignatureSrc(p.signature));saveICS(icsData);});
 
       const ICS_SIG_C_KEY="staff_ics_sig_custodian_v1",ICS_SIG_I_KEY="staff_ics_sig_issuing_v1";
       function applySig(side,src){const isC=side==="custodian";const previewImg=document.getElementById(isC?"custodianSigPreview":"issuingSigPreview");const placeholder=document.getElementById(isC?"custodianSigPlaceholder":"issuingSigPlaceholder");const paperWrap=document.getElementById(isC?"previewCustodianSigWrap":"previewIssuingSigWrap");const paperImg=document.getElementById(isC?"previewCustodianSig":"previewIssuingSig");const key=isC?ICS_SIG_C_KEY:ICS_SIG_I_KEY;if(src){if(previewImg){previewImg.src=src;previewImg.style.display="block";}if(placeholder)placeholder.style.display="none";if(paperWrap)paperWrap.style.display="flex";if(paperImg)paperImg.src=src;try{localStorage.setItem(key,src);}catch(e){}}else{if(previewImg){previewImg.src="";previewImg.style.display="none";}if(placeholder)placeholder.style.display="inline";if(paperWrap)paperWrap.style.display="none";if(paperImg)paperImg.src="";try{localStorage.removeItem(key);}catch(e){}}}
       // Custodian signature is now loaded per-personnel in icsOpenDoc() — not from a global key
-      try{const s=localStorage.getItem(ICS_SIG_I_KEY);if(s)applySig("issuing",s);}catch(e){}
+      try{const s=localStorage.getItem(ICS_SIG_I_KEY);applySig("issuing",s||ICS_DEFAULT_ISSUER_SIGNATURE);}catch(e){applySig("issuing",ICS_DEFAULT_ISSUER_SIGNATURE);}
       function wireSignature(side){const isC=side==="custodian";const inputEl=document.getElementById(isC?"custodianSigInput":"issuingSigInput");const uploadBtn=document.getElementById(isC?"uploadCustodianSigBtn":"uploadIssuingSigBtn");const clearBtn=document.getElementById(isC?"clearCustodianSigBtn":"clearIssuingSigBtn");uploadBtn?.addEventListener("click",()=>inputEl?.click());clearBtn?.addEventListener("click",()=>{applySig(side,null);if(inputEl)inputEl.value="";});inputEl?.addEventListener("change",function(){const file=this.files?.[0];if(!file||!file.type.startsWith("image/"))return;const reader=new FileReader();reader.onload=ev=>applySig(side,ev.target.result);reader.readAsDataURL(file);});}
       wireSignature("custodian");wireSignature("issuing");
 
@@ -2846,8 +3396,11 @@
             rpSetStep(1);
             rpPhotoBase64 = null;
             rpSignatureBase64 = null;
+            rpCloseCamera();
             document.getElementById('rp_sigBox').innerHTML = '<p style="font-size:.75rem;color:#64748b;margin:0;">Click to capture signature</p>';
             document.getElementById('rp_photoPreview').style.display = 'none';
+            document.getElementById('rp_photo').value = '';
+            document.getElementById('rp_photoSource').textContent = '';
             ['rp_lastName','rp_firstName','rp_middleName','rp_afpSerial','rp_email','rp_contact','rp_pistolSerial','rp_ammo','rp_issuedBy','rp_armory','rp_remarks','rp_afosMos','rp_branch'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
             ['rp_rank','rp_unit','rp_pistolNomenclature','rp_pistolType','rp_civil','rp_gender','rp_citizenship','rp_dob','rp_dateIssued'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
             ['rp_parIssuedBy','rp_parApprovedBy','rp_parValidUntil','rp_parRemarks'].forEach(function(id){document.getElementById(id).value='';});
@@ -2864,18 +3417,92 @@
 
   var rpPhotoBase64 = null;
   var rpSignatureBase64 = null;
+  var rpCameraStream = null;
+
+  function rpSetPhoto(dataUrl, sourceLabel) {
+    rpPhotoBase64 = dataUrl;
+    document.getElementById('rp_photoImg').src = dataUrl;
+    document.getElementById('rp_photoPreview').style.display = 'block';
+    document.getElementById('rp_photoSource').textContent = sourceLabel || 'Photo ready';
+  }
 
   function rpPreviewPhoto(input) {
     if (input.files && input.files[0]) {
+      if (!input.files[0].type.startsWith('image/')) return;
       var reader = new FileReader();
       reader.onload = function(e) {
-        rpPhotoBase64 = e.target.result;
-        document.getElementById('rp_photoImg').src = e.target.result;
-        document.getElementById('rp_photoPreview').style.display = 'block';
+        rpSetPhoto(e.target.result, 'Attached photo ready');
       };
       reader.readAsDataURL(input.files[0]);
     }
   }
+
+  async function rpOpenCamera() {
+    var modal = document.getElementById('rp_cameraModal');
+    var status = document.getElementById('rp_cameraStatus');
+    var captureBtn = document.getElementById('rp_cameraCaptureBtn');
+    modal.style.display = 'flex';
+    status.textContent = 'Requesting camera access...';
+    status.style.color = '#94a3b8';
+    captureBtn.disabled = true;
+
+    if (!navigator.mediaDevices || !navigator.mediaDevices.getUserMedia) {
+      status.textContent = 'Camera access is unavailable. Use HTTPS or attach a photo instead.';
+      status.style.color = '#fc8181';
+      return;
+    }
+
+    try {
+      rpStopCameraStream();
+      rpCameraStream = await navigator.mediaDevices.getUserMedia({
+        video: { facingMode: 'user', width: { ideal: 1280 }, height: { ideal: 1280 } },
+        audio: false
+      });
+      var video = document.getElementById('rp_cameraVideo');
+      video.srcObject = rpCameraStream;
+      await video.play();
+      status.textContent = 'Center the face and shoulders inside the guide.';
+      captureBtn.disabled = false;
+    } catch (error) {
+      status.textContent = error.name === 'NotAllowedError'
+        ? 'Camera permission was denied. Allow camera access or attach a photo instead.'
+        : 'The camera could not be opened. Attach a photo instead.';
+      status.style.color = '#fc8181';
+    }
+  }
+
+  function rpStopCameraStream() {
+    if (rpCameraStream) {
+      rpCameraStream.getTracks().forEach(function(track) { track.stop(); });
+      rpCameraStream = null;
+    }
+    var video = document.getElementById('rp_cameraVideo');
+    if (video) video.srcObject = null;
+  }
+
+  function rpCloseCamera() {
+    rpStopCameraStream();
+    var modal = document.getElementById('rp_cameraModal');
+    if (modal) modal.style.display = 'none';
+  }
+
+  function rpCapturePhoto() {
+    var video = document.getElementById('rp_cameraVideo');
+    if (!video.videoWidth || !video.videoHeight) return;
+
+    var canvas = document.getElementById('rp_cameraCanvas');
+    var ctx = canvas.getContext('2d');
+    var sourceSize = Math.min(video.videoWidth, video.videoHeight);
+    var sourceX = (video.videoWidth - sourceSize) / 2;
+    var sourceY = (video.videoHeight - sourceSize) / 2;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    ctx.drawImage(video, sourceX, sourceY, sourceSize, sourceSize, 0, 0, canvas.width, canvas.height);
+    rpSetPhoto(canvas.toDataURL('image/jpeg', 0.9), 'Camera photo ready');
+    document.getElementById('rp_photo').value = '';
+    rpCloseCamera();
+  }
+
+  window.addEventListener('pagehide', rpStopCameraStream);
 
   function rpOpenSig() {
     var modal=document.getElementById('rp_sigModal'); modal.style.display='flex';
@@ -2897,6 +3524,49 @@
     document.getElementById('rp_sigBox').innerHTML='<img src="'+data+'" style="max-height:55px;border-radius:6px;"><p style="font-size:.68rem;color:#64748b;margin:0;">Signature saved ✓</p>';
   }
   </script>
-  </body>
+
+  {{-- =========================================================
+       STAFF DASHBOARD - 30 MINUTE INACTIVITY AUTO LOGOUT
+  ========================================================= --}}
+  <form id="autoLogoutForm"
+        method="POST"
+        action="{{ route('logout') }}"
+        style="display:none;">
+    @csrf
+  </form>
+
+  <script>
+  document.addEventListener('DOMContentLoaded', function () {
+    const INACTIVITY_LIMIT = 30 * 60 * 1000; // 30 minutes
+    let inactivityTimer;
+
+    function resetInactivityTimer() {
+      clearTimeout(inactivityTimer);
+
+      inactivityTimer = setTimeout(function () {
+        const logoutForm = document.getElementById('autoLogoutForm');
+
+        if (logoutForm) {
+          logoutForm.submit();
+        }
+      }, INACTIVITY_LIMIT);
+    }
+
+    [
+      'mousemove',
+      'mousedown',
+      'keydown',
+      'scroll',
+      'touchstart',
+      'click'
+    ].forEach(function (eventName) {
+      document.addEventListener(eventName, resetInactivityTimer, true);
+    });
+
+    resetInactivityTimer();
+  });
+  </script>
+
+</body>
   </html>
 
