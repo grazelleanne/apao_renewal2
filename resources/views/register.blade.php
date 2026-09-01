@@ -115,8 +115,8 @@
           <div class="password-wrapper">
             <input class="input" type="password" id="password" placeholder="Min 8 chars, uppercase, number, symbol" autocomplete="new-password" />
             <button type="button" class="toggle-password" id="togglePassword" aria-label="Show password">
-              <svg class="icon-eye" viewBox="0 0 24 24"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
-              <svg class="icon-eye-off" viewBox="0 0 24 24" style="display:none;"><path d="M2 4.27 3.28 3 21 20.72 19.73 22l-3.08-3.08A11.6 11.6 0 0 1 12 20C5 20 2 13 2 13a17.6 17.6 0 0 1 4.06-5.94L2 4.27zM12 6c7 0 10 7 10 7a17.9 17.9 0 0 1-2.19 3.36l-2.16-2.16A4 4 0 0 0 12 8a3.95 3.95 0 0 0-1.29.22L8.36 5.86A11.6 11.6 0 0 1 12 6zm-3.29 4.29 5 5A4 4 0 0 1 8.71 10.29z"/></svg>
+              <svg class="icon-eye" viewBox="0 0 24 24" style="display:none;"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+              <svg class="icon-eye-off" viewBox="0 0 24 24"><path d="M2 4.27 3.28 3 21 20.72 19.73 22l-3.08-3.08A11.6 11.6 0 0 1 12 20C5 20 2 13 2 13a17.6 17.6 0 0 1 4.06-5.94L2 4.27zM12 6c7 0 10 7 10 7a17.9 17.9 0 0 1-2.19 3.36l-2.16-2.16A4 4 0 0 0 12 8a3.95 3.95 0 0 0-1.29.22L8.36 5.86A11.6 11.6 0 0 1 12 6zm-3.29 4.29 5 5A4 4 0 0 1 8.71 10.29z"/></svg>
             </button>
           </div>
           <div class="strength-bar-wrap"><div class="strength-bar" id="strengthBar"></div></div>
@@ -128,8 +128,8 @@
           <div class="password-wrapper">
             <input class="input" type="password" id="password_confirm" placeholder="Repeat your password" autocomplete="new-password" />
             <button type="button" class="toggle-password" id="toggleConfirmPassword" aria-label="Show password">
-              <svg class="icon-eye" viewBox="0 0 24 24"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
-              <svg class="icon-eye-off" viewBox="0 0 24 24" style="display:none;"><path d="M2 4.27 3.28 3 21 20.72 19.73 22l-3.08-3.08A11.6 11.6 0 0 1 12 20C5 20 2 13 2 13a17.6 17.6 0 0 1 4.06-5.94L2 4.27zM12 6c7 0 10 7 10 7a17.9 17.9 0 0 1-2.19 3.36l-2.16-2.16A4 4 0 0 0 12 8a3.95 3.95 0 0 0-1.29.22L8.36 5.86A11.6 11.6 0 0 1 12 6zm-3.29 4.29 5 5A4 4 0 0 1 8.71 10.29z"/></svg>
+              <svg class="icon-eye" viewBox="0 0 24 24" style="display:none;"><path d="M12 5c-7 0-10 7-10 7s3 7 10 7 10-7 10-7-3-7-10-7zm0 11a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm0-2a2 2 0 1 0 0-4 2 2 0 0 0 0 4z"/></svg>
+              <svg class="icon-eye-off" viewBox="0 0 24 24"><path d="M2 4.27 3.28 3 21 20.72 19.73 22l-3.08-3.08A11.6 11.6 0 0 1 12 20C5 20 2 13 2 13a17.6 17.6 0 0 1 4.06-5.94L2 4.27zM12 6c7 0 10 7 10 7a17.9 17.9 0 0 1-2.19 3.36l-2.16-2.16A4 4 0 0 0 12 8a3.95 3.95 0 0 0-1.29.22L8.36 5.86A11.6 11.6 0 0 1 12 6zm-3.29 4.29 5 5A4 4 0 0 1 8.71 10.29z"/></svg>
             </button>
           </div>
         </div>
@@ -161,8 +161,8 @@
       button.addEventListener('click', function () {
         const isPassword = input.type === 'password';
         input.type = isPassword ? 'text' : 'password';
-        eyeIcon.style.display    = isPassword ? 'none' : 'block';
-        eyeOffIcon.style.display = isPassword ? 'block' : 'none';
+        eyeIcon.style.display    = isPassword ? 'block' : 'none';
+        eyeOffIcon.style.display = isPassword ? 'none' : 'block';
         button.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
       });
     }

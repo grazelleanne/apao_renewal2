@@ -20,6 +20,19 @@
   }
 </script>
 <style>
+  .notification-bell{position:relative;cursor:pointer;outline:none;transition:color .2s ease;}
+  .notification-badge{position:absolute;top:-4px;right:-4px;background:#ef4444;color:#fff;font-weight:700;border-radius:999px;font-size:.62rem;min-width:17px;height:17px;display:none;align-items:center;justify-content:center;border:2px solid #1a2025;}
+  .notification-bell.has-unread .notification-badge{display:flex;}
+  #adminNotifDropdown{display:none;position:absolute;top:calc(100% + 10px);right:0;width:320px;background:#23272f;border:1px solid #363b48;border-radius:12px;box-shadow:0 12px 32px rgba(0,0,0,.4);z-index:200;overflow:hidden;}
+  #adminNotifDropdown.open{display:block;}
+  .notif-header{padding:12px 16px;border-bottom:1px solid #363b48;display:flex;justify-content:space-between;align-items:center;font-size:.8rem;font-weight:700;color:#94a3b8;text-transform:uppercase;letter-spacing:.06em;}
+  .notif-mark-read{font-size:.72rem;color:#3ec6ff;cursor:pointer;text-transform:none;letter-spacing:0;}
+  .notif-list{max-height:340px;overflow-y:auto;}
+  .notif-item{padding:12px 16px;border-bottom:1px solid #2e333d;display:flex;gap:10px;align-items:flex-start;font-size:.8rem;color:#cbd5e0;}
+  .notif-item.unread{background:#1c2631;}
+  .notif-content{flex:1;min-width:0;}.notif-title{font-weight:700;color:#e5eaf2;}.notif-message{color:#94a3b8;font-size:.75rem;line-height:1.4;}.notif-time{color:#64748b;font-size:.7rem;margin-top:4px;}
+  .notif-dot{width:7px;height:7px;border-radius:50%;background:#3ec6ff;flex-shrink:0;margin-top:5px;}
+  .notif-empty,.notif-footer{padding:10px 16px;text-align:center;color:#64748b;font-size:.72rem;}.notif-empty{padding:24px 16px;}.notif-footer{border-top:1px solid #363b48;}
   /* ── SIDEBAR ── */
 #sidebar{width:240px;min-width:64px;background:#181c21;border-right:1px solid #23272f;display:flex;flex-direction:column;padding:16px 12px;transition:width 0.28s cubic-bezier(.4,0,.2,1);overflow:hidden;position:sticky;top:0;height:100vh;}
 #sidebar.sidebar-collapsed{width:64px;}
@@ -50,27 +63,31 @@ nav.sb-nav{flex:1;display:flex;flex-direction:column;gap:2px;}
 .stat-card .text-2xl{color:#e5eaf2;}
 body.light-mode .stat-card .text-2xl{color:#1e293b;}
 .stat-card:hover{border-color:#363b48;background:#2a2f3a;}
-.stat-card.active-pending{border-color:#f59e0b;box-shadow:0 0 0 3px rgba(245,158,11,.13);}
-.stat-card.active-renewal{border-color:#3ec6ff;box-shadow:0 0 0 3px rgba(62,198,255,.12);}
-.stat-card.active-under{border-color:#a78bfa;box-shadow:0 0 0 3px rgba(167,139,250,.12);}
+.stat-card.active-pending{border-color:#94a3b8;box-shadow:0 0 0 3px rgba(148,163,184,.13);}
+.stat-card.active-renewal{border-color:#22c55e;box-shadow:0 0 0 3px rgba(34,197,94,.12);}
+.stat-card.active-under{border-color:#eab308;box-shadow:0 0 0 3px rgba(234,179,8,.12);}
 /* Inspection workflow order: Pending -> Under Inspection -> Ready for Renewal */
 #card-pending{order:1;}
 #card-under{order:2;}
 #card-renewal{order:3;}
 .stat-card .card-count{position:absolute;top:14px;right:16px;font-size:.78rem;font-weight:800;padding:2px 9px;border-radius:999px;}
-#statPending{color:#f59e0b;}
-#statApproved{color:#3ec6ff;}
-#statUnder{color:#a78bfa;}
-.stat-card.active-pending .card-count{background:#2a1f00;color:#f59e0b;}
-.stat-card.active-renewal .card-count{background:#0a1f3a;color:#3ec6ff;}
-.stat-card.active-under .card-count{background:#1e1040;color:#a78bfa;}
+#statPending{color:#94a3b8;}
+#statApproved{color:#22c55e;}
+#statUnder{color:#eab308;}
+.stat-card.active-pending .card-count{background:#27303b;color:#cbd5e1;}
+.stat-card.active-renewal .card-count{background:#0d3325;color:#4ade80;}
+.stat-card.active-under .card-count{background:#352b08;color:#facc15;}
 .stat-card:not(.active-pending):not(.active-renewal):not(.active-under) .card-count{background:#1a2025;color:#94a3b8;}
 
 /* ── BADGES ── */
-.badge{display:inline-flex;align-items:center;padding:3px 10px;border-radius:999px;font-size:.72rem;font-weight:700;}
-.badge-pending{background:#2a1f00;color:#f59e0b;border:1px solid #3a2d00;}
-.badge-under{background:#1e1040;color:#a78bfa;border:1px solid #2d1a5a;}
-.badge-approved{background:#0d3325;color:#33b481;border:1px solid #166534;}
+.badge{display:inline-flex;align-items:center;gap:8px;padding:0;border:0;border-radius:0;background:transparent;font-size:.75rem;font-weight:700;}
+.badge::before{content:'';width:7px;height:7px;border-radius:50%;flex-shrink:0;}
+.badge-pending{color:#94a3b8;}
+.badge-pending::before{background:#94a3b8;}
+.badge-under{color:#eab308;}
+.badge-under::before{background:#eab308;}
+.badge-approved{color:#22c55e;}
+.badge-approved::before{background:#22c55e;}
 .badge-needs_repair{background:#2d0a0a;color:#fc8181;border:1px solid #991b1b;}
 
 /* ── TABLE ── */
@@ -79,20 +96,18 @@ body.light-mode .stat-card .text-2xl{color:#1e293b;}
 .tbl tr:hover td{background:#1a2025;}
 
 /* ── ACTION BUTTONS ── */
-.btn-inspect{background:#3ec6ff;color:#0a1f3a;border:none;border-radius:6px;padding:5px 14px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;}
-.btn-inspect:hover{background:#6dd4ff;}
-.btn-notify{background:#0d3325;color:#33b481;border:1px solid #166534;border-radius:6px;padding:5px 14px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;}
-.btn-notify:hover{background:#14532d;}
-body.light-mode .btn-notify{background:#d1fae5;color:#047857;border-color:#a7f3d0;}
-body.light-mode .btn-notify:hover{background:#a7f3d0;}
-.btn-continue{background:#1e1040;color:#a78bfa;border:1px solid #4c1d95;border-radius:6px;padding:5px 14px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;}
-.btn-continue:hover{background:#2d1a5a;}
+.btn-inspect,.btn-notify,.btn-continue{display:inline-flex;align-items:center;justify-content:center;gap:7px;background:#16a34a;color:#fff;border:1px solid #16a34a;border-radius:8px;padding:6px 12px;font-size:.75rem;font-weight:700;cursor:pointer;white-space:nowrap;box-shadow:0 1px 2px rgba(15,23,42,.18);transition:background .15s,border-color .15s,transform .15s,box-shadow .15s;}
+.btn-notify svg{width:14px;height:14px;stroke-width:2;}
+.btn-inspect:hover,.btn-notify:hover,.btn-continue:hover{background:#15803d;border-color:#15803d;box-shadow:0 3px 8px rgba(22,163,74,.24);transform:translateY(-1px);}
+.btn-inspect:focus-visible,.btn-notify:focus-visible,.btn-continue:focus-visible{outline:3px solid rgba(34,197,94,.3);outline-offset:2px;}
+body.light-mode .btn-inspect,body.light-mode .btn-notify,body.light-mode .btn-continue{background:#16a34a;color:#fff;border-color:#16a34a;}
+body.light-mode .btn-inspect:hover,body.light-mode .btn-notify:hover,body.light-mode .btn-continue:hover{background:#15803d;border-color:#15803d;}
 
 /* ── TAB LABELS ── */
 .tab-label{font-size:.72rem;padding:2px 9px;border-radius:999px;font-weight:700;margin-left:8px;vertical-align:middle;}
-.tab-label-pending{background:#2a1f00;color:#f59e0b;}
-.tab-label-renewal{background:#0a1f3a;color:#3ec6ff;}
-.tab-label-under{background:#1e1040;color:#a78bfa;}
+.tab-label-pending{background:#27303b;color:#cbd5e1;}
+.tab-label-renewal{background:#0d3325;color:#4ade80;}
+.tab-label-under{background:#352b08;color:#facc15;}
 
 /* ── CHECKLIST ── */
 .cl-table{width:100%;border-collapse:collapse;font-size:.73rem;}
@@ -121,22 +136,25 @@ body.light-mode .btn-notify:hover{background:#a7f3d0;}
 .pg-btn{background:#23272f;border:1px solid #363b48;color:#94a3b8;border-radius:6px;padding:5px 11px;font-size:.78rem;cursor:pointer;}
 .pg-btn:hover,.pg-btn.active{background:#3ec6ff;color:#0a1f3a;border-color:#3ec6ff;}
 /* ── ICON CIRCLES ── */
-.icon-circle-pending{background:#2a1f00;}
-.icon-circle-renewal{background:#0a1f3a;}
-.icon-circle-under{background:#1e1040;}
+.icon-circle-pending{background:#27303b;}
+.icon-circle-renewal{background:#0d3325;}
+.icon-circle-under{background:#352b08;}
 
-body.light-mode .icon-circle-pending{background:#fef3c7;}
-body.light-mode .icon-circle-renewal{background:#dbeafe;}
-body.light-mode .icon-circle-under{background:#ede9fe;}
+body.light-mode .icon-circle-pending{background:#e2e8f0;}
+body.light-mode .icon-circle-renewal{background:#dcfce7;}
+body.light-mode .icon-circle-under{background:#fef9c3;}
 
 /* ── LIGHT MODE BADGES ── */
-body.light-mode .badge-pending{background:#fef3c7;color:#b45309;border-color:#fde68a;}
-body.light-mode .badge-under{background:#ede9fe;color:#6d28d9;border-color:#ddd6fe;}
-body.light-mode .badge-approved{background:#d1fae5;color:#047857;border-color:#a7f3d0;}
+body.light-mode .badge-pending{background:transparent;color:#64748b;border:0;}
+body.light-mode .badge-under{background:transparent;color:#a16207;border:0;}
+body.light-mode .badge-approved{background:transparent;color:#15803d;border:0;}
+body.light-mode .badge-pending::before{background:#64748b;}
+body.light-mode .badge-under::before{background:#ca8a04;}
+body.light-mode .badge-approved::before{background:#16a34a;box-shadow:none;}
 body.light-mode .badge-needs_repair{background:#fee2e2;color:#b91c1c;border-color:#fecaca;}
-body.light-mode .tab-label-pending{background:#fef3c7;color:#b45309;}
-body.light-mode .tab-label-renewal{background:#dbeafe;color:#1d4ed8;}
-body.light-mode .tab-label-under{background:#ede9fe;color:#6d28d9;}
+body.light-mode .tab-label-pending{background:#e2e8f0;color:#475569;}
+body.light-mode .tab-label-renewal{background:#dcfce7;color:#15803d;}
+body.light-mode .tab-label-under{background:#fef9c3;color:#a16207;}
 /* ── LIGHT MODE CHECKLIST BOX ── */
 body.light-mode .bg-\[\#1e2430\]{background:#fff !important;border:1px solid #e2e8f0 !important;}
 
@@ -296,32 +314,40 @@ body.light-mode .btn-save-under{background:#ede9fe;color:#6d28d9;border-color:#c
   <main class="flex-1 p-7 overflow-y-auto app-main">
 
     <!-- Header -->
-   <header class="flex flex-wrap justify-between mb-8 items-center gap-4">
-  <div class="relative w-72">
-    <input id="searchInput" type="text" placeholder="Search personnel..." oninput="filterTable()" class="bg-[#23272f] text-white border border-[#363b48] rounded px-4 py-2 w-full focus:outline-none focus:ring-2 focus:ring-[#3ec6ff] pr-10 force-light-text" />
-    <svg class="absolute right-3 top-1/2 -translate-y-1/2 h-5 w-5 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-4.35-4.35M5 11a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>
-  </div>
-  <div class="flex items-center gap-4">
-    @include('partials.account_dropdown')
-  </div>
-</header>
+   <header class="flex flex-wrap justify-between mb-6 items-start gap-4">
+     <div>
+       <h1 class="text-2xl font-bold mb-1 force-light-text">Inspection / Renewal</h1>
+       <p class="text-sm text-[#64748b] force-light-text">Review and inspect firearms and documents of personnel. After inspection, update the status accordingly.</p>
+     </div>
+     <div class="flex items-center gap-4 pt-1">
+       <div class="relative" id="adminNotifWrapper">
+         <button id="notificationBell" class="notification-bell text-cyan-400 focus:outline-none" aria-label="Notifications" type="button">
+           <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11c0-3.074-1.64-5.64-5-5.996V5a2 2 0 10-4 0v.004C6.64 5.36 5 7.926 5 11v3.159c0 .538-.214 1.055-.595 1.436L3 17h5m7 0v1a3 3 0 01-6 0v-1m7 0H8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+           <span class="notification-badge" id="notificationBadge"></span>
+         </button>
+         <div id="adminNotifDropdown">
+           <div class="notif-header"><span>Notifications</span><span class="notif-mark-read" id="adminMarkAllRead">Mark all read</span></div>
+           <div class="notif-list" id="adminNotifList"><div class="notif-empty">Loading...</div></div>
+           <div class="notif-footer" id="adminNotifFooter">Auto-refreshes every 30 seconds</div>
+         </div>
+       </div>
+       @include('partials.account_dropdown')
+     </div>
+   </header>
 
 
       <!-- ===== LIST VIEW ===== -->
       <div id="viewList">
-       <h1 class="text-2xl font-bold mb-1 force-light-text">Inspection / Renewal</h1>
-<p class="text-sm text-[#64748b] mb-6 force-light-text">Review and inspect firearms and documents of personnel. After inspection, update the status accordingly.</p>
-
         <!-- ── Stat Cards (filter tabs) ── -->
         <div class="grid grid-cols-3 gap-4 mb-6">
 
           <!-- Pending Inspection -->
 <div class="stat-card" id="card-pending" onclick="setActiveTab('pending')">
   <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 icon-circle-pending">
-    <svg fill="none" stroke="#f59e0b" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/></svg>
+    <svg fill="none" stroke="#94a3b8" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"><circle cx="12" cy="12" r="10"/><path stroke-linecap="round" d="M12 6v6l4 2"/></svg>
   </div>
   <div>
-    <div class="text-xs font-bold uppercase tracking-wide" style="color:#f59e0b;">Pending Inspection</div>
+    <div class="text-xs font-bold uppercase tracking-wide" style="color:#94a3b8;">Pending Inspection</div>
     <div class="text-2xl font-black" id="statPending">—</div>
     <div class="text-xs text-[#64748b]">Awaiting inspection and review</div>
   </div>
@@ -331,12 +357,12 @@ body.light-mode .btn-save-under{background:#ede9fe;color:#6d28d9;border-color:#c
           <!-- Ready for Renewal -->
           <div class="stat-card" id="card-renewal" onclick="setActiveTab('renewal')">
          <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 icon-circle-renewal">
-               <svg fill="none" stroke="#3ec6ff" stroke-width="2" viewBox="0 0 24 24" width="20" height="20">
+               <svg fill="none" stroke="#22c55e" stroke-width="2" viewBox="0 0 24 24" width="20" height="20">
                 <path stroke-linecap="round" stroke-linejoin="round" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
               </svg>
             </div>
             <div>
-            <div class="text-xs font-bold uppercase tracking-wide" style="color:#3ec6ff;">Ready for Renewal</div>
+            <div class="text-xs font-bold uppercase tracking-wide" style="color:#22c55e;">Ready for Renewal</div>
               <div class="text-2xl font-black" id="statApproved">—</div>
               <div class="text-xs text-[#64748b]">For approval and renewal</div>
             </div>
@@ -346,16 +372,24 @@ body.light-mode .btn-save-under{background:#ede9fe;color:#6d28d9;border-color:#c
           <!-- Under Inspection -->
           <div class="stat-card" id="card-under" onclick="setActiveTab('under')">
          <div class="w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 icon-circle-under">
-          <svg fill="none" stroke="#a78bfa" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
+          <svg fill="none" stroke="#eab308" stroke-width="2" viewBox="0 0 24 24" width="20" height="20"><path stroke-linecap="round" stroke-linejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/></svg>
             </div>
             <div>
-              <div class="text-xs font-bold uppercase text-[#a78bfa] tracking-wide">Under Inspection</div>
+              <div class="text-xs font-bold uppercase tracking-wide" style="color:#eab308;">Under Inspection</div>
               <div class="text-2xl font-black" id="statUnder">—</div>
-              <div class="text-xs text-[#64748b]">Currently being inspected</div>
+              <div class="text-xs text-[#64748b]">Awaiting inspection results</div>
             </div>
             <span class="card-count" id="countUnder">—</span>
           </div>
 
+        </div>
+
+        <!-- Search (applies to the active inspection tab) -->
+        <div class="flex justify-end mb-4">
+          <div class="relative w-full" style="max-width:280px;">
+            <input id="searchInput" type="text" placeholder="Search by name / AFP serial..." oninput="filterTable()" class="bg-[#23272f] text-white border border-[#363b48] rounded px-3 py-1.5 text-sm w-full focus:outline-none focus:ring-2 focus:ring-[#3ec6ff] pr-9 force-light-text" />
+            <svg class="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M21 21l-4.35-4.35M5 11a6 6 0 1112 0 6 6 0 01-12 0z"/></svg>
+          </div>
         </div>
 
         <!-- Table -->
@@ -586,23 +620,70 @@ body.light-mode .btn-save-under{background:#ede9fe;color:#6d28d9;border-color:#c
   <script>
     const CSRF = document.querySelector('meta[name="csrf-token"]').content;
 
+    // Admin notifications
+    const notifBell = document.getElementById('notificationBell');
+    const notifBadge = document.getElementById('notificationBadge');
+    const notifDropdown = document.getElementById('adminNotifDropdown');
+    const adminNotifList = document.getElementById('adminNotifList');
+    const adminNotifFooter = document.getElementById('adminNotifFooter');
+    const adminMarkAllRead = document.getElementById('adminMarkAllRead');
+    const ADMIN_NOTIF_URL = "{{ route('admin.notifications') }}";
+    const ADMIN_NOTIF_READ_URL = "{{ route('admin.notifications.read') }}";
+
+    function notifTimeAgo(dateStr) {
+      const diff = Math.floor((new Date() - new Date(dateStr)) / 1000);
+      if (diff < 60) return 'Just now';
+      if (diff < 3600) return `${Math.floor(diff / 60)}m ago`;
+      if (diff < 86400) return `${Math.floor(diff / 3600)}h ago`;
+      return new Date(dateStr).toLocaleDateString('en-US', {month:'short', day:'numeric', year:'numeric'});
+    }
+
+    async function loadAdminNotifications() {
+      try {
+        const response = await fetch(ADMIN_NOTIF_URL, {headers:{'Accept':'application/json','X-CSRF-TOKEN':CSRF}});
+        const json = await response.json();
+        if (!json.success) return;
+        const count = json.unreadCount || 0;
+        notifBell.classList.toggle('has-unread', count > 0);
+        notifBadge.style.display = count > 0 ? 'flex' : 'none';
+        notifBadge.textContent = count > 99 ? '99+' : String(count || '');
+        adminNotifFooter.textContent = count ? `${count} unread notification${count > 1 ? 's' : ''}` : 'All caught up!';
+        adminNotifList.innerHTML = json.notifications?.length
+          ? json.notifications.map(n => `<div class="notif-item ${!n.read?'unread':''}"><div class="notif-content"><div class="notif-title">${escapeHtml(n.title)}</div><div class="notif-message">${escapeHtml(n.message)}</div><div class="notif-time">${notifTimeAgo(n.createdAt)}</div></div>${!n.read?'<div class="notif-dot"></div>':''}</div>`).join('')
+          : '<div class="notif-empty">No notifications yet.</div>';
+      } catch (error) {
+        adminNotifList.innerHTML = '<div class="notif-empty">Failed to load notifications.</div>';
+      }
+    }
+
+    notifBell.addEventListener('click', event => {
+      event.stopPropagation();
+      notifDropdown.classList.toggle('open');
+    });
+    document.addEventListener('click', event => {
+      if (!document.getElementById('adminNotifWrapper').contains(event.target)) notifDropdown.classList.remove('open');
+    });
+    adminMarkAllRead.addEventListener('click', async event => {
+      event.stopPropagation();
+      await fetch(ADMIN_NOTIF_READ_URL, {method:'POST', headers:{'Accept':'application/json','X-CSRF-TOKEN':CSRF}});
+      await loadAdminNotifications();
+    });
+    loadAdminNotifications();
+    setInterval(loadAdminNotifications, 30000);
+
     const PARTS = [
-      'barrel','slide','recoil_spring_assembly','firing_pin','spacer_sleeve',
-      'firing_pin_spring','spring_cups','firing_pin_safety','firing_pin_safety_spring',
-      'extractor','extractor_depressor_plunger','extractor_depressor_plunger_spring',
-      'trigger_loaded_bearing','rear_sight','front_sight',
-      'front_sight_screw','frame','magazine_catch_spring','magazine_catch','slide_lock',
-      'slide_cover_plate','connector','trigger_mechanism_housing','trigger','trigger_spring',
-      'trigger_with_trigger_bar','slide_stop_lever','trigger_pin','trigger_housing_pin','locking_block_pin'
+      'barrel','slide','recoil_spring_assembly','firing_pin','firing_pin_safety',
+      'extractor','rear_sight','front_sight','frame','magazine','magazine_catch',
+      'magazine_catch_spring','trigger','trigger_spring','trigger_bar','slide_stop_lever',
+      'trigger_pin','trigger_mechanism_housing','trigger_housing_pin','locking_block',
+      'locking_block_pin','slide_lock','slide_lock_spring','connector','guide_rod'
     ];
     const PART_LABELS = [
-      'Barrel','Slide','Recoil Spring Assembly','Firing Pin','Spacer Sleeve',
-      'Firing Pin Spring','Spring Cups','Firing Pin Safety','Firing Pin Safety Spring',
-      'Extractor','Extractor Depressor Plunger','Extractor Depressor Plunger Spring',
-      'Spring-Loaded Bearing','Rear Sight','Front Sight',
-      'Front Sight Screw','Frame','Magazine Catch Spring','Magazine Catch','Slide Lock',
-      'Slide Cover Plate','Connector','Trigger Mechanism Housing w/ Ejector','Trigger','Trigger Spring',
-      'Trigger with Trigger Bar','Slide Stop Lever','Trigger Pin','Trigger Housing Pin','Locking Block Pin'
+      'Barrel','Slide','Recoil Spring Assembly','Firing Pin / Striker','Firing Pin Safety',
+      'Extractor','Rear Sight','Front Sight','Frame','Magazine','Magazine Catch',
+      'Magazine Catch Spring','Trigger','Trigger Spring','Trigger Bar','Slide Stop Lever',
+      'Trigger Pin','Trigger Housing / Mechanism Housing','Trigger Housing Pin','Locking Block',
+      'Locking Block Pin','Slide Lock','Slide Lock Spring','Connector','Guide Rod'
     ];
 
     let allPersonnel = [], currentPage = 1, currentItemNumber = null, activeTab = 'pending';
@@ -651,7 +732,10 @@ body.light-mode .btn-save-under{background:#ede9fe;color:#6d28d9;border-color:#c
         return `<button onclick="openInspect(${p.itemNumber})" class="btn-inspect">Inspect</button>`;
       }
       if (activeTab === 'renewal') {
-        return `<button onclick="openNotifyModal(${JSON.stringify(p).replace(/"/g,'&quot;')})" class="btn-notify">Notify Staff</button>`;
+        return `<button type="button" onclick="openNotifyModal(${JSON.stringify(p).replace(/"/g,'&quot;')})" class="btn-notify" aria-label="Notify staff about renewal">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d="M15 17h5l-1.4-1.4A2 2 0 0 1 18 14.2V11a6 6 0 1 0-12 0v3.2c0 .5-.2 1-.6 1.4L4 17h5m6 0a3 3 0 0 1-6 0h6Z"/></svg>
+          <span>Notify Staff</span>
+        </button>`;
       }
       if (activeTab === 'under') {
         return `<button onclick="openInspect(${p.itemNumber})" class="btn-continue">Continue Inspection</button>`;

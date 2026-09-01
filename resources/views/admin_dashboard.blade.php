@@ -190,7 +190,7 @@
   <main class="flex-1 main-bg bg-[#1a2025] p-7 overflow-y-auto">
 
     <header class="flex flex-wrap justify-end mb-8 items-center gap-4">
-      <div class="flex items-center gap-4">
+      <div class="flex flex-row-reverse items-center gap-4">
         @include('partials.account_dropdown')
         <div class="relative" id="adminNotifWrapper">
           <button id="notificationBell" class="notification-bell text-cyan-400 focus:outline-none" aria-label="Notifications" type="button">

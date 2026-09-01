@@ -80,6 +80,16 @@
       .notif-footer{padding:10px 16px;border-top:1px solid #363b48;text-align:center;font-size:0.72rem;color:#4b5563;}
       .page-section{display:none;}
       .page-section.active{display:block;}
+      #page-registration.active,
+      #page-ics.active,
+      #page-par.active,
+      #page-renewal.active{margin-top:-3rem;}
+      @media(max-width:640px){
+        #page-registration.active,
+        #page-ics.active,
+        #page-par.active,
+        #page-renewal.active{margin-top:-1.5rem;}
+      }
       .badge{display:inline-block;padding:0;border-radius:0;font-size:0.7rem;font-weight:600;background:transparent!important;}
       .badge-text{background:transparent!important;padding:0!important;border-radius:0!important;}
       .badge-renewed{color:#33b481;}
@@ -248,6 +258,8 @@
       body.light-mode .card-desc{color:#2d8a65!important;}
       body.light-mode .force-light-text{color:#1e293b!important;}
       body.light-mode input,body.light-mode select,body.light-mode textarea{background:#f8fafc!important;color:#1e293b!important;border-color:#cbd5e1!important;}
+      body.light-mode #personnelClearFilters{background:#ffffff!important;color:#475569!important;border-color:#cbd5e1!important;}
+      body.light-mode #personnelClearFilters:hover{background:#f8fafc!important;color:#1e293b!important;}
       body.light-mode #searchInput{background:#f0f4f9!important;color:#1e293b!important;border-color:#cbd5e1!important;}
       body.light-mode .badge-new{background:transparent!important;color:#1e40af!important;}
       body.light-mode .badge-renewed{background:transparent!important;color:#047857!important;}
@@ -608,6 +620,11 @@
 </style>
   </head>
   <body class="min-h-screen font-inter main-bg bg-[#1a2025]">
+  @php
+    $staffInitialPersonnel = collect($initialDashboardData['personnel'] ?? []);
+    $staffIcsCounts = $staffInitialPersonnel->countBy(fn ($person) => $person['icsStatus'] ?? 'inspection');
+    $staffRenewalCounts = $staffInitialPersonnel->countBy(fn ($person) => $person['approvedStatus'] ?? 'pending');
+  @endphp
   <div class="flex min-h-screen">
 
     {{-- ===== SIDEBAR ===== --}}
@@ -774,7 +791,9 @@
             <h2 class="font-semibold text-base force-light-text tracking-tight">List of Personnel</h2>
             <div class="flex gap-2 items-center flex-wrap">
               <input id="personnelNameFilter" type="search" placeholder="Name" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
-              <input id="personnelRankFilter" type="search" placeholder="Rank" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
+              <select id="personnelRankFilter" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
+                <option value="">All Ranks</option><option>PVT</option><option>PFC</option><option>CPL</option><option>SGT</option><option>SSG</option><option>SFC</option><option>TSG</option><option>MSG</option><option>1SG</option><option>SGM</option><option>2LT</option><option>1LT</option><option>CPT</option><option>MAJ</option><option>LTC</option><option>COL</option><option>BGen</option><option>Cpl (OS) PA</option><option>Sgt (OS) PA</option>
+              </select>
               <input id="personnelUnitFilter" type="search" placeholder="Unit / Office" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
               <label for="approvalFilter" class="text-[#b0bac7] text-xs">Status:</label>
               <select id="approvalFilter" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
@@ -794,10 +813,6 @@
                 <option value="dateOfValidity-asc">Validity (Earliest)</option>
                 <option value="dateOfValidity-desc">Validity (Latest)</option>
               </select>
-              <button id="registerPersonnelBtn" class="flex items-center gap-1.5 px-3 py-1.5 rounded text-xs font-bold transition-colors" style="background:#0a1f3a;color:#3ec6ff;border:1px solid #1a4a7a;">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path d="M12 4v16m8-8H4"/></svg>
-                Register Personnel
-              </button>
               <button id="exportBtn" class="bg-[#0d3325] text-[#33b481] border border-[#1a5c3a] rounded px-3 py-1 text-xs font-semibold hover:bg-[#154d32] transition-colors">Export CSV</button>
             </div>
           </div>
@@ -838,8 +853,6 @@
               <h2 class="font-semibold text-base force-light-text tracking-tight">ICS / Personnel List</h2>
               <p class="text-xs text-[#64748b] mt-0.5">Manage and process the Individual Clearance Sheets (ICS) of personnel. Send for inspection to Admin and process ICS once inspection is approved.</p>
             </div>
-            <input id="icsListSearch" type="text" placeholder="Search by name / AFP serial…"
-              class="bg-[#23272f] text-white border border-[#363b48] rounded px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-accent w-56 force-light-text" />
           </div>
 
           {{-- Summary cards --}}
@@ -851,7 +864,7 @@
                 </div>
                 <span style="font-size:0.7rem;font-weight:700;color:#d4a017;text-transform:uppercase;letter-spacing:0.06em;">For Inspection</span>
               </div>
-              <p id="ics-sum-inspection" style="font-size:1.8rem;font-weight:800;color:#d4a017;margin:0 0 2px;">0</p>
+              <p id="ics-sum-inspection" style="font-size:1.8rem;font-weight:800;color:#d4a017;margin:0 0 2px;">{{ $staffIcsCounts->get('inspection', 0) }}</p>
               <p style="font-size:0.68rem;color:#7a6020;margin:0;">Waiting to be sent to Admin</p>
             </button>
             <button onclick="icsSetTab('under')" class="text-left rounded-xl p-4 border" style="background:#0f1e2e;border-color:#1a3a5c;">
@@ -861,8 +874,8 @@
                 </div>
                 <span style="font-size:0.7rem;font-weight:700;color:#3ec6ff;text-transform:uppercase;letter-spacing:0.06em;">Under Inspection</span>
               </div>
-              <p id="ics-sum-under" style="font-size:1.8rem;font-weight:800;color:#3ec6ff;margin:0 0 2px;">0</p>
-              <p style="font-size:0.68rem;color:#1e5070;margin:0;">Currently being inspected by Admin</p>
+              <p id="ics-sum-under" style="font-size:1.8rem;font-weight:800;color:#3ec6ff;margin:0 0 2px;">{{ $staffIcsCounts->get('under', 0) }}</p>
+              <p style="font-size:0.68rem;color:#1e5070;margin:0;">Under Admin Inspection</p>
             </button>
             <button onclick="icsSetTab('ready')" class="text-left rounded-xl p-4 border" style="background:#0c2418;border-color:#1a5c3a;">
               <div class="flex items-center gap-2 mb-2">
@@ -871,9 +884,14 @@
                 </div>
                 <span style="font-size:0.7rem;font-weight:700;color:#33b481;text-transform:uppercase;letter-spacing:0.06em;">Ready for Renewal</span>
               </div>
-              <p id="ics-sum-ready" style="font-size:1.8rem;font-weight:800;color:#33b481;margin:0 0 2px;">0</p>
+              <p id="ics-sum-ready" style="font-size:1.8rem;font-weight:800;color:#33b481;margin:0 0 2px;">{{ $staffIcsCounts->get('ready', 0) }}</p>
               <p style="font-size:0.68rem;color:#1a5c3a;margin:0;">Inspection passed. Ready for ICS processing</p>
             </button>
+          </div>
+
+          <div class="flex justify-end mb-3 no-print">
+            <input id="icsListSearch" type="text" placeholder="Search by name / AFP serial…"
+              class="bg-[#23272f] text-white border border-[#363b48] rounded px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-accent w-64 force-light-text" />
           </div>
 
           {{-- Table --}}
@@ -893,7 +911,21 @@
                     <th class="py-2 px-3 font-semibold text-[#64748b]" style="text-transform:uppercase;letter-spacing:0.05em;font-size:0.68rem;">Action</th>
                   </tr>
                 </thead>
-                <tbody id="ics-tbody"></tbody>
+                <tbody id="ics-tbody">
+                  @foreach($staffInitialPersonnel->where('icsStatus', 'inspection')->take(10) as $person)
+                    <tr style="border-bottom:1px solid #1a2025;">
+                      <td class="py-2 px-3 force-light-text">{{ trim(($person['lastName'] ?? '').', '.($person['firstName'] ?? '').' '.($person['middleName'] ?? '')) }}</td>
+                      <td class="py-2 px-3 force-light-text">{{ $person['afpSerialNumber'] ?? '—' }}</td>
+                      <td class="py-2 px-3 force-light-text">{{ $person['rank'] ?? '—' }}</td>
+                      <td class="py-2 px-3 force-light-text">{{ $person['unit'] ?? '—' }}</td>
+                      <td class="py-2 px-3 force-light-text">{{ $person['pistolNomenclature'] ?? '—' }}</td>
+                      <td class="py-2 px-3"><span style="color:#d4a017;font-weight:700;">For Inspection</span></td>
+                      <td class="py-2 px-3 force-light-text">{{ $person['inspectionResult'] ?? '—' }}</td>
+                      <td class="py-2 px-3 force-light-text">{{ $person['inspectionUpdatedAt'] ?? '—' }}</td>
+                      <td class="py-2 px-3"><button onclick="icsSendForInspection({{ Js::from($person['itemNumber']) }}, this)" style="background:#1c2c18;color:#d4a017;border:1px solid #3a2800;border-radius:6px;padding:5px 11px;font-size:.7rem;font-weight:700;">Send for Inspection</button></td>
+                    </tr>
+                  @endforeach
+                </tbody>
               </table>
             </div>
             <div class="flex items-center justify-between px-4 py-3 flex-wrap gap-2" style="border-top:1px solid #1e2530;">
@@ -1040,7 +1072,7 @@
           </div>
           <span style="font-size:0.85rem;font-weight:700;color:#33b481;">Renewed</span>
         </div>
-        <p id="renewal-sum-renewed" style="font-size:1.9rem;font-weight:800;color:#e5eaf2;margin:0;">0</p>
+        <p id="renewal-sum-renewed" style="font-size:1.9rem;font-weight:800;color:#e5eaf2;margin:0;">{{ $staffRenewalCounts->get('renewed', 0) }}</p>
         <p style="font-size:0.7rem;color:#1a5c3a;margin:2px 0 0;">ICS already renewed</p>
       </button>
       <button onclick="renewalSetTab('within')" class="text-left rounded-xl p-4 border" style="background:#241c06;border-color:#5c4a1a;">
@@ -1050,7 +1082,7 @@
           </div>
           <span style="font-size:0.85rem;font-weight:700;color:#f6e05e;">Within Renewal Period</span>
         </div>
-        <p id="renewal-sum-within" style="font-size:1.9rem;font-weight:800;color:#e5eaf2;margin:0;">0</p>
+        <p id="renewal-sum-within" style="font-size:1.9rem;font-weight:800;color:#e5eaf2;margin:0;">{{ $staffRenewalCounts->get('within', 0) }}</p>
         <p style="font-size:0.7rem;color:#5c4a1a;margin:2px 0 0;">Expiring within 60 days</p>
       </button>
       <button onclick="renewalSetTab('expired')" class="text-left rounded-xl p-4 border" style="background:#2d0a0a;border-color:#5c1a1a;">
@@ -1060,7 +1092,7 @@
           </div>
           <span style="font-size:0.85rem;font-weight:700;color:#fc8181;">Expired</span>
         </div>
-        <p id="renewal-sum-expired" style="font-size:1.9rem;font-weight:800;color:#e5eaf2;margin:0;">0</p>
+        <p id="renewal-sum-expired" style="font-size:1.9rem;font-weight:800;color:#e5eaf2;margin:0;">{{ $staffRenewalCounts->get('expired', 0) }}</p>
         <p style="font-size:0.7rem;color:#5c1a1a;margin:2px 0 0;">ICS already expired</p>
       </button>
     </div>
@@ -1077,15 +1109,15 @@
       <div class="flex flex-wrap gap-2 mb-4">
         <button id="renewaltab-renewed" onclick="renewalSetTab('renewed')" style="display:flex;align-items:center;gap:6px;border-radius:7px;padding:8px 16px;font-size:0.78rem;font-weight:700;cursor:pointer;border:1px solid #1a5c3a;background:#0c2418;color:#33b481;">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          Renewed (<span id="renewaltab-count-renewed">0</span>)
+          Renewed (<span id="renewaltab-count-renewed">{{ $staffRenewalCounts->get('renewed', 0) }}</span>)
         </button>
         <button id="renewaltab-within" onclick="renewalSetTab('within')" style="display:flex;align-items:center;gap:6px;border-radius:7px;padding:8px 16px;font-size:0.78rem;font-weight:700;cursor:pointer;border:1px solid #2a3748;background:transparent;color:#64748b;">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
-          Within Renewal Period (<span id="renewaltab-count-within">0</span>)
+          Within Renewal Period (<span id="renewaltab-count-within">{{ $staffRenewalCounts->get('within', 0) }}</span>)
         </button>
         <button id="renewaltab-expired" onclick="renewalSetTab('expired')" style="display:flex;align-items:center;gap:6px;border-radius:7px;padding:8px 16px;font-size:0.78rem;font-weight:700;cursor:pointer;border:1px solid #2a3748;background:transparent;color:#64748b;">
           <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 9v2m0 4h.01M10.29 3.86L1.82 18a2 2 0 001.71 3h16.94a2 2 0 001.71-3L13.71 3.86a2 2 0 00-3.42 0z"/></svg>
-          Expired (<span id="renewaltab-count-expired">0</span>)
+          Expired (<span id="renewaltab-count-expired">{{ $staffRenewalCounts->get('expired', 0) }}</span>)
         </button>
       </div>
 
@@ -1117,7 +1149,20 @@
               <th class="py-2 px-2 font-semibold">Action</th>
             </tr>
           </thead>
-          <tbody id="renewalTbody"></tbody>
+          <tbody id="renewalTbody">
+            @foreach($staffInitialPersonnel->where('approvedStatus', 'renewed')->take(10) as $index => $person)
+              <tr class="border-b border-[#1a2025]">
+                <td class="py-2 px-2"></td>
+                <td class="py-2 px-2 force-light-text">{{ $loop->iteration }}</td>
+                <td class="py-2 px-2 force-light-text">{{ trim(($person['lastName'] ?? '').', '.($person['firstName'] ?? '').' '.($person['middleName'] ?? '')) }}</td>
+                <td class="py-2 px-2 force-light-text">{{ $person['rank'] ?? '—' }}</td>
+                <td class="py-2 px-2 force-light-text">{{ $person['afpSerialNumber'] ?? '—' }}</td>
+                <td class="py-2 px-2 force-light-text">{{ $person['unit'] ?? '—' }}</td>
+                <td class="py-2 px-2 force-light-text">{{ $person['dateOfValidity'] ?? 'No validity date' }}</td>
+                <td class="py-2 px-2"><button onclick="renewalOpenDetails({{ Js::from($person['itemNumber']) }})" class="renewal-action-renewed" style="background:transparent;color:#33b481;border:1px solid #1a5c3a;border-radius:6px;padding:5px 12px;font-size:.72rem;font-weight:700;">View Details</button></td>
+              </tr>
+            @endforeach
+          </tbody>
         </table>
       </div>
 
@@ -1454,7 +1499,8 @@
                   <div><label class="reg-label">Contact Number</label><input type="text" id="rp_contact" class="reg-input" placeholder="Enter contact number"></div>
                   <div><label class="reg-label">Civil Status</label><select id="rp_civil" class="reg-input"><option value="">Select civil status</option><option>Single</option><option>Married</option><option>Widowed</option><option>Separated</option></select></div>
                   <div><label class="reg-label">Gender</label><select id="rp_gender" class="reg-input"><option value="">Select gender</option><option>Male</option><option>Female</option></select></div>
-                  <div><label class="reg-label">Citizenship</label><select id="rp_citizenship" class="reg-input"><option value="Filipino">Filipino</option><option>Other</option></select></div>
+                  <div><label class="reg-label">Citizenship</label><select id="rp_citizenship" class="reg-input" onchange="rpToggleOtherCitizenship()"><option value="Filipino">Filipino</option><option value="Other">Other</option></select></div>
+                  <div id="rp_otherCitizenshipWrap" style="display:none;"><label class="reg-label">Specify Citizenship <span style="color:#ef4444;">*</span></label><input id="rp_otherCitizenship" class="reg-input" placeholder="Enter citizenship"></div>
                 </div>
               </div>
               <div id="rp_err1" style="color:#fc8181;font-size:.8rem;margin-bottom:8px;display:none;"></div>
@@ -1803,7 +1849,9 @@
       window.scrollTo({ top: 0, behavior: "smooth" });
       if (page === "personnel") renderTable();
       if (page === "renewal" && window.renewalRenderAll) window.renewalRenderAll();
+      if (page === "ics" && window.icsRefresh) window.icsRefresh();
       if (page === "report" && typeof staffPrepareReports === "function") staffPrepareReports();
+      if (["personnel", "ics", "renewal"].includes(page)) loadDashboard();
     }
     document.addEventListener('rp-navigate', function(e) { navigateTo(e.detail); });
     document.querySelectorAll(".nav-link, .nav-item").forEach(btn => {
@@ -1879,30 +1927,62 @@
     setInterval(loadNotifications, 30000);
 
     // ── DATA ───────────────────────────────────────────────────────────────
-    let personnel = [];
+    const initialDashboardData = @json($initialDashboardData ?? ['success' => true, 'metrics' => [], 'personnel' => []]);
+    let personnel = Array.isArray(initialDashboardData.personnel) ? initialDashboardData.personnel : [];
     let chartsInitialized = false;
 
-    async function loadDashboard() {
+    function applyDashboardMetrics(data) {
+      const m = data.metrics || {};
+      document.getElementById("totalNew").innerText      = m.totalNew      ?? '0';
+      document.getElementById("totalRenewed").innerText  = m.totalRenewed  ?? '0';
+      document.getElementById("withinRenewal").innerText = m.withinRenewal ?? '0';
+      document.getElementById("expired").innerText       = m.expired       ?? '0';
+      document.getElementById("pending").innerText       = m.pending       ?? '0';
+      document.getElementById("totalPersonnel").innerText = personnel.length;
+    }
+
+    applyDashboardMetrics(initialDashboardData);
+
+    async function loadDashboard(attempt = 0) {
       try {
-        const res = await fetch("{{ route('staff.dashboard.data') }}", { headers: { "Accept":"application/json", "X-CSRF-TOKEN":CSRF } });
+        const res = await fetch("{{ route('staff.dashboard.data') }}?refresh=" + Date.now(), {
+          credentials: "same-origin",
+          cache: "no-store",
+          headers: { "Accept":"application/json", "X-CSRF-TOKEN":CSRF }
+        });
         if (res.status === 401 || res.status === 403) { window.location.href = "{{ route('login') }}"; return; }
+        if (!res.ok) throw new Error("Dashboard request failed with status " + res.status);
         const json = await res.json();
         if (!json.success) throw new Error("Failed");
-        const m = json.metrics || {};
-        document.getElementById("totalNew").innerText      = m.totalNew      ?? '0';
-        document.getElementById("totalRenewed").innerText  = m.totalRenewed  ?? '0';
-        document.getElementById("withinRenewal").innerText = m.withinRenewal ?? '0';
-        document.getElementById("expired").innerText       = m.expired       ?? '0';
-        document.getElementById("pending").innerText       = m.pending       ?? '0';
         personnel = json.personnel || [];
-        document.getElementById("totalPersonnel").innerText = personnel.length;
-        if (typeof staffPrepareReports === 'function') staffPrepareReports();
+        const m = json.metrics || {};
+        applyDashboardMetrics(json);
+        try {
+          if (typeof staffPrepareReports === 'function') staffPrepareReports();
+        } catch (reportError) {
+          console.error('Report preparation failed:', reportError);
+        }
         if (!chartsInitialized) {
-          initCharts(m.totalNew??0, m.totalRenewed??0, m.withinRenewal??0, m.expired??0, m.pending??0);
-          chartsInitialized = true;
+          try {
+            initCharts(m.totalNew??0, m.totalRenewed??0, m.withinRenewal??0, m.expired??0, m.pending??0);
+            chartsInitialized = true;
+          } catch (chartError) {
+            console.error('Dashboard charts failed:', chartError);
+          }
+        }
+        try {
+          if (currentPage === 'personnel') renderTable();
+          if (currentPage === 'ics' && typeof window.icsRefresh === 'function') window.icsRefresh();
+          if (currentPage === 'renewal' && typeof window.renewalRenderAll === 'function') window.renewalRenderAll();
+        } catch (moduleError) {
+          console.error('Active module refresh failed:', moduleError);
         }
   } catch (e) {
       console.error('Dashboard load failed:', e);
+      if (attempt < 2) {
+        window.setTimeout(function(){ loadDashboard(attempt + 1); }, 500 * (attempt + 1));
+        return;
+      }
       ["totalPersonnel","totalNew","totalRenewed","withinRenewal","expired","pending"].forEach(id => {
           const el = document.getElementById(id); if(el) el.innerText='0';
       });
@@ -1974,7 +2054,7 @@
       let filtered  = [...new Map(personnel.map(p => [p.itemNumber, p])).values()].filter(p => {
         const nameMatch   = [p.firstName, p.middleName, p.lastName].some(v => (v||"").toLowerCase().includes(q));
         const statusMatch = statusF ? (p.approvedStatus||'pending').toLowerCase() === statusF.toLowerCase() : true;
-        const rankMatch = !rankF || (p.rank || '').toLowerCase().includes(rankF);
+        const rankMatch = !rankF || (p.rank || '').trim().toLowerCase() === rankF;
         const unitMatch = !unitF || (p.unit || '').toLowerCase().includes(unitF);
         return nameMatch && statusMatch && rankMatch && unitMatch;
       });
@@ -2029,7 +2109,8 @@
 
     document.getElementById("sortSelect")?.addEventListener("change", e => { currentSort = e.target.value; renderTable(); });
     document.getElementById("approvalFilter")?.addEventListener("change", () => { currentTablePage = 1; renderTable(); });
-    ['personnelNameFilter','personnelRankFilter','personnelUnitFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', () => { currentTablePage = 1; renderTable(); }));
+    ['personnelNameFilter','personnelUnitFilter'].forEach(id => document.getElementById(id)?.addEventListener('input', () => { currentTablePage = 1; renderTable(); }));
+    document.getElementById('personnelRankFilter')?.addEventListener('change', () => { currentTablePage = 1; renderTable(); });
     document.getElementById('personnelClearFilters')?.addEventListener('click', () => {
       ['personnelNameFilter','personnelRankFilter','personnelUnitFilter','approvalFilter'].forEach(id => { document.getElementById(id).value = ''; });
       currentTablePage = 1;
@@ -2071,7 +2152,7 @@
 
     function closeRegisterModal() { registerOverlay.style.display = 'none'; }
 
-    document.getElementById('registerPersonnelBtn').addEventListener('click', openRegisterModal);
+    document.getElementById('registerPersonnelBtn')?.addEventListener('click', openRegisterModal);
     document.getElementById('registerModalClose').addEventListener('click', closeRegisterModal);
     document.getElementById('registerModalCancel').addEventListener('click', closeRegisterModal);
     registerOverlay.addEventListener('click', function(e) { if (e.target === this) closeRegisterModal(); });
@@ -3179,6 +3260,7 @@
       document.getElementById("icsPersonnelSearch")?.addEventListener("input",function(){const q=this.value.trim().toLowerCase();const sel=document.getElementById("icsPersonnelSelect");if(!sel)return;Array.from(sel.options).forEach(opt=>{opt.hidden=q?!opt.textContent.toLowerCase().includes(q):false;});});
 
       const icsSection=document.getElementById("page-ics");
+      window.icsRefresh=function(){populateICSSelect();icsRenderTable();};
       new MutationObserver(()=>{if(icsSection.classList.contains("active")){populateICSSelect();icsRenderTable();}}).observe(icsSection,{attributes:true,attributeFilter:["class"]});
       if(icsSection.classList.contains("active")){populateICSSelect();icsRenderTable();}
 
@@ -3238,6 +3320,18 @@
     window.scrollTo(0, 0);
   }
 
+  function rpToggleOtherCitizenship() {
+    var isOther = document.getElementById('rp_citizenship').value === 'Other';
+    document.getElementById('rp_otherCitizenshipWrap').style.display = isOther ? 'block' : 'none';
+    if (!isOther) document.getElementById('rp_otherCitizenship').value = '';
+  }
+
+  function rpCitizenshipValue() {
+    return document.getElementById('rp_citizenship').value === 'Other'
+      ? document.getElementById('rp_otherCitizenship').value.trim()
+      : document.getElementById('rp_citizenship').value;
+  }
+
   function rpNext(step) {
     if (step === 1) {
       var fields = [
@@ -3250,6 +3344,9 @@
         {id:'rp_email',     label:'Email Address'}
       ];
       var errEl = document.getElementById('rp_err1');
+      if (document.getElementById('rp_citizenship').value === 'Other') {
+        fields.push({id:'rp_otherCitizenship', label:'Citizenship'});
+      }
       for (var i=0; i<fields.length; i++) {
         var el = document.getElementById(fields[i].id);
         if (!el || !el.value.trim()) {
@@ -3302,7 +3399,7 @@
         ['Contact #',document.getElementById('rp_contact').value],
         ['Civil Status',document.getElementById('rp_civil').value],
         ['Gender',document.getElementById('rp_gender').value],
-        ['Citizenship',document.getElementById('rp_citizenship').value]
+        ['Citizenship',rpCitizenshipValue()]
       ];
       document.getElementById('rp_reviewPersonal').innerHTML = rp.map(function(x){return row(x[0],x[1]);}).join('');
       var rf=[
@@ -3384,6 +3481,7 @@
       dateOfValidity:     null,
       afosMos:            document.getElementById('rp_afosMos').value,
       branch:             document.getElementById('rp_branch').value,
+      citizenship:        rpCitizenshipValue(),
       remarks:            document.getElementById('rp_remarks').value
     };
     fetch(STORE_URL, {method:'POST',headers:{'Content-Type':'application/json','X-CSRF-TOKEN':CSRF,'Accept':'application/json'},body:JSON.stringify(body)})
@@ -3401,8 +3499,9 @@
             document.getElementById('rp_photoPreview').style.display = 'none';
             document.getElementById('rp_photo').value = '';
             document.getElementById('rp_photoSource').textContent = '';
-            ['rp_lastName','rp_firstName','rp_middleName','rp_afpSerial','rp_email','rp_contact','rp_pistolSerial','rp_ammo','rp_issuedBy','rp_armory','rp_remarks','rp_afosMos','rp_branch'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+            ['rp_lastName','rp_firstName','rp_middleName','rp_afpSerial','rp_email','rp_contact','rp_pistolSerial','rp_ammo','rp_issuedBy','rp_armory','rp_remarks','rp_afosMos','rp_branch','rp_otherCitizenship'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
             ['rp_rank','rp_unit','rp_pistolNomenclature','rp_pistolType','rp_civil','rp_gender','rp_citizenship','rp_dob','rp_dateIssued'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
+            document.getElementById('rp_citizenship').value='Filipino';rpToggleOtherCitizenship();
             ['rp_parIssuedBy','rp_parApprovedBy','rp_parValidUntil','rp_parRemarks'].forEach(function(id){document.getElementById(id).value='';});
             document.getElementById('rp_parFirearmQty').value='1';document.getElementById('rp_parFirearmCost').value='0';document.getElementById('rp_parAmmoCost').value='0';document.getElementById('rp_parEquipmentList').innerHTML='';rpInitEquipment();rpIssuedSignatureBase64=null;rpApprovedSignatureBase64=null;
             window._rpNavigate('dashboard');

@@ -72,10 +72,14 @@ class InspectionController extends Controller
     {
         try {
             $data = $request->all();
+            $checklist = [];
+            foreach (Inspection::parts() as $key => $label) {
+                $checklist[$key] = $data[$key] ?? 'serviceable';
+            }
 
             Inspection::updateOrCreate(
                 ['item_number' => $data['itemNumber']],
-                [
+                array_merge([
                     'status'                             => $data['status']                            ?? 'under',
                     'remarks'                            => $data['remarks']                           ?? '',
                     'inspected_by_name'                  => $data['inspectedByName']                   ?? '',
@@ -90,22 +94,7 @@ class InspectionController extends Controller
                     'noted_by_name'                      => $data['notedByName']                       ?? '',
                     'noted_by_rank'                      => $data['notedByRank']                       ?? '',
                     'noted_by_position'                  => $data['notedByPosition']                   ?? '',
-                    'barrel'                             => $data['barrel']                            ?? 'serviceable',
-                    'slide'                              => $data['slide']                             ?? 'serviceable',
-                    'recoil_spring_assembly'             => $data['recoil_spring_assembly']            ?? 'serviceable',
-                    'firing_pin'                         => $data['firing_pin']                        ?? 'serviceable',
-                    'spacer_sleeve'                      => $data['spacer_sleeve']                     ?? 'serviceable',
-                    'firing_pin_spring'                  => $data['firing_pin_spring']                 ?? 'serviceable',
-                    'spring_cups'                        => $data['spring_cups']                       ?? 'serviceable',
-                    'firing_pin_safety'                  => $data['firing_pin_safety']                 ?? 'serviceable',
-                    'firing_pin_safety_spring'           => $data['firing_pin_safety_spring']          ?? 'serviceable',
-                    'extractor'                          => $data['extractor']                         ?? 'serviceable',
-                    'extractor_depressor_plunger'        => $data['extractor_depressor_plunger']       ?? 'serviceable',
-                    'extractor_depressor_plunger_spring' => $data['extractor_depressor_plunger_spring']?? 'serviceable',
-                    'trigger_loaded_bearing'             => $data['trigger_loaded_bearing']            ?? 'serviceable',
-                    'rear_sight'                         => $data['rear_sight']                        ?? 'serviceable',
-                    'front_sight'                        => $data['front_sight']                       ?? 'serviceable',
-                ]
+                ], $checklist)
             );
 
             return response()->json(['success' => true]);

@@ -269,40 +269,12 @@
 
   {{-- ===================== INSPECTION CHECKLIST ===================== --}}
   @php
-    $allParts = [
-      ['barrel',                             'Barrel'],
-      ['slide',                              'Slide'],
-      ['recoil_spring_assembly',             'Recoil Spring Assembly'],
-      ['firing_pin',                         'Firing Pin'],
-      ['spacer_sleeve',                      'Spacer Sleeve'],
-      ['firing_pin_spring',                  'Firing Pin Spring'],
-      ['spring_cups',                        'Spring Cups'],
-      ['firing_pin_safety',                  'Firing Pin Safety'],
-      ['firing_pin_safety_spring',           'Firing Pin Safety Spring'],
-      ['extractor',                          'Extractor'],
-      ['extractor_depressor_plunger',        'Extractor Depressor Plunger'],
-      ['extractor_depressor_plunger_spring', 'Extractor Depressor Plunger Spring'],
-      ['trigger_loaded_bearing',             'Spring-Loaded Bearing'],
-      ['rear_sight',                         'Rear Sight'],
-      ['front_sight',                        'Front Sight'],
-      ['front_sight_screw',                  'Front Sight Screw'],
-      ['frame',                              'Frame'],
-      ['magazine_catch_spring',              'Magazine Catch Spring'],
-      ['magazine_catch',                     'Magazine Catch'],
-      ['slide_lock',                         'Slide Lock'],
-      ['slide_cover_plate',                  'Slide Cover Plate'],
-      ['connector',                          'Connector'],
-      ['trigger_mechanism_housing',          'Trigger Mechanism Housing w/ Ejector'],
-      ['trigger',                            'Trigger'],
-      ['trigger_spring',                     'Trigger Spring'],
-      ['trigger_with_trigger_bar',           'Trigger with Trigger Bar'],
-      ['slide_stop_lever',                   'Slide Stop Lever'],
-      ['trigger_pin',                        'Trigger Pin'],
-      ['trigger_housing_pin',                'Trigger Housing Pin'],
-      ['locking_block_pin',                  'Locking Block Pin'],
-    ];
-    $leftParts  = array_slice($allParts, 0, 15);
-    $rightParts = array_slice($allParts, 15, 15);
+    $allParts = collect(\App\Models\Inspection::parts())
+      ->map(fn ($label, $key) => [$key, $label])
+      ->values()
+      ->all();
+    $leftParts  = array_slice($allParts, 0, 13);
+    $rightParts = array_slice($allParts, 13);
   @endphp
 
   <table class="checklist-wrap">

@@ -219,7 +219,7 @@
         <h1 class="text-xl font-bold force-light-text tracking-tight">Audit Log</h1>
         <p class="text-xs text-[#64748b] mt-0.5">Complete record of all system actions and user activity.</p>
       </div>
-      <div class="flex items-center gap-4">
+      <div class="flex flex-row-reverse items-center gap-4">
         @include('partials.account_dropdown')
         <!-- NOTIFICATION BELL -->
         <div class="relative" id="adminNotifWrapper">

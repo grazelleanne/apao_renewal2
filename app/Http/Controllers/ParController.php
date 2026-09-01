@@ -131,9 +131,15 @@ class ParController extends Controller
                     'reference' => $person->afp_serial_number,
                     'status' => 'Waiting for PAR Issuance',
                 ])->values(),
-                'month' => $issuedThisMonth->map(fn ($par) => $this->metricDetail($par, 'PAR Issued')),
-                'year' => $issuedThisYear->map(fn ($par) => $this->metricDetail($par, 'PAR Issued')),
-                'returned_replaced' => $replacedThisMonth->map(fn ($par) => $this->metricDetail($par, 'Replaced')),
+                'month' => $issuedThisMonth
+                    ->map(fn (PropertyAcknowledgementReceipt $par): array => $this->metricDetail($par, 'PAR Issued'))
+                    ->values(),
+                'year' => $issuedThisYear
+                    ->map(fn (PropertyAcknowledgementReceipt $par): array => $this->metricDetail($par, 'PAR Issued'))
+                    ->values(),
+                'returned_replaced' => $replacedThisMonth
+                    ->map(fn (PropertyAcknowledgementReceipt $par): array => $this->metricDetail($par, 'Replaced'))
+                    ->values(),
             ],
             'units' => Personnel::active()->whereNotNull('unit')->where('unit', '<>', '')->distinct()->orderBy('unit')->pluck('unit'),
         ]);
@@ -247,10 +253,10 @@ class ParController extends Controller
             ->mapWithKeys(fn ($value, $key) => [str_replace('personnel_', '', $key) => $value])->all();
         $data = collect($data)->except(array_map(fn ($key) => 'personnel_'.$key, array_keys($personnelData)))->all();
         if (empty($data['issued_by']) && ($data['issued_by_personnel_id'] ?? null)) {
-            $data['issued_by'] = \App\Models\Personnel::findOrFail($data['issued_by_personnel_id'])->full_name;
+            $data['issued_by'] = Personnel::findOrFail($data['issued_by_personnel_id'])->full_name;
         }
         if (empty($data['approved_by']) && ($data['approved_by_personnel_id'] ?? null)) {
-            $data['approved_by'] = \App\Models\Personnel::findOrFail($data['approved_by_personnel_id'])->full_name;
+            $data['approved_by'] = Personnel::findOrFail($data['approved_by_personnel_id'])->full_name;
         }
         $before = $par->only(array_keys($data));
         DB::transaction(function () use ($par, $data, $personnelData) {
@@ -378,9 +384,13 @@ class ParController extends Controller
 
     private function metricDetail(PropertyAcknowledgementReceipt $par, string $status): array
     {
+        $date = $par->replaced_at ?? $par->issued_date ?? $par->updated_at;
+
         return [
-            'date' => ($par->replaced_at ?? $par->issued_date ?? $par->updated_at)?->toIso8601String(),
-            'personnel' => $par->personnel?->full_name ?? 'Unknown personnel',
+            'date' => $date instanceof \DateTimeInterface
+                ? $date->format(DATE_ATOM)
+                : ($date ? (string) $date : null),
+                    'personnel' => $par->personnel?->full_name ?? 'Unknown personnel',
             'reference' => $par->par_number,
             'status' => $status,
         ];
@@ -395,8 +405,8 @@ class ParController extends Controller
     private function parWaitingPersonnel($query): void
     {
         $query->active()
-            ->where('approved_status', 'new')
-            ->whereDoesntHave('propertyAcknowledgementReceipts', fn ($par) => $par->where('status', 'Active'));
+            ->where('approved_status', 'renewed')
+            ->where('ics_status', 'ready');
     }
 
     private function paginationMeta($page): array
@@ -424,4 +434,3 @@ class ParController extends Controller
         ]);
     }
 }
-

@@ -232,7 +232,7 @@
 
     <header class="flex flex-wrap justify-between mb-8 items-center gap-4">
       <h1 class="text-2xl font-bold tracking-tight force-light-text">Reports</h1>
-      <div class="flex items-center gap-4">
+      <div class="flex flex-row-reverse items-center gap-4">
         @include('partials.account_dropdown')
 
         <!-- NOTIFICATION BELL -->

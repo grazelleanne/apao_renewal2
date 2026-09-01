@@ -16,23 +16,8 @@ use App\Models\Inspection;
 if (!function_exists('inspectionPartsForFirearm')) {
     function inspectionPartsForFirearm(?string $firearm): array
     {
-        $glock17 = [
-            'barrel', 'slide', 'recoil_spring_assembly', 'firing_pin', 'spacer_sleeve',
-            'firing_pin_spring', 'spring_cups', 'firing_pin_safety', 'firing_pin_safety_spring',
-            'extractor', 'extractor_depressor_plunger', 'extractor_depressor_plunger_spring',
-            'trigger_loaded_bearing', 'rear_sight', 'front_sight', 'front_sight_screw', 'frame',
-            'magazine_catch_spring', 'magazine_catch', 'slide_lock', 'slide_cover_plate', 'connector',
-            'trigger_mechanism_housing', 'trigger', 'trigger_spring', 'trigger_with_trigger_bar',
-            'slide_stop_lever', 'trigger_pin', 'trigger_housing_pin', 'locking_block_pin',
-        ];
-        $pistol9mm = [
-            'barrel', 'slide', 'recoil_spring_assembly', 'firing_pin', 'extractor',
-            'rear_sight', 'front_sight', 'frame', 'magazine_catch', 'trigger',
-            'trigger_spring', 'slide_stop_lever', 'trigger_pin', 'trigger_housing_pin',
-            'locking_block_pin',
-        ];
-
-        return str_contains(strtolower((string) $firearm), 'glock 17') ? $glock17 : $pistol9mm;
+        // The approved checklist is shared by Pistol 9mm and Pistol Cal .45.
+        return array_keys(Inspection::parts());
     }
 }
 
@@ -339,6 +324,7 @@ Route::middleware('check.session:admin')->prefix('admin')->group(function () {
             'pistolSerialNumber' => $p->pistol_serial_number ?? '',
             'qtyAmmo'            => $p->qty_ammo             ?? 0,
             'approvedStatus'     => $p->approved_status      ?? 'pending',
+            'dateApproved'       => $p->date_approved        ?? null,
             'email'              => $p->email                ?? '',
             'photo'              => $p->photo                ?? null,
             'signature'          => $p->signature            ?? null,
@@ -1385,7 +1371,20 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
 
         session(['user' => (array) $user]);
 
-        return view('staff_dashboard', compact('user'));
+        $initialDashboardData = ['success' => true, 'metrics' => [], 'personnel' => []];
+
+        try {
+            $dataRoute = app('router')->getRoutes()->getByName('staff.dashboard.data');
+            $dataAction = $dataRoute?->getAction('uses');
+
+            if ($dataAction instanceof Closure) {
+                $initialDashboardData = $dataAction()->getData(true);
+            }
+        } catch (Throwable $exception) {
+            report($exception);
+        }
+
+        return view('staff_dashboard', compact('user', 'initialDashboardData'));
     })->name('staff.dashboard');
 
     Route::put('/profile', [ProfileController::class, 'update'])->name('staff.profile.update');
@@ -1422,8 +1421,16 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
             ->unique('item_number')
             ->keyBy('item_number');
 
-        $personnel = $all->map(function ($p) use ($latestInspections) {
+        $latestPars = DB::table('property_acknowledgement_receipts')
+            ->whereIn('personnel_id', $all->pluck('id'))
+            ->orderByDesc('id')
+            ->get()
+            ->unique('personnel_id')
+            ->keyBy('personnel_id');
+
+        $personnel = $all->map(function ($p) use ($latestInspections, $latestPars) {
             $inspection = $latestInspections->get($p->item_number);
+            $par = $latestPars->get($p->id);
             $rpcspRemark = rpcspRemarkFromInspection($inspection);
 
             $inspectionResult = match (true) {
@@ -1460,6 +1467,11 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
             'signature'          => $p->signature            ?? null,
 
             'icsStatus'           => $p->ics_status           ?? 'inspection',
+            'parNumber'           => $par->par_number         ?? null,
+            'parStatus'           => $par ? 'issued' : null,
+            'dateIssued'          => $par->issued_date        ?? null,
+            'issuedBy'            => $par->issued_by          ?? null,
+            'approvedBy'          => $par->approved_by        ?? null,
             'inspectionResult'    => $inspectionResult,
             'inspectionUpdatedAt' => $inspection?->updated_at,
             'inspectionRemarks'   => $inspection?->remarks ?? '',
@@ -1499,6 +1511,7 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
                 'email'                => $email,
                 'photo'                => $body['photo'] ?? $request->input('photo') ?? null,
                 'signature'            => $body['signature'] ?? null,
+                'citizenship'          => trim((string) ($body['citizenship'] ?? 'Filipino')) ?: 'Filipino',
                 'approved_status'      => 'new',
                 'ics_status'           => 'inspection',
                 'status'               => 'active',

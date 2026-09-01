@@ -1122,16 +1122,13 @@
     return list.map(function (p) {
       var ov = getOverride(p.itemNumber);
 
-      // Only brand-new registrants (approvedStatus === 'new') have genuinely never
-      // had a PAR. Renewed / within-renewal / expired personnel already went through
-      // PAR issuance previously, so they belong in PAR Management, not PAR Issuance —
-      // regardless of their current ICS inspection status.
-      var isBrandNew = (p.approvedStatus === 'new');
-      var alreadyHasPar = !!p.parNumber || !isBrandNew;
-
-      var derivedStatus = ov.parStatus || (alreadyHasPar ? 'issued' : (p.icsStatus === 'ready' ? 'ready' : 'ready'));
-      var seededNumber = ov.parNumber || p.parNumber || (alreadyHasPar ? parSeedNumber(p.itemNumber) : null);
-      var seededDate = ov.dateIssued || p.dateIssued || (alreadyHasPar ? (p.updated_at || p.inspectionUpdatedAt || null) : null);
+      // Issuance contains only renewed personnel whose ICS is ready and whose
+      // replacement PAR has not been processed. Existing PARs stay in Management.
+      var hasExistingPar = !!(ov.parNumber || p.parNumber);
+      var awaitingRenewalPar = p.approvedStatus === 'renewed' && p.icsStatus === 'ready' && ov.parStatus !== 'issued';
+      var derivedStatus = awaitingRenewalPar ? 'ready' : (hasExistingPar ? 'issued' : 'ineligible');
+      var seededNumber = ov.parNumber || p.parNumber || null;
+      var seededDate = ov.dateIssued || p.dateIssued || null;
 
       return Object.assign({}, p, {
         parStatus: derivedStatus,
@@ -1183,7 +1180,7 @@
   // ── HUB ────────────────────────────────────────────────────────────
   function parRenderHub() {
     var readyCount = parAll.filter(function (p) { return p.parStatus === 'ready'; }).length;
-    var existingCount = parAll.filter(function (p) { return p.parStatus === 'issued'; }).length;
+    var existingCount = parAll.filter(function (p) { return !!p.parNumber; }).length;
     var now = new Date();
     var activity = loadActivity();
     var updatedThisMonth = activity.filter(function (a) {
@@ -1386,7 +1383,7 @@
     var statusF = document.getElementById('parMgmtStatusFilter').value;
 
     var list = parAll.filter(function (p) {
-      if (p.parStatus !== 'issued') return false;
+      if (!p.parNumber) return false;
       if (unitF && p.unit !== unitF) return false;
       if (statusF === 'replaced' && !p.wasReplaced) return false;
       if (statusF === 'active' && p.wasReplaced) return false;
@@ -1459,6 +1456,7 @@
               + `<div class="par-kebab-item" onclick="parViewReceipt(${JSON.stringify(r.itemNumber)})"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>View Receipt</div>`
               + `<div class="par-kebab-item" onclick="parOpenProcess(${JSON.stringify(r.itemNumber)}, 'update')"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M11 4H4a2 2 0 00-2 2v14a2 2 0 002 2h14a2 2 0 002-2v-7"/><path d="M18.5 2.5a2.12 2.12 0 013 3L12 15l-4 1 1-4z"/></svg>Update PAR</div>`
               + `<div class="par-kebab-item" onclick="parOpenReplace(${JSON.stringify(r.itemNumber)})"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M1 4v6h6M23 20v-6h-6"/><path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/></svg>Replace PAR</div>`
+              + `<div class="par-kebab-item" onclick="parReprint(${JSON.stringify(r.itemNumber)})"><svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6v-8z"/></svg>Reprint PAR</div>`
             + '</div>'
           + '</div>'
         + '</td>'
