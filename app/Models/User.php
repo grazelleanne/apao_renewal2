@@ -13,6 +13,16 @@ class User extends Authenticatable
     /** @use HasFactory<UserFactory> */
     use HasFactory, Notifiable;
 
+    public const ROLE_SUPER_ADMIN = 'super_admin';
+    public const ROLE_ADMIN = 'admin';
+    public const ROLE_STAFF = 'staff';
+
+    public function canAccessRole(string $role): bool
+    {
+        return $this->role === $role
+            || ($this->role === self::ROLE_SUPER_ADMIN && $role === self::ROLE_ADMIN);
+    }
+
     /**
      * The attributes that are mass assignable.
      *
@@ -23,7 +33,8 @@ protected $fillable = [
     'email',
     'contact_number',
     'password',
-    'role',   // ← add this
+    'role',
+    'is_active',
 ];
 
     /**
@@ -49,4 +60,3 @@ protected $fillable = [
         ];
     }
 }
-

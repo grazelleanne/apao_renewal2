@@ -9,6 +9,7 @@ class RenewalTransaction extends Model
     protected $table = 'renewal_transactions';
 
     protected $fillable = [
+        'source_history_id',
         'personnel_id',
         'item_number',
         'par_number',

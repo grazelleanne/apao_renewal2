@@ -11,6 +11,7 @@ use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
 use Illuminate\Validation\ValidationException;
+use App\Rules\NoInvisibleCharacters;
 
 class ProfileController extends Controller
 {
@@ -18,7 +19,7 @@ class ProfileController extends Controller
     {
         $user = $this->currentActiveUser($request);
         $validated = $request->validate([
-            'name' => ['required', 'string', 'max:255'],
+            'name' => ['required', 'string', 'max:255', new NoInvisibleCharacters],
             'email' => ['required', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
             'current_password' => ['nullable', 'string'],
         ]);
@@ -97,9 +98,9 @@ class ProfileController extends Controller
         $user = $userId ? DB::table('users')->where('id', $userId)->first() : null;
 
         $authorized = $user
-            && in_array($user->role, ['admin', 'staff'], true)
+            && in_array($user->role, ['super_admin', 'admin', 'staff'], true)
             && $user->role === $sessionRole
-            && $user->role === $expectedRole
+            && ($user->role === 'super_admin' || $user->role === $expectedRole)
             && (int) $user->is_active === 1;
 
         if (!$authorized) {

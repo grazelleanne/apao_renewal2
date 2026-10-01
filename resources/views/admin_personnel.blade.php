@@ -288,8 +288,9 @@
         <div class="flex flex-wrap gap-2 items-center ml-auto">
           <label for="sortSelect" class="text-[#b0bac7] text-xs force-light-text mr-1">Sort by:</label>
           <select id="sortSelect" class="control-select bg-[#23272f] text-white border border-[#363b48] rounded px-2 py-1 text-xs force-light-text">
+            <option value="approvedStatus-asc" selected>Approval Status</option>
             <option value="itemNumber-asc">Item # (Asc)</option>
-            <option value="itemNumber-desc" selected>Item # (Desc)</option>
+            <option value="itemNumber-desc">Item # (Desc)</option>
             <option value="lastName-asc">Last Name (A-Z)</option>
             <option value="lastName-desc">Last Name (Z-A)</option>
             <option value="dateOfValidity-asc">Date of Validity (Earliest)</option>
@@ -606,13 +607,20 @@ dateOfValidity: (s.dateOfValidity && s.dateOfValidity !== 'null' && s.dateOfVali
   }
 
   // ===== TABLE =====
-  let currentSort = "itemNumber-desc";
+  let currentSort = "approvedStatus-asc";
   let personnelPage = 1;
   const PERSONNEL_PER_PAGE = 15;
+  const APPROVAL_STATUS_ORDER = { new: 0, pending: 1, renewed: 2, within: 3, expired: 4 };
 
   function sortPersonnel(list, sortBy) {
     const [key, dir] = sortBy.split("-");
     return list.slice().sort((a, b) => {
+      if (key === "approvedStatus") {
+        const aOrder = APPROVAL_STATUS_ORDER[resolveStatus(a)] ?? Number.MAX_SAFE_INTEGER;
+        const bOrder = APPROVAL_STATUS_ORDER[resolveStatus(b)] ?? Number.MAX_SAFE_INTEGER;
+        if (aOrder !== bOrder) return dir === "asc" ? aOrder - bOrder : bOrder - aOrder;
+        return Number(b.itemNumber) - Number(a.itemNumber);
+      }
       let aVal = a[key], bVal = b[key];
       if (key === "itemNumber" || key === "qtyAmmo") { aVal = Number(aVal); bVal = Number(bVal); }
       else if (key !== "dateOfValidity" && key !== "dateOfBirth") { aVal = (aVal || "").toString().toLowerCase(); bVal = (bVal || "").toString().toLowerCase(); }

@@ -100,7 +100,8 @@ class InspectionController extends Controller
             return response()->json(['success' => true]);
 
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+            \Log::error('Inspection update failed: ' . $e->getMessage());
+            return response()->json(['success' => false, 'error' => 'Unable to save inspection.'], 500);
         }
     }
 
@@ -129,7 +130,8 @@ class InspectionController extends Controller
             return response()->json(['success' => true]);
 
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()]);
+            \Log::error('Inspection operation failed: ' . $e->getMessage());
+            return response()->json(['success' => false, 'error' => 'The requested operation could not be completed.'], 500);
         }
     }
 

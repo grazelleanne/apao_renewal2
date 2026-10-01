@@ -75,16 +75,18 @@
 
     .brand {
       display: flex;
-      flex-direction: column;
       align-items: center;
-      gap: 1.25rem;
+      justify-content: center;
+      width: 100%;
       z-index: 1;
     }
 
     .brand-logo {
-      width: 90px; height: 90px;
+      width: min(240px, 85%);
+      height: auto;
+      max-height: 420px;
       border-radius: 50%;
-      object-fit: cover;
+      object-fit: contain;
       border: 3px solid rgba(255,255,255,0.3);
       background: rgba(255,255,255,0.1);
       box-shadow: 0 8px 32px rgba(0,0,0,0.2);
@@ -356,6 +358,7 @@
     @media (max-width: 640px) {
       .card { flex-direction: column; }
       .side.left { width: 100%; min-height: 160px; padding: 2rem; }
+      .brand-logo { width: min(120px, 60%); max-height: 120px; }
       .side.right { padding: 2rem 1.5rem; }
     }
   </style>
@@ -373,14 +376,11 @@
           alt="Company Logo"
           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"
         />
-        <div style="display:none; width:90px; height:90px; border-radius:50%; background:rgba(255,255,255,0.15); align-items:center; justify-content:center;">
-          <svg fill="white" viewBox="0 0 24 24" style="width:40px;height:40px;">
+        <div style="display:none; width:min(240px, 85%); aspect-ratio:1; border-radius:50%; background:rgba(255,255,255,0.15); align-items:center; justify-content:center;">
+          <svg fill="white" viewBox="0 0 24 24" style="width:45%;height:45%;">
             <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
           </svg>
         </div>
-        <span class="brand-title">APAO Portal</span>
-        <span class="brand-subtitle">Secure Access System</span>
-        <div class="divider"></div>
       </div>
     </section>
 
@@ -419,6 +419,16 @@
           </label>
         </div>
 
+        <div class="field">
+          <label class="label" for="captcha">Security check</label>
+          <div style="display:flex;gap:.65rem;align-items:center;margin-bottom:.55rem;">
+            <strong id="captchaQuestion" style="flex:1;padding:.7rem;border-radius:8px;background:#eef2f7;color:#1f2937;text-align:center;letter-spacing:.04em;">{{ $captchaQuestion }}</strong>
+            <button type="button" id="refreshCaptcha" class="toggle-password" style="position:static;width:42px;height:42px;border:1px solid #d3d8e2;border-radius:8px;" aria-label="Get a new security question" title="New question">↻</button>
+          </div>
+          <input class="input" type="text" id="captcha" name="captcha" inputmode="numeric"
+            pattern="[0-9]*" placeholder="Enter the answer" required autocomplete="off" />
+        </div>
+
         <button type="submit" class="btn" id="loginBtn">Login</button>
 
 
@@ -444,6 +454,31 @@
   </div>
 
   <script>
+    // A cached login page can retain the success modal when reached through
+    // Back/Forward. End any remaining authenticated session and replace that
+    // stale history entry with a fresh login page.
+    window.addEventListener('pageshow', async function (event) {
+      const navigation = window.performance.getEntriesByType('navigation')[0];
+      const isHistoryNavigation = event.persisted || navigation?.type === 'back_forward';
+      if (!isHistoryNavigation) return;
+
+      document.getElementById('successModal')?.classList.remove('active');
+
+      try {
+        await fetch(@json(route('logout')), {
+          method: 'POST',
+          headers: {
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]')?.content || '',
+            'Accept': 'application/json'
+          },
+          credentials: 'same-origin',
+          cache: 'no-store'
+        });
+      } finally {
+        window.location.replace(@json(route('login')));
+      }
+    });
+
    const togglePasswordBtn = document.getElementById('togglePassword');
     const passwordInput     = document.getElementById('password');
     const eyeIcon           = togglePasswordBtn.querySelector('.icon-eye');
@@ -455,6 +490,29 @@
       eyeIcon.style.display    = isPassword ? 'block' : 'none';
       eyeOffIcon.style.display = isPassword ? 'none' : 'block';
       togglePasswordBtn.setAttribute('aria-label', isPassword ? 'Hide password' : 'Show password');
+    });
+
+    const captchaEl = document.getElementById('captcha');
+    const captchaQuestionEl = document.getElementById('captchaQuestion');
+
+    captchaEl.addEventListener('input', function () {
+      this.value = this.value.replace(/\D/g, '');
+    });
+
+    async function refreshCaptcha() {
+      const response = await fetch('{{ route('login.captcha') }}', {
+        headers: { 'Accept': 'application/json' },
+      });
+      const data = await response.json();
+      captchaQuestionEl.textContent = data.question;
+      captchaEl.value = '';
+    }
+
+    document.getElementById('refreshCaptcha').addEventListener('click', function () {
+      refreshCaptcha().catch(() => {
+        document.getElementById('loginError').textContent = 'Could not refresh the security question.';
+        document.getElementById('loginError').classList.add('visible');
+      });
     });
 
     document.getElementById('loginForm').addEventListener('submit', async function (e) {
@@ -472,6 +530,7 @@
       errorBox.classList.remove('visible');
       emailEl.classList.remove('error');
       passEl.classList.remove('error');
+      captchaEl.classList.remove('error');
 
       // Basic client validation
       if (!emailEl.value.trim()) {
@@ -485,6 +544,13 @@
         errorBox.textContent = 'Password is required.';
         errorBox.classList.add('visible');
         passEl.classList.add('error');
+        return;
+      }
+
+      if (!captchaEl.value.trim()) {
+        errorBox.textContent = 'Security answer is required.';
+        errorBox.classList.add('visible');
+        captchaEl.classList.add('error');
         return;
       }
 
@@ -503,6 +569,7 @@
             email:    emailEl.value.trim(),
             password: passEl.value,
             remember: document.getElementById('remember').checked,
+            captcha:  captchaEl.value,
             _token:   document.querySelector('input[name="_token"]').value,
           }),
         });
@@ -523,7 +590,7 @@
               hintEl.textContent = `Redirecting in ${count}…`;
             } else {
               clearInterval(timer);
-              window.location.href = data.redirect;
+              window.location.replace(data.redirect);
             }
           }, 1000);
 
@@ -532,6 +599,11 @@
           errorBox.classList.add('visible');
           emailEl.classList.add('error');
           passEl.classList.add('error');
+          if (data.captcha_question) {
+            captchaQuestionEl.textContent = data.captcha_question;
+            captchaEl.value = '';
+          }
+          captchaEl.classList.add('error');
         }
 
       } catch (err) {

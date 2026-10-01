@@ -169,6 +169,10 @@
     .rpcsp-signatory p{margin:0;}
     .rpcsp-signatory-name{font-weight:700;}
     .rpcsp-empty{text-align:center!important;padding:14px!important;color:#666;}
+    .rpcsp-preview-section[hidden]{display:none!important;}
+    .rpcsp-preview-status{margin-top:10px;min-height:18px;font-size:.75rem;color:#94a3b8;}
+    .rpcsp-preview-status.success{color:#22c55e;}
+    .rpcsp-preview-status.error{color:#f87171;}
     @media(max-width:1100px){.rpcsp-config-grid{grid-template-columns:repeat(2,minmax(0,1fr));}}
     @media(max-width:640px){.rpcsp-config-grid{grid-template-columns:1fr;}}
 
@@ -460,15 +464,16 @@
           </div>
 
           <div class="rpcsp-actions">
-            <button type="button" id="previewRpcspBtn" class="rpcsp-btn rpcsp-btn-primary">Preview RPCSP</button>
+            <button type="button" id="previewRpcspBtn" class="rpcsp-btn rpcsp-btn-primary" aria-controls="rpcspPreviewSection" aria-expanded="false">Preview RPCSP</button>
             <button type="button" id="printRpcspBtn" class="rpcsp-btn rpcsp-btn-green">Print / Save PDF</button>
             <button type="button" id="exportRpcspBtn" class="rpcsp-btn rpcsp-btn-amber">Export Excel</button>
           </div>
+          <div id="rpcspPreviewStatus" class="rpcsp-preview-status" role="status" aria-live="polite"></div>
         </div>
       </section>
 
       <!-- RPCSP Preview -->
-      <section class="mb-10">
+      <section class="mb-10 rpcsp-preview-section" id="rpcspPreviewSection" hidden>
         <div class="rpcsp-preview-shell">
           <div class="rpcsp-document" id="rpcspDocument">
             <h1 class="rpcsp-title">REPORT ON THE PHYSICAL COUNT OF SEMI-EXPENDABLE PROPERTY</h1>
@@ -856,7 +861,43 @@ document.addEventListener("DOMContentLoaded", function () {
   });
 
   document.getElementById("downloadReportBtn").onclick = function () { const rows = document.querySelectorAll("#personnelTableBody tr"); if (!rows.length || (rows.length === 1 && rows[0].querySelector("td[colspan]"))) { alert("No data. Click Preview first."); return; } const headers = ["Item #","Date of Validity","Status","Last Name","First Name","Middle Name","AFP Serial #","Date of Birth","Nomenclature of Pistol","Pistol Serial #","Qty Ammo"]; let tableRows = ""; rows.forEach(row => { const cells = row.querySelectorAll("td"); if (!cells.length) return; let r = ""; cells.forEach(cell => { r += `<td style="border:1px solid #ccc;padding:5px 8px;font-size:11px;">${cell.innerText.trim()}</td>`; }); tableRows += `<tr>${r}</tr>`; }); const today = new Date().toLocaleDateString(); const win = window.open("","_blank"); win.document.write(`<!DOCTYPE html><html><head><meta charset="UTF-8"><title>APAO Report</title><style>body{font-family:Arial;margin:30px;}h2{text-align:center;}table{width:100%;border-collapse:collapse;}th{background:#1a3a2a;color:#fff;padding:6px;font-size:11px;border:1px solid #ccc;text-align:left;}</style></head><body><h2>ARMY PROPERTY ACCOUNTABILITY OFFICE</h2><h2>Personnel Renewal Report</h2><p style="text-align:center;font-size:12px;color:#555;">Generated: ${today}</p><table><thead><tr>${headers.map(h=>"<th>"+h+"</th>").join("")}</tr></thead><tbody>${tableRows}</tbody></table></body></html>`); win.document.close(); setTimeout(()=>{win.focus();win.print();},400); };
-  document.getElementById("exportExcelBtn").onclick = function () { const rows = document.querySelectorAll("#personnelTableBody tr"); if (!rows.length || (rows.length === 1 && rows[0].querySelector("td[colspan]"))) { alert("No data. Click Preview first."); return; } const headers = ["Item #","Date of Validity","Status","Last Name","First Name","Middle Name","AFP Serial #","Date of Birth","Nomenclature of Pistol","Pistol Serial #","Qty Ammo"]; let csv = headers.map(h => `"${h}"`).join(",") + "\n"; rows.forEach(row => { const cells = row.querySelectorAll("td"); if (!cells.length) return; csv += Array.from(cells).map(c => `"${c.innerText.trim().replace(/"/g,"\"\"")}"` ).join(",") + "\n"; }); const blob = new Blob(["\uFEFF"+csv],{type:"text/csv;charset=utf-8;"}); const url = URL.createObjectURL(blob); const a = document.createElement("a"); a.href=url; a.download="APAO_Report_"+new Date().toISOString().slice(0,10)+".csv"; a.click(); URL.revokeObjectURL(url); };
+  document.getElementById("exportExcelBtn").onclick = function () {
+    const tableRows = document.querySelectorAll("#personnelTableBody tr");
+    if (!tableRows.length || (tableRows.length === 1 && tableRows[0].querySelector("td[colspan]"))) {
+      alert("No data. Click Preview first.");
+      return;
+    }
+
+    const periodLabels = {
+      "this-year": "This Year",
+      "last-year": "Last Year",
+      "custom": [customStart.value, customEnd.value].filter(Boolean).join(" to ") || "Custom Period"
+    };
+
+    const rows = Array.from(tableRows).map(row => {
+      const cells = Array.from(row.querySelectorAll("td"));
+      return {
+        itemNumber: Number(cells[0]?.innerText.trim() || 0),
+        dateOfValidity: cells[1]?.innerText.trim() || "",
+        status: cells[2]?.innerText.trim() || "",
+        lastName: cells[3]?.innerText.trim() || "",
+        firstName: cells[4]?.innerText.trim() || "",
+        middleName: cells[5]?.innerText.trim() || "",
+        afpSerialNumber: cells[6]?.innerText.trim() || "",
+        dateOfBirth: cells[7]?.innerText.trim() || "",
+        pistolNomenclature: cells[8]?.innerText.trim() || "",
+        pistolSerialNumber: cells[9]?.innerText.trim() || "",
+        qtyAmmo: Number(cells[10]?.innerText.trim() || 0)
+      };
+    });
+
+    exportPersonnelRenewalExcel({
+      filename: "APAO_Personnel_Renewal_Report_" + new Date().toISOString().slice(0, 10) + ".xls",
+      generatedDate: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+      period: periodLabels[periodSelect.value] || "All Records",
+      rows
+    });
+  };
 
 
   // ================================================================
@@ -876,7 +917,6 @@ document.addEventListener("DOMContentLoaded", function () {
 
     if (isRpcsp) {
       populateRpcspUnitFilter();
-      renderRpcsp();
     }
   }
 
@@ -894,6 +934,8 @@ document.addEventListener("DOMContentLoaded", function () {
   const rpcspUnitValue = document.getElementById('rpcspUnitValue');
   const rpcspUnitFilter = document.getElementById('rpcspUnitFilter');
   const rpcspRemarks = document.getElementById('rpcspRemarks');
+  const rpcspPreviewSection = document.getElementById('rpcspPreviewSection');
+  const rpcspPreviewStatus = document.getElementById('rpcspPreviewStatus');
 
   rpcspAsOfDate.value = new Date().toISOString().slice(0, 10);
 
@@ -1013,9 +1055,56 @@ document.addEventListener("DOMContentLoaded", function () {
       rpcspMoney(rows.length * unitValue);
   }
 
-  document.getElementById('previewRpcspBtn').addEventListener('click', renderRpcsp);
-  rpcspUnitFilter.addEventListener('change', renderRpcsp);
-  rpcspRemarks.addEventListener('change', renderRpcsp);
+  function refreshVisibleRpcspPreview() {
+    if (!rpcspPreviewSection.hidden) renderRpcsp();
+  }
+
+  document.getElementById('previewRpcspBtn').addEventListener('click', function () {
+    const previewButton = this;
+
+    if (!rpcspPreviewSection.hidden) {
+      rpcspPreviewSection.hidden = true;
+      previewButton.textContent = 'Preview RPCSP';
+      previewButton.setAttribute('aria-expanded', 'false');
+      rpcspPreviewStatus.className = 'rpcsp-preview-status';
+      rpcspPreviewStatus.textContent = '';
+      return;
+    }
+
+    previewButton.disabled = true;
+    previewButton.textContent = 'Generating...';
+    rpcspPreviewStatus.className = 'rpcsp-preview-status';
+    rpcspPreviewStatus.textContent = 'Preparing the RPCSP document...';
+
+    try {
+      renderRpcsp();
+      rpcspPreviewSection.hidden = false;
+      previewButton.setAttribute('aria-expanded', 'true');
+      const rowCount = getRpcspRows().length;
+      rpcspPreviewStatus.className = 'rpcsp-preview-status success';
+      rpcspPreviewStatus.textContent = rowCount
+        ? `RPCSP preview generated with ${rowCount} record${rowCount === 1 ? '' : 's'}.`
+        : 'RPCSP preview generated. No records match the selected unit.';
+
+      requestAnimationFrame(() => {
+        rpcspPreviewSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+    } catch (error) {
+      console.error('Unable to generate RPCSP preview:', error);
+      rpcspPreviewStatus.className = 'rpcsp-preview-status error';
+      rpcspPreviewStatus.textContent = 'Unable to generate the preview. Please reload the page and try again.';
+    } finally {
+      previewButton.disabled = false;
+      previewButton.textContent = rpcspPreviewSection.hidden
+        ? 'Preview RPCSP'
+        : 'Close RPCSP Preview';
+    }
+  });
+
+  rpcspUnitFilter.addEventListener('change', refreshVisibleRpcspPreview);
+  rpcspRemarks.addEventListener('change', refreshVisibleRpcspPreview);
+  [rpcspAsOfDate, rpcspFundCluster, rpcspOfficer, rpcspDesignation, rpcspAssumptionDate, rpcspUnitValue]
+    .forEach(field => field.addEventListener('change', refreshVisibleRpcspPreview));
 
   document.getElementById('printRpcspBtn').addEventListener('click', function () {
     renderRpcsp();

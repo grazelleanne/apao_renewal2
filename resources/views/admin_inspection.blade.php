@@ -440,9 +440,6 @@ body.light-mode .btn-save-under{background:#ede9fe;color:#6d28d9;border-color:#c
           Back to List
         </button>
 
-        <h1 class="text-2xl font-bold mb-1">Inspection / Renewal</h1>
-        <p class="text-sm text-[#64748b] mb-5">Review and inspect firearms and documents of personnel. After inspection, update the status accordingly.</p>
-
         <!-- Personnel Info -->
         <div class="bg-[#23272f] rounded-lg p-5 mb-4 shadow shadow-black/10">
           <div class="flex items-center gap-2 mb-3">

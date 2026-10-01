@@ -46,6 +46,9 @@
       .theme-btn{background:#23272f;border:none;color:#94a3b8;cursor:pointer;padding:8px;border-radius:50%;display:flex;align-items:center;justify-content:center;transition:background 0.15s,color 0.15s;}
       .theme-btn:hover{background:#2d3340;color:#e5eaf2;}
       .notification-bell{position:relative;cursor:pointer;outline:none;transition:color 0.2s ease;}
+      .staff-topbar{position:sticky;top:0;z-index:400;min-height:54px;background:#1a2025;padding:4px 0 10px;border-bottom:1px solid #252b32;isolation:isolate;box-sizing:border-box;}
+      .staff-topbar-inner{display:flex;align-items:center;gap:1rem;margin-left:auto;}
+      body.light-mode .staff-topbar{background:#f4f7fb!important;border-bottom-color:#dbe3ed!important;}
       .notification-badge{position:absolute;top:-4px;right:-4px;background:#ef4444;color:white;font-weight:bold;border-radius:50%;font-size:0.62rem;min-width:17px;height:17px;display:none;align-items:center;justify-content:center;border:2px solid #1a2025;animation:bell-pop 0.3s ease-out;}
       .notification-bell.has-unread .notification-badge{display:flex;}
       @keyframes bell-pop{0%{transform:scale(0);opacity:0}50%{transform:scale(1.2)}100%{transform:scale(1);opacity:1}}
@@ -79,17 +82,7 @@
       .notif-empty{padding:24px 16px;text-align:center;color:#4b5563;font-size:0.8rem;}
       .notif-footer{padding:10px 16px;border-top:1px solid #363b48;text-align:center;font-size:0.72rem;color:#4b5563;}
       .page-section{display:none;}
-      .page-section.active{display:block;}
-      #page-registration.active,
-      #page-ics.active,
-      #page-par.active,
-      #page-renewal.active{margin-top:-3rem;}
-      @media(max-width:640px){
-        #page-registration.active,
-        #page-ics.active,
-        #page-par.active,
-        #page-renewal.active{margin-top:-1.5rem;}
-      }
+      .page-section.active{display:block;padding-top:0.5rem;}
       .badge{display:inline-block;padding:0;border-radius:0;font-size:0.7rem;font-weight:600;background:transparent!important;}
       .badge-text{background:transparent!important;padding:0!important;border-radius:0!important;}
       .badge-renewed{color:#33b481;}
@@ -325,8 +318,12 @@
   body.light-mode #ics-tbody .ics-ready-note{color:#15803d!important;}
   body.light-mode #ics-tbody .ics-inspection-pill{background:transparent!important;color:#a16207!important;}
   body.light-mode #ics-tbody .ics-inspection-pill > span{background:#d97706!important;}
+  body.light-mode #ics-tbody .ics-under-pill{background:transparent!important;color:#0369a1!important;}
+  body.light-mode #ics-tbody .ics-under-pill > span{background:#0ea5e9!important;}
   body.light-mode #ics-tbody .ics-process-btn{background:#166534!important;color:#ffffff!important;border-color:#166534!important;}
   body.light-mode #ics-tbody .ics-process-btn:hover{background:#15803d!important;}
+  body.light-mode #ics-tbody .ics-action-send{background:#fffbeb!important;color:#b77913!important;border-color:#f2cc72!important;}
+  body.light-mode #ics-tbody .ics-action-send:hover{background:#fef3c7!important;color:#92400e!important;border-color:#eab308!important;}
 
   /* ICS summary cards + tab bar (inline-styled, no class) */
   body.light-mode [style*="background:#1c2c18"]{background:#fef9e7!important;border-color:#f0d998!important;}
@@ -397,22 +394,22 @@
   body.light-mode #rp_reviewRemarks div[style*="2a2d35"]{border-color:#e2e8f0!important;}
       .new-status-banner{background:linear-gradient(90deg,#0a1f3a 0%,#0d2d4a 100%);border:1px solid #1a4a7a;border-radius:8px;padding:10px 14px;margin-bottom:10px;display:flex;align-items:center;gap:8px;font-size:0.78rem;color:#7dd3fc;}
       .ics-paper{width:min(860px,100%);min-height:860px;background:#fff;border-radius:10px;border:1px solid #d6dde8;box-shadow:0 12px 36px rgba(0,0,0,0.25);overflow:hidden;}
-      .ics-paper-grid{min-height:860px;padding:18px 16px 14px 16px;background-color:#fff;background-image:linear-gradient(to right,rgba(21,33,52,0.07) 1px,transparent 1px),linear-gradient(to bottom,rgba(21,33,52,0.07) 1px,transparent 1px);background-size:48px 24px;}
+      .ics-paper-grid{min-height:860px;padding:18px 16px 14px;background-color:#fff;background-image:linear-gradient(to right,rgba(21,33,52,0.07) 1px,transparent 1px),linear-gradient(to bottom,rgba(21,33,52,0.07) 1px,transparent 1px);background-size:48px 24px;}
       .ics-header-row{display:flex;align-items:flex-start;gap:6px;}
       .ics-doc-header{flex:1;text-align:center;color:#141b2c;}
       .ics-doc-header .small{font-size:0.88rem;line-height:1.25;font-weight:700;}
       .ics-doc-header .tiny{font-size:0.8rem;line-height:1.25;}
       .ics-doc-header .main-title{font-size:1.85rem;line-height:1.12;margin-top:0.4rem;font-weight:800;letter-spacing:0.02em;}
-      .ics-logo{width:70px;height:70px;object-fit:cover;border-radius:9999px;border:2px solid #1e8b46;background:#f8fafc;margin:0 auto 6px auto;display:block;}
-      .ics-photo-2x2{width:152px;min-width:152px;height:152px;border:2px solid #202a39;background:#f0f4f8;border-radius:4px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;align-self:flex-start;}
-      .ics-photo-2x2 img{width:100%;height:100%;object-fit:cover;}
+      .ics-logo{width:70px;height:70px;object-fit:cover;border-radius:9999px;border:2px solid #1e8b46;background:#f8fafc;margin:0 auto 6px;display:block;}
+      .ics-photo-2x2{width:152px!important;min-width:152px!important;max-width:152px!important;height:152px!important;min-height:152px!important;max-height:152px!important;border:2px solid #202a39;background:#f0f4f8;border-radius:4px;overflow:hidden;flex-shrink:0;display:flex;align-items:center;justify-content:center;align-self:flex-start;box-sizing:border-box;}
+      .ics-photo-2x2 img{display:block;width:100%!important;height:100%!important;max-width:152px!important;max-height:152px!important;object-fit:cover!important;object-position:center top;}
       .ics-meta{width:100%;border-collapse:collapse;margin-top:0.7rem;margin-bottom:0.65rem;}
       .ics-meta td{border:1px solid #1f2938;font-size:0.79rem;padding:0.3rem 0.4rem;color:#111827;}
       .ics-meta .label{font-weight:700;text-align:right;width:20%;background:#f6f9fc;}
       .ics-meta .value{font-weight:700;width:30%;}
       .ics-main-table{width:100%;border-collapse:collapse;table-layout:fixed;margin-top:0.35rem;}
       .ics-main-table th,.ics-main-table td{border:1px solid #1f2938;font-size:0.76rem;color:#101826;padding:0.2rem 0.28rem;vertical-align:top;}
-      .ics-main-table th{background:#f1f6fb;font-weight:800;text-align:center;}
+      .ics-main-table th{background:#f1f6fb;font-weight:800;text-align:center;vertical-align:middle;}
       .ics-signatures{width:100%;margin-top:0.6rem;border-collapse:collapse;table-layout:fixed;}
       .ics-signatures td{border:1px solid #1f2938;min-height:128px;height:128px;vertical-align:top;padding:0.24rem 0.32rem;color:#101826;font-size:0.74rem;}
       .ics-sign-wrap{height:100%;display:flex;flex-direction:column;justify-content:space-between;}
@@ -440,11 +437,20 @@
       .ics-pill-ready{background:#12321f;color:#64d485;}
       .ics-ready-pill{background:transparent!important;padding:0!important;border-radius:0!important;}
       .ics-inspection-pill{background:transparent!important;padding:0!important;border-radius:0!important;}
+      .ics-under-pill{background:transparent!important;padding:0!important;border-radius:0!important;}
       .ics-action-btn{border-radius:6px;padding:.38rem .7rem;font-size:.72rem;font-weight:800;cursor:pointer;transition:opacity .15s,background .15s;}
       .ics-action-send{background:#241b07;color:#f4b63f;border:1px solid #b77913;}
+      .ics-action-send:hover{background:#33270a;}
       .ics-action-process{background:#062414;color:#3dff7f;border:1px solid #00d94b;}
       .ics-action-btn:disabled{opacity:.6;cursor:not-allowed;}
+      .ics-doc-toolbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:0.75rem;position:sticky;top:54px;z-index:350;background:#1a2025;padding:0.55rem 0;border-bottom:1px solid #252b32;}
+      .ics-doc-toolbar-actions{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:0.5rem;margin-left:auto;min-width:0;}
+      #icsPersonnelSearch{width:17rem;max-width:100%;min-width:0;box-sizing:border-box;}
+      .ics-print-btn{flex:0 0 auto;white-space:nowrap;}
+      body.light-mode .ics-doc-toolbar{background:#f4f7fb!important;border-bottom-color:#dbe3ed!important;}
       @media(max-width:1050px){#ics-layout{flex-direction:column!important;}#ics-panel{width:100%!important;min-width:unset!important;}}
+      @media(max-width:760px){.ics-doc-toolbar{align-items:stretch}.ics-doc-toolbar>div:first-child{width:100%}.ics-doc-toolbar-actions{width:100%;margin-left:0;justify-content:flex-start}.ics-doc-toolbar-actions #icsPersonnelSearch{flex:1 1 210px;width:auto}.ics-print-btn{flex:0 0 auto;}}
+      @media(max-width:480px){.ics-doc-toolbar-actions{display:grid;grid-template-columns:1fr}.ics-doc-toolbar-actions #icsPersonnelSearch,.ics-print-btn{width:100%;justify-content:center;}}
       @media print{
         @page{size:A4 portrait;margin:0;}
         html,body{margin:0!important;padding:0!important;background:#fff!important;}
@@ -684,8 +690,8 @@
     <main class="flex-1 main-bg bg-[#1a2025] p-4 overflow-y-auto">
 
       {{-- HEADER --}}
-      <header class="flex flex-wrap justify-between mb-2 items-center gap-4 min-h-10">
-        <div class="flex items-center gap-4 ml-auto">
+      <header class="staff-topbar flex flex-wrap justify-between mb-2 items-center gap-4 min-h-10">
+        <div class="staff-topbar-inner">
   <div class="relative" id="notifWrapper">
     <button id="notificationBell" class="notification-bell text-cyan-400 focus:outline-none" aria-label="Notifications" type="button">
       <svg class="w-7 h-7" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11c0-3.074-1.64-5.64-5-5.996V5a2 2 0 10-4 0v.004C6.64 5.36 5 7.926 5 11v3.159c0 .538-.214 1.055-.595 1.436L3 17h5m7 0v1a3 3 0 01-6 0v-1m7 0H8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -702,6 +708,7 @@
     'profileUrl' => route('staff.profile.update'),
     'passwordUrl' => route('staff.profile.password'),
   ])
+        </div>
       </header>
 
       {{-- ===== DASHBOARD PAGE ===== --}}
@@ -813,7 +820,7 @@
                 <option value="dateOfValidity-asc">Validity (Earliest)</option>
                 <option value="dateOfValidity-desc">Validity (Latest)</option>
               </select>
-              <button id="exportBtn" class="bg-[#0d3325] text-[#33b481] border border-[#1a5c3a] rounded px-3 py-1 text-xs font-semibold hover:bg-[#154d32] transition-colors">Export CSV</button>
+              <button id="exportBtn" class="bg-[#0d3325] text-[#33b481] border border-[#1a5c3a] rounded px-3 py-1 text-xs font-semibold hover:bg-[#154d32] transition-colors">Export Excel</button>
             </div>
           </div>
           <div class="overflow-x-auto">
@@ -922,7 +929,7 @@
                       <td class="py-2 px-3"><span style="color:#d4a017;font-weight:700;">For Inspection</span></td>
                       <td class="py-2 px-3 force-light-text">{{ $person['inspectionResult'] ?? '—' }}</td>
                       <td class="py-2 px-3 force-light-text">{{ $person['inspectionUpdatedAt'] ?? '—' }}</td>
-                      <td class="py-2 px-3"><button onclick="icsSendForInspection({{ Js::from($person['itemNumber']) }}, this)" style="background:#1c2c18;color:#d4a017;border:1px solid #3a2800;border-radius:6px;padding:5px 11px;font-size:.7rem;font-weight:700;">Send for Inspection</button></td>
+                      <td class="py-2 px-3"><button class="ics-action-btn ics-action-send" onclick="icsSendForInspection({{ Js::from($person['itemNumber']) }}, this)">Send for Inspection</button></td>
                     </tr>
                   @endforeach
                 </tbody>
@@ -937,7 +944,7 @@
 
         {{-- ICS DOCUMENT VIEW --}}
         <div id="ics-doc-view" style="display:none;">
-          <div class="flex flex-wrap items-center justify-between mb-5 gap-3 no-print">
+          <div class="ics-doc-toolbar mb-5 no-print">
             <div class="flex items-center gap-3">
               <button onclick="icsShowList()" style="display:inline-flex;align-items:center;gap:6px;background:#1a2025;color:#94a3b8;border:1px solid #2e3748;border-radius:7px;padding:6px 14px;font-size:0.76rem;font-weight:600;cursor:pointer;">
                 <svg width="13" height="13" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M19 12H5M12 5l-7 7 7 7"/></svg>
@@ -945,10 +952,10 @@
               </button>
               <span id="ics-doc-crumb" class="text-xs text-[#64748b]"></span>
             </div>
-            <div class="flex gap-2">
+            <div class="ics-doc-toolbar-actions">
               <input id="icsPersonnelSearch" type="text" placeholder="Search personnel by name / serial…"
-                class="bg-[#23272f] text-white border border-[#363b48] rounded px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-accent w-52 force-light-text" />
-              <button onclick="printICS()" class="bg-[#0a1f2d] text-[#3ec6ff] border border-[#1a3a4f] rounded px-4 py-1.5 text-xs font-semibold hover:bg-[#112840] transition-colors flex items-center gap-1.5">
+                class="bg-[#23272f] text-white border border-[#363b48] rounded px-3 py-1.5 text-xs focus:outline-none focus:ring-2 focus:ring-accent force-light-text" />
+              <button onclick="printICS()" class="ics-print-btn bg-[#0a1f2d] text-[#3ec6ff] border border-[#1a3a4f] rounded px-4 py-1.5 text-xs font-semibold hover:bg-[#112840] transition-colors flex items-center gap-1.5">
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-width="2" d="M6 9V2h12v7M6 18H4a2 2 0 01-2-2v-5a2 2 0 012-2h16a2 2 0 012 2v5a2 2 0 01-2 2h-2M6 14h12v8H6v-8z"/></svg>
                 Print ICS
               </button>
@@ -967,22 +974,25 @@
                       <div class="tiny">Fort Andres Bonifacio, Taguig City</div>
                       <div class="main-title">INVENTORY CUSTODIAN SLIP</div>
                     </div>
-                    <div class="ics-photo-2x2"><img id="previewPaperPhoto" src="{{ asset('images/logo.png') }}" alt="Personnel Photo" onerror="this.style.opacity='0.3'" /></div>
+                    <div class="ics-photo-2x2"><img id="previewPaperPhoto" src="{{ asset('images/logo.png') }}" alt="Personnel Photo" /></div>
                   </div>
                   <table class="ics-meta">
                     <tr><td class="label">ICS No:</td><td class="value" id="previewIcsNo">ICS-0001</td><td class="label">Rank:</td><td class="value" id="previewRank">CPT</td></tr>
-                    <tr><td class="label">ICS Validity:</td><td class="value" id="previewIcsValidity">01/Jun/2027</td><td class="label">Name:</td><td class="value" id="previewPersonnelName">Juan D. Cruz</td></tr>
+                    <tr><td class="label">ICS Validity:</td><td class="value" id="previewIcsValidity">01 June 2027</td><td class="label">Name:</td><td class="value" id="previewPersonnelName">Juan D. Cruz</td></tr>
                     <tr><td class="label">Unit:</td><td class="value" id="previewUnit">8IB, 4ID, PA</td><td class="label">Serial No:</td><td class="value" id="previewSerial">AFP023947</td></tr>
                   </table>
                   <table class="ics-main-table">
                     <colgroup><col style="width:8%"><col style="width:7%"><col style="width:13%"><col style="width:13%"><col style="width:26%"><col style="width:17%"><col style="width:16%"></colgroup>
-                    <thead><tr><th>Quantity</th><th>Unit</th><th>Unit Cost</th><th>Total Cost</th><th>Description</th><th>Inventory Item No.</th><th>Estimated Useful Life</th></tr></thead>
+                    <thead>
+                      <tr><th rowspan="2">Quantity</th><th rowspan="2">Unit</th><th colspan="2">Amount</th><th rowspan="2">Description</th><th rowspan="2">Inventory Item No.</th><th rowspan="2">Estimated Useful Life</th></tr>
+                      <tr><th>Unit Cost</th><th>Total Cost</th></tr>
+                    </thead>
                     <tbody>
     <tr>
       <td class="text-center" contenteditable="true">1</td>
       <td class="text-center" contenteditable="true">eu</td>
-      <td class="text-center" contenteditable="true">P 16,450.00</td>
-      <td class="text-center" contenteditable="true">P 16,450.00</td>
+      <td class="text-center" id="previewFirearmUnitCost" contenteditable="true">P 16,450.00</td>
+      <td class="text-center" id="previewFirearmTotal" contenteditable="true">P 16,450.00</td>
       <td>
         <span id="previewFirearm" contenteditable="true">9mm Glock17</span><br>
         FASN: <strong id="previewSerialDesc" contenteditable="true">AFP023947</strong><br>
@@ -1001,9 +1011,9 @@
     <tr>
       <td class="text-center" id="previewAmmo" contenteditable="true">68</td>
       <td class="text-center" contenteditable="true">rds</td>
-      <td class="text-center" contenteditable="true">P 15.07</td>
+      <td class="text-center" id="previewAmmoUnitCost" contenteditable="true">P 15.07</td>
       <td class="text-center" id="previewAmmoTotal" contenteditable="true">P 1,024.76</td>
-      <td contenteditable="true">Ctg, 9mm, Ball</td>
+      <td id="previewAmmoDescription" contenteditable="true">Ctg, 9mm, Ball</td>
       <td contenteditable="true"></td>
       <td contenteditable="true"></td>
     </tr>
@@ -1046,7 +1056,7 @@
               </div>
               <div class="ics-side-box">
                 <div class="ics-side-title">Personnel Photo (2×2)</div>
-                <div class="ics-photo-preview"><img id="icsPhotoSidePreview" src="{{ asset('images/logo.png') }}" alt="Photo" onerror="this.style.opacity='0.3'" /></div>
+                <div class="ics-photo-preview"><img id="icsPhotoSidePreview" src="{{ asset('images/logo.png') }}" alt="Personnel photo preview" /></div>
                 <input id="icsPhotoInput" type="file" accept="image/*" class="hidden" />
                 <button id="icsUploadPhotoBtn" class="ics-btn-primary">Upload Photo</button>
                 <button id="icsResetPhotoBtn" class="ics-btn-secondary">Reset Photo</button>
@@ -1212,12 +1222,12 @@
 
             <div class="grid md:grid-cols-3 gap-4 mb-6">
               <div>
-                <label class="text-xs text-[#94a3b8] mb-1 block">Date From</label>
+                <label for="reportFrom" class="text-xs text-[#94a3b8] mb-1 block">Validity Date From</label>
                 <input type="date" id="reportFrom" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-3 py-2 text-xs w-full force-light-text">
               </div>
 
               <div>
-                <label class="text-xs text-[#94a3b8] mb-1 block">Date To</label>
+                <label for="reportTo" class="text-xs text-[#94a3b8] mb-1 block">Validity Date To</label>
                 <input type="date" id="reportTo" class="bg-[#1a2025] text-white border border-[#363b48] rounded px-3 py-2 text-xs w-full force-light-text">
               </div>
 
@@ -1240,9 +1250,11 @@
               </button>
 
               <button id="exportReportBtn" class="bg-[#0a1f2d] text-[#3ec6ff] border border-[#1a3a4f] rounded px-4 py-2 text-xs font-semibold hover:bg-[#112840] transition-colors">
-                Export CSV
+                Export Excel
               </button>
             </div>
+
+            <p id="reportFilterFeedback" class="text-xs text-[#64748b] mb-4" role="status" aria-live="polite"></p>
 
             <div class="overflow-x-auto">
               <table class="w-full text-xs text-left force-light-text">
@@ -1466,6 +1478,7 @@
       </div>
       {{-- ===== NEW REGISTRATION PAGE ===== --}}
       <input type="hidden" id="rpStoreUrl" value="{{ route('staff.personnel.store') }}">
+      <input type="hidden" id="rpAvailabilityUrl" value="{{ route('staff.personnel.availability') }}">
       <div id="page-registration" class="page-section">
         <div class="mb-4">
           <h1 class="text-2xl font-bold force-light-text">New Personnel Registration</h1>
@@ -1494,9 +1507,9 @@
                   <div><label class="reg-label">Unit / Organization <span style="color:#ef4444;">*</span></label><select id="rp_unit" class="reg-input"><option value="">Select unit / organization</option><option>8IB, 4ID, PA</option><option>9IB, 4ID, PA</option><option>10IB, 4ID, PA</option><option>62IB, 4ID, PA</option><option>901Bde, 9ID, PA</option><option>4ID, PA</option><option>APAO, PA</option><option>10FPAO, APAO, PA</option><option>Other</option></select></div>
                   <div><label class="reg-label">AFOS/MOS</label><input type="text" id="rp_afosMos" class="reg-input" placeholder="e.g. 11A"></div>
                   <div><label class="reg-label">Branch</label><input type="text" id="rp_branch" class="reg-input" placeholder="e.g. Infantry"></div>
-                  <div><label class="reg-label">Date of Birth <span style="color:#ef4444;">*</span></label><input type="date" id="rp_dob" class="reg-input"></div>
+                  <div><label class="reg-label">Date of Birth <span style="color:#ef4444;">*</span></label><input type="date" id="rp_dob" class="reg-input" max="{{ now()->toDateString() }}"></div>
                   <div><label class="reg-label">Email Address <span style="color:#ef4444;">*</span></label><input type="email" id="rp_email" class="reg-input" placeholder="Enter email address"></div>
-                  <div><label class="reg-label">Contact Number</label><input type="text" id="rp_contact" class="reg-input" placeholder="Enter contact number"></div>
+                  <div><label class="reg-label">Contact Number</label><input type="text" id="rp_contact" class="reg-input" inputmode="numeric" pattern="[0-9]*" maxlength="20" placeholder="Numbers only" oninput="this.value=this.value.replace(/\D/g,'')"></div>
                   <div><label class="reg-label">Civil Status</label><select id="rp_civil" class="reg-input"><option value="">Select civil status</option><option>Single</option><option>Married</option><option>Widowed</option><option>Separated</option></select></div>
                   <div><label class="reg-label">Gender</label><select id="rp_gender" class="reg-input"><option value="">Select gender</option><option>Male</option><option>Female</option></select></div>
                   <div><label class="reg-label">Citizenship</label><select id="rp_citizenship" class="reg-input" onchange="rpToggleOtherCitizenship()"><option value="Filipino">Filipino</option><option value="Other">Other</option></select></div>
@@ -1506,7 +1519,7 @@
               <div id="rp_err1" style="color:#fc8181;font-size:.8rem;margin-bottom:8px;display:none;"></div>
               <div style="display:flex;justify-content:space-between;">
                 <button type="button" onclick="window._rpNavigate('dashboard')" style="background:transparent;border:1px solid #2a2d35;color:#64748b;border-radius:8px;padding:10px 24px;font-size:.85rem;font-weight:600;cursor:pointer;">Cancel</button>
-                <button type="button" onclick="rpNext(1)" style="background:#d4a017;color:#13151a;border:none;border-radius:8px;padding:10px 24px;font-size:.85rem;font-weight:700;cursor:pointer;">Next: Firearm Info →</button>
+                <button type="button" id="rpNextPersonalBtn" onclick="rpNext(1)" style="background:#d4a017;color:#13151a;border:none;border-radius:8px;padding:10px 24px;font-size:.85rem;font-weight:700;cursor:pointer;">Next: Firearm Info →</button>
               </div>
             </div>
             <div id="regFormStep2" style="display:none;">
@@ -1516,16 +1529,16 @@
                   <div><label class="reg-label">Nomenclature of Pistol <span style="color:#ef4444;">*</span></label><select id="rp_pistolNomenclature" class="reg-input"><option value="">Select nomenclature</option><option>Pistol 9mm, Glock 17</option><option>Pistol Cal .45</option><option>Pistol 9mm</option><option>Glock 17</option></select></div>
                   <div><label class="reg-label">Pistol Type <span style="color:#ef4444;">*</span></label><select id="rp_pistolType" class="reg-input"><option value="">Select pistol type</option><option>Pistol</option><option>Revolver</option></select></div>
                   <div><label class="reg-label">Pistol Serial Number <span style="color:#ef4444;">*</span></label><input type="text" id="rp_pistolSerial" class="reg-input" placeholder="Enter pistol serial number"></div>
-                  <div><label class="reg-label">Quantity of Ammo Issued <span style="color:#ef4444;">*</span></label><input type="number" id="rp_ammo" class="reg-input" placeholder="Enter quantity" min="0"></div>
+                  <div><label class="reg-label">Quantity of Ammo Issued <span style="color:#ef4444;">*</span></label><input type="number" id="rp_ammo" class="reg-input" placeholder="Enter quantity" min="0" step="1" oninput="if (this.value !== '' && Number(this.value) < 0) this.value = 0;"></div>
                   <div><label class="reg-label">Date Issued</label><input type="date" id="rp_dateIssued" class="reg-input"></div>
-                  <div><label class="reg-label">Issued By</label><input type="text" id="rp_issuedBy" class="reg-input" placeholder="Enter name / position"></div>
+                  <div><label class="reg-label">Issued By <span style="color:#ef4444;">*</span></label><select id="rp_issuedBy" class="reg-input"><option value="">Select issuing officer</option><option>MS ROSEMARIE O VILBAR</option><option>MS EVANGELINE M SINGUEO, Ph.D.</option></select></div>
                   <div><label class="reg-label">Armory / Issuing Unit</label><input type="text" id="rp_armory" class="reg-input" placeholder="Enter armory / unit"></div>
                 </div>
               </div>
               <div id="rp_err2" style="color:#fc8181;font-size:.8rem;margin-bottom:8px;display:none;"></div>
               <div style="display:flex;justify-content:space-between;">
                 <button type="button" onclick="rpPrev(2)" style="background:transparent;border:1px solid #2a2d35;color:#64748b;border-radius:8px;padding:10px 24px;font-size:.85rem;font-weight:600;cursor:pointer;">← Back</button>
-                <button type="button" onclick="rpNext(2)" style="background:#d4a017;color:#13151a;border:none;border-radius:8px;padding:10px 24px;font-size:.85rem;font-weight:700;cursor:pointer;">Next: Documents →</button>
+                <button type="button" id="rpNextFirearmBtn" onclick="rpNext(2)" style="background:#d4a017;color:#13151a;border:none;border-radius:8px;padding:10px 24px;font-size:.85rem;font-weight:700;cursor:pointer;">Next: Documents →</button>
               </div>
             </div>
             <div id="regFormStep3" style="display:none;">
@@ -1560,12 +1573,7 @@
               <style>.par-equipment-item{display:grid!important;grid-template-columns:auto 1fr auto;align-items:center;gap:9px}.par-equipment-item:before{display:none!important}.par-equipment-check{width:17px;height:17px;accent-color:#d4a017}.par-equipment-remove,.par-equipment-add{border:1px solid #465164;background:transparent;color:#b8c2cf;border-radius:6px;padding:7px 10px;cursor:pointer}.par-equipment-add{color:#e2b632;border-color:#7b651f;margin-top:10px}body.light-mode .par-process-card{background:#fff!important;border-color:#d7dee8!important}body.light-mode .par-process-title{color:#1e293b!important}body.light-mode .par-package-summary,body.light-mode .par-equipment-item,body.light-mode .par-cost-box{background:#f8fafc!important;border-color:#d7dee8!important}body.light-mode .par-package-summary strong,body.light-mode .par-cost-box strong{color:#1e293b!important}body.light-mode .par-equipment-remove,body.light-mode .par-equipment-add{background:#fff!important;color:#475569!important;border-color:#cbd5e1!important}body.light-mode #rp_parPersonnel{color:#334155!important}body.light-mode #rp_parPreview{border:1px solid #d7dee8}</style>
               <div class="par-process-stack">
                 <section class="par-process-card"><h3 class="par-process-title">Personnel Information</h3><div id="rp_parPersonnel" style="font-size:.82rem;color:#d6dde7;"></div></section>
-                <section class="par-process-card"><h3 class="par-process-title">PAR Information</h3><div class="par-process-grid"><div><label class="reg-label">PAR Number</label><input class="reg-input" value="Generated upon submission" readonly></div><div><label class="reg-label">Date Issued *</label><input id="rp_parIssuedDate" type="date" class="reg-input"></div><div><label class="reg-label">Valid Until</label><input id="rp_parValidUntil" type="date" class="reg-input"></div><div><label class="reg-label">Issued By *</label><input id="rp_parIssuedBy" class="reg-input" placeholder="Enter complete name" oninput="rpUpdateParPreview()"></div><div><label class="reg-label">Approved By *</label><input id="rp_parApprovedBy" class="reg-input" placeholder="Enter complete name" oninput="rpUpdateParPreview()"></div></div></section>
-                <section class="par-process-card"><h3 class="par-process-title">Assigned Equipment Package</h3><div class="par-package-head"><div class="par-package-summary"><span>Assigned Firearm Package</span><strong id="rp_parPackageFirearm">—</strong></div><div class="par-package-summary"><span>Firearm Quantity</span><input id="rp_parFirearmQty" type="number" min="1" value="1" class="reg-input" oninput="rpUpdateParPreview()"></div><div class="par-package-summary"><span>Ammunition Quantity</span><strong id="rp_parPackageAmmo">0 rounds</strong></div></div><div class="par-process-grid" style="margin-top:14px"><div><label class="reg-label">Firearm Unit Cost</label><input id="rp_parFirearmCost" type="number" min="0" step=".01" value="0" class="reg-input" oninput="rpUpdateParPreview()"></div><div><label class="reg-label">Ammunition Unit Cost</label><input id="rp_parAmmoCost" type="number" min="0" step=".01" value="0" class="reg-input" oninput="rpUpdateParPreview()"></div></div><div style="color:#8e99a9;font-size:.68rem;font-weight:700;text-transform:uppercase;margin-top:16px;">Included Equipment</div><div id="rp_parEquipmentList" class="par-equipment-list"></div><button type="button" class="par-equipment-add" onclick="rpAddEquipment()">+ Add Equipment</button></section>
-                <section class="par-process-card"><h3 class="par-process-title">Cost Summary</h3><div class="par-cost-row"><div class="par-cost-box"><span>Equipment Subtotal</span><strong id="rp_parEquipmentSubtotal">₱0.00</strong></div><div class="par-cost-box"><span>Ammunition Subtotal</span><strong id="rp_parAmmoSubtotal">₱0.00</strong></div><div class="par-cost-box"><span>Total Package Cost</span><strong id="rp_parGrandTotal" style="color:#e1b43b">₱0.00</strong></div></div></section>
-                <section class="par-process-card"><h3 class="par-process-title">Remarks</h3><textarea id="rp_parRemarks" class="reg-input" rows="3" placeholder="Enter PAR remarks" oninput="rpUpdateParPreview()"></textarea></section>
-                <section class="par-process-card"><h3 class="par-process-title">Digital Signatures</h3><div class="par-process-grid"><div><label class="reg-label">Receiver</label><div class="par-package-summary"><strong>Registration signature</strong></div></div><div><label class="reg-label">Issued By</label><input id="rp_parIssuedSig" type="file" accept="image/*" class="reg-input"></div><div><label class="reg-label">Approved By</label><input id="rp_parApprovedSig" type="file" accept="image/*" class="reg-input"></div></div></section>
-                <section class="par-process-card"><h3 class="par-process-title">PAR Preview</h3><div id="rp_parPreview" style="background:#fff;color:#111;border-radius:8px;padding:20px;font-size:.78rem;"></div></section>
+                <section class="par-process-card"><h3 class="par-process-title">PAR Information</h3><div class="par-process-grid"><div><label class="reg-label">PAR Number</label><input class="reg-input" value="Generated upon submission" readonly></div><div><label class="reg-label">Date Issued *</label><input id="rp_parIssuedDate" type="date" class="reg-input"></div><div><label class="reg-label">Valid Until</label><input id="rp_parValidUntil" type="date" class="reg-input"></div><div><label class="reg-label">Issued By *</label><select id="rp_parIssuedBy" class="reg-input"><option value="">Select issuing officer</option><option>MS ROSEMARIE O VILBAR</option><option>MS EVANGELINE M SINGUEO, Ph.D.</option></select></div><div><label class="reg-label">Approved By *</label><input id="rp_parApprovedBy" class="reg-input" placeholder="Enter complete name"></div></div></section>
               </div>
               <div id="rp_err4" style="color:#fc8181;font-size:.8rem;margin-bottom:8px;display:none;"></div><div style="display:flex;justify-content:space-between;"><button type="button" onclick="rpPrev(4)" class="par-btn">Back</button><button type="button" onclick="rpNext(4)" class="par-btn par-btn-gold">Next: Review & Submit</button></div>
             </div>
@@ -1646,7 +1654,7 @@
           <div class="reg-section-title">Personal Information</div>
           <div class="reg-field-grid">
             <div><label class="reg-label">Rank <span style="color:#ef4444;">*</span></label><select name="rank" class="reg-input" required><option value="" disabled selected>Select rank</option><option>LTC</option><option>MAJ</option><option>CPT</option><option>1LT</option><option>2LT</option><option>MSG</option><option>TSG</option><option>SSG</option><option>SGT</option><option>CPL</option><option>PFC</option><option>PVT</option></select></div>
-            <div><label class="reg-label">Date of Birth <span style="color:#ef4444;">*</span></label><input name="dateOfBirth" type="date" class="reg-input" required /></div>
+            <div><label class="reg-label">Date of Birth <span style="color:#ef4444;">*</span></label><input name="dateOfBirth" type="date" class="reg-input" max="{{ now()->toDateString() }}" required /></div>
             <div><label class="reg-label">Last Name <span style="color:#ef4444;">*</span></label><input name="lastName" type="text" id="regLastName" class="reg-input" placeholder="Cruz" required /></div>
             <div><label class="reg-label">First Name <span style="color:#ef4444;">*</span></label><input name="firstName" type="text" id="regFirstName" class="reg-input" placeholder="Juan" required /></div>
             <div class="span-2"><label class="reg-label">Middle Name</label><input name="middleName" type="text" id="regMiddleName" class="reg-input" placeholder="Dela" /></div>
@@ -1794,6 +1802,7 @@
     </div>
   </div>
 <script src="{{ asset('js/rpcsp_excel.js') }}"></script>
+<script src="{{ asset('js/staff_report_filter.js') }}"></script>
 <script>
   document.addEventListener("DOMContentLoaded", function () {
 
@@ -1838,6 +1847,11 @@
 
     // ── SPA NAV ────────────────────────────────────────────────────────────
     let currentPage = "dashboard";
+    window.staffScrollToTop = function(behavior = "auto") {
+      const mainContent = document.querySelector("main");
+      if (mainContent) mainContent.scrollTo({ top: 0, left: 0, behavior });
+      else window.scrollTo({ top: 0, left: 0, behavior });
+    };
     function navigateTo(page) {
       document.querySelectorAll(".page-section").forEach(s => s.classList.remove("active"));
       document.querySelectorAll(".nav-link, .nav-item").forEach(l => l.classList.remove("active"));
@@ -1846,7 +1860,7 @@
       target.classList.add("active");
       currentPage = page;
       document.querySelectorAll(`[data-page="${page}"]`).forEach(el => el.classList.add("active"));
-      window.scrollTo({ top: 0, behavior: "smooth" });
+      window.staffScrollToTop();
       if (page === "personnel") renderTable();
       if (page === "renewal" && window.renewalRenderAll) window.renewalRenderAll();
       if (page === "ics" && window.icsRefresh) window.icsRefresh();
@@ -2370,32 +2384,66 @@
       }
     });
 
-    // ── EXPORT CSV ─────────────────────────────────────────────────────────
-    function exportCSV(data, filename) {
-      if (!data.length) return;
-      const headers = Object.keys(data[0]);
-      const rows    = data.map(r => headers.map(h => `"${(r[h]??'').toString().replace(/"/g,'""')}"`).join(","));
-      const csv  = [headers.join(","), ...rows].join("\n");
-      const blob = new Blob([csv], { type:"text/csv" });
-      const url  = URL.createObjectURL(blob);
-      const a    = document.createElement("a"); a.href = url; a.download = filename; a.click();
-      URL.revokeObjectURL(url);
-    }
-    document.getElementById("exportBtn")?.addEventListener("click", () => exportCSV(personnel, "personnel_export.csv"));
+    // ── PERSONNEL EXCEL EXPORT ─────────────────────────────────────────────
+    document.getElementById("exportBtn")?.addEventListener("click", () => {
+      if (!personnel.length) return;
+      exportPersonnelListExcel({
+        filename: "APAO_Personnel_List_" + new Date().toISOString().slice(0, 10) + ".xls",
+        generatedDate: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+        rows: personnel
+      });
+    });
 
     // ── REPORT ─────────────────────────────────────────────────────────────
-    document.getElementById("generateReportBtn")?.addEventListener("click", () => {
-      const from   = document.getElementById("reportFrom").value;
-      const to     = document.getElementById("reportTo").value;
-      const status = document.getElementById("reportStatus").value;
-      let filtered = personnel.filter(p => {
-        const ap = p.approvedStatus || 'pending';
-        return (status ? ap === status : true)
-          && (!from || (p.dateOfValidity && p.dateOfValidity >= from))
-          && (!to   || (p.dateOfValidity && p.dateOfValidity <= to));
+    const reportFrom = document.getElementById("reportFrom");
+    const reportTo = document.getElementById("reportTo");
+    const reportStatus = document.getElementById("reportStatus");
+    const reportFeedback = document.getElementById("reportFilterFeedback");
+
+    function getFilteredReportRows() {
+      return window.StaffReportFilter.filter(personnel, {
+        from: reportFrom?.value || '',
+        to: reportTo?.value || '',
+        status: reportStatus?.value || ''
       });
+    }
+
+    function showReportFeedback(message, isError = false) {
+      if (!reportFeedback) return;
+      reportFeedback.textContent = message;
+      reportFeedback.style.color = isError ? '#fc8181' : '#64748b';
+    }
+
+    function syncReportDateLimits() {
+      if (reportFrom && reportTo) {
+        reportTo.min = reportFrom.value || '';
+        reportFrom.max = reportTo.value || '';
+      }
+      showReportFeedback('');
+    }
+
+    reportFrom?.addEventListener('change', syncReportDateLimits);
+    reportTo?.addEventListener('change', syncReportDateLimits);
+
+    function renderStaffRenewalReport() {
+      const result = getFilteredReportRows();
       const tbody = document.getElementById("reportTableBody");
-      if (!filtered.length) { tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-400">No records match the filters.</td></tr>`; return; }
+
+      if (result.error) {
+        showReportFeedback(result.error, true);
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-red-400">${result.error}</td></tr>`;
+        return;
+      }
+
+      const filtered = result.rows;
+      const rangeLabel = [reportFrom?.value, reportTo?.value].filter(Boolean).join(' to ');
+      showReportFeedback(`${filtered.length} record${filtered.length === 1 ? '' : 's'} found${rangeLabel ? ` for validity dates ${rangeLabel}` : ''}.`);
+
+      if (!filtered.length) {
+        tbody.innerHTML = `<tr><td colspan="5" class="text-center py-6 text-gray-400">No records match the selected validity dates and status.</td></tr>`;
+        return;
+      }
+
       const badgeMap = {
         new:     `<span class="badge report-status-badge badge-new">New</span>`,
         renewed: `<span class="badge report-status-badge badge-renewed">Renewed</span>`,
@@ -2404,7 +2452,7 @@
         pending: `<span class="badge report-status-badge badge-pending">Pending</span>`
       };
       tbody.innerHTML = filtered.map(r => {
-        const s = r.approvedStatus || 'pending';
+        const s = String(r.approvedStatus || 'pending').trim().toLowerCase();
         return `<tr class="border-b border-[#1a2025] hover:bg-[#1a2025] transition-colors">
           <td class="py-2 px-2 force-light-text">${r.itemNumber??''}</td>
           <td class="py-2 px-2 force-light-text">${r.lastName??''}, ${r.firstName??''} ${r.middleName??''}</td>
@@ -2413,12 +2461,48 @@
           <td class="py-2 px-2">${badgeMap[s]||badgeMap['pending']}</td>
         </tr>`;
       }).join("");
-    });
+    }
+
+    document.getElementById("generateReportBtn")?.addEventListener("click", renderStaffRenewalReport);
 
     document.getElementById("exportReportBtn")?.addEventListener("click", () => {
-      const from=document.getElementById("reportFrom").value, to=document.getElementById("reportTo").value, status=document.getElementById("reportStatus").value;
-      let filtered = personnel.filter(p => { const ap=p.approvedStatus||'pending'; return (status?ap===status:true)&&(!from||(p.dateOfValidity&&p.dateOfValidity>=from))&&(!to||(p.dateOfValidity&&p.dateOfValidity<=to)); });
-      exportCSV(filtered.map(r=>({itemNumber:r.itemNumber??'',lastName:r.lastName??'',firstName:r.firstName??'',middleName:r.middleName??'',afpSerialNumber:r.afpSerialNumber??'',dateOfValidity:r.dateOfValidity??'',approvedStatus:r.approvedStatus||'pending'})),"report_export.csv");
+      const result = getFilteredReportRows();
+      if (result.error) {
+        showReportFeedback(result.error, true);
+        return;
+      }
+
+      const filtered = result.rows;
+      if (!filtered.length) {
+        showReportFeedback('There are no matching records to export.', true);
+        return;
+      }
+
+      const from = reportFrom?.value || '';
+      const to = reportTo?.value || '';
+      const statusLabel = reportStatus?.selectedOptions?.[0]?.textContent?.trim() || 'All';
+      const period = from || to
+        ? `${from || 'Beginning'} to ${to || 'Present'}`
+        : 'All Validity Dates';
+
+      window.exportPersonnelRenewalExcel({
+        filename: "APAO_Personnel_Renewal_Report_" + new Date().toISOString().slice(0, 10) + ".xls",
+        generatedDate: new Date().toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" }),
+        period: period + ' | Status: ' + statusLabel,
+        rows: filtered.map(r => ({
+          itemNumber: r.itemNumber ?? '',
+          dateOfValidity: r.dateOfValidity ?? '',
+          status: String(r.approvedStatus || 'pending').replace(/_/g, ' ').replace(/\b\w/g, letter => letter.toUpperCase()),
+          lastName: r.lastName ?? '',
+          firstName: r.firstName ?? '',
+          middleName: r.middleName ?? '',
+          afpSerialNumber: r.afpSerialNumber ?? '',
+          dateOfBirth: r.dateOfBirth ?? '',
+          pistolNomenclature: r.pistolNomenclature ?? '',
+          pistolSerialNumber: r.pistolSerialNumber ?? '',
+          qtyAmmo: r.qtyAmmo ?? 0
+        }))
+      });
     });
 
 
@@ -3077,16 +3161,15 @@
           var pill = st === 'inspection'
             ? '<span class="ics-inspection-pill" style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:0.68rem;font-weight:700;background:#2c2000;color:#d4a017;"><span style="width:6px;height:6px;border-radius:50%;background:#d4a017;flex-shrink:0;"></span>For Inspection</span><br><small style="color:#7a6020;">Send to Admin</small>'
             : st === 'under'
-            ? '<span style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:0.68rem;font-weight:700;background:#0a1f38;color:#3ec6ff;"><span style="width:6px;height:6px;border-radius:50%;background:#3ec6ff;flex-shrink:0;"></span>Under Inspection</span><br><small style="color:#1e5070;">Being inspected</small>'
+            ? '<span class="ics-under-pill" style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:0.68rem;font-weight:700;background:#0a1f38;color:#3ec6ff;"><span style="width:6px;height:6px;border-radius:50%;background:#3ec6ff;flex-shrink:0;"></span>Under Inspection</span><br><small style="color:#1e5070;">Being inspected</small>'
             : '<span class="ics-ready-pill" style="display:inline-flex;align-items:center;gap:5px;padding:3px 9px;border-radius:99px;font-size:0.68rem;font-weight:700;background:#0c2e1a;color:#33b481;"><span style="width:6px;height:6px;border-radius:50%;background:#33b481;flex-shrink:0;"></span>Ready for Renewal</span><br><small class="ics-ready-note" style="color:#1a5c3a;">Inspection passed</small>';
           var result = r.inspectionResult
             ? '<span style="color:#33b481;font-weight:700;font-size:0.75rem;">✓ ' + r.inspectionResult + '</span>'
             : '<span style="color:#374151;">—</span>';
           var action = '';
           if (st === 'inspection') {
-            action = '<button onclick="icsSendForInspection(' + JSON.stringify(r.itemNumber) + ', this)" '
-              + 'style="display:inline-flex;align-items:center;gap:5px;background:#1c2c18;color:#d4a017;border:1px solid #3a2800;border-radius:6px;padding:5px 11px;font-size:0.7rem;font-weight:700;cursor:pointer;white-space:nowrap;" '
-              + 'onmouseover="this.style.background=\'#2a3e1c\'" onmouseout="this.style.background=\'#1c2c18\'">'
+            action = '<button class="ics-action-btn ics-action-send" onclick="icsSendForInspection(' + JSON.stringify(r.itemNumber) + ', this)" '
+              + 'style="display:inline-flex;align-items:center;gap:5px;white-space:nowrap;">'
               + '<svg width="11" height="11" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>Send for Inspection</button>';
           } else if (st === 'under') {
             action = '<span style="color:#374151;font-size:0.72rem;">—</span>';
@@ -3174,19 +3257,13 @@
     set('receivedByField',    ln.toUpperCase() + ', ' + fn.toUpperCase());
     set('issuedByField',      'MS ROSEMARIE O VILBAR');
 
-  // ── Auto-load personnel photo from DB (base64) ──
     var paperPhoto = document.getElementById('previewPaperPhoto');
-    var sidePhoto  = document.getElementById('icsPhotoSidePreview');
-    if (p.photo && p.photo.trim() !== '') {
-      var src = p.photo.startsWith('data:') ? p.photo : 'data:image/jpeg;base64,' + p.photo;
-      if (paperPhoto) paperPhoto.src = src;
-      if (sidePhoto)  sidePhoto.src  = src;
-    } else {
-      // fallback to default logo if no photo
-      var fallback = "{{ asset('images/logo.png') }}";
-      if (paperPhoto) paperPhoto.src = fallback;
-      if (sidePhoto)  sidePhoto.src  = fallback;
-    }
+    var sidePhoto = document.getElementById('icsPhotoSidePreview');
+    var personnelPhoto = p.photo && p.photo.trim() !== ''
+      ? (p.photo.startsWith('data:') ? p.photo : 'data:image/jpeg;base64,' + p.photo)
+      : "{{ asset('images/logo.png') }}";
+    if (paperPhoto) paperPhoto.src = personnelPhoto;
+    if (sidePhoto) sidePhoto.src = personnelPhoto;
 
     // ── Auto-load personnel's own signature from registration (base64) ──
     applySig('custodian', personnelSignatureSrc(p.signature));
@@ -3200,7 +3277,7 @@
 
     document.getElementById('ics-list-view').style.display = 'none';
     document.getElementById('ics-doc-view').style.display  = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.staffScrollToTop();
   };
       window.printICS = function() {
         const paper = document.querySelector('#ics-doc-view .ics-print-area');
@@ -3225,7 +3302,7 @@
       window.icsShowList = function() {
         document.getElementById('ics-doc-view').style.display  = 'none';
         document.getElementById('ics-list-view').style.display = 'block';
-        window.scrollTo({ top:0, behavior:'smooth' });
+        window.staffScrollToTop();
       };
 
       function icsShowToast(msg) {
@@ -3238,7 +3315,7 @@
         setTimeout(function(){ t.style.opacity='0'; t.style.transition='opacity 0.35s'; setTimeout(function(){ t.remove(); },350); }, 3000);
       }
 
-      const ICS_KEY="staff_ics_details_v1", PHOTO_KEY="staff_ics_photo_v1", AMMO_COST=15.07;
+      const ICS_KEY="staff_ics_details_v1", PHOTO_KEY="staff_ics_photo_v1", FIREARM_COST=16450, AMMO_COST=15.07;
       const PLACEHOLDER="{{ asset('images/logo.png') }}";
       const ICS_DEFAULT_ISSUER="MS ROSEMARIE O VILBAR";
       const ICS_DEFAULT_ISSUER_SIGNATURE=@json(asset('images/ROSEMARIE VILBAR.png'));
@@ -3247,7 +3324,33 @@
       function fmtDate(val){if(!val)return"";const d=new Date(val);if(isNaN(d))return val;const mo=["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];return`${String(d.getDate()).padStart(2,"0")}/${mo[d.getMonth()]}/${d.getFullYear()}`;}
       function todayStr(){const d=new Date();return`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;}
       function setText(id,v){const el=document.getElementById(id);if(el)el.textContent=v||"";}
-      function renderICSPreview(d){const rank=(d.rank||"").trim().toUpperCase(),name=(d.personnelName||"").trim(),serial=(d.serial||"").trim();const ammoQty=parseInt(d.ammo)||0,ammoTotal=(ammoQty*AMMO_COST).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2});setText("previewIcsNo",d.icsNo||"");setText("previewIcsValidity",fmtDate(d.icsValidity));setText("previewRank",rank);setText("previewPersonnelName",name);setText("previewUnit",d.unit||"");setText("previewSerial",serial);setText("previewFirearm",d.firearm||"");setText("previewSerialDesc",serial||"—");setText("previewInventoryItem",serial||"—");setText("previewRankName",`${rank} ${name}`.trim()||"—");setText("previewAmmo",String(ammoQty));setText("previewAmmoTotal",`P ${ammoTotal}`);setText("previewReceivedBy",(d.receivedBy||"").toUpperCase()||"—");setText("previewIssuedBy",(d.issuedBy||"").toUpperCase()||"—");setText("previewReceivedOffice",d.unit||"—");setText("previewIssuedOffice","Chief, PAOGS, APAO, PA");const sd=fmtDate(todayStr());setText("previewSignDateLeft",sd);setText("previewSignDateRight",sd);}
+      function renderICSPreview(d){
+        const rank=(d.rank||"").trim().toUpperCase(),name=(d.personnelName||"").trim(),serial=(d.serial||"").trim();
+        const ammoQty=parseInt(d.ammo)||0;
+        const money=value=>`P ${Number(value).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2})}`;
+        const ammoTotal=ammoQty*AMMO_COST;
+        setText("previewIcsNo",d.icsNo||"");
+        setText("previewIcsValidity",fmtDate(d.icsValidity));
+        setText("previewRank",rank);
+        setText("previewPersonnelName",name);
+        setText("previewUnit",d.unit||"");
+        setText("previewSerial",serial);
+        setText("previewFirearm",d.firearm||"");
+        setText("previewSerialDesc",serial||"—");
+        setText("previewInventoryItem",serial||"—");
+        setText("previewRankName",`${rank} ${name}`.trim()||"—");
+        setText("previewFirearmUnitCost",money(FIREARM_COST));
+        setText("previewFirearmTotal",money(FIREARM_COST));
+        setText("previewAmmo",String(ammoQty));
+        setText("previewAmmoUnitCost",money(AMMO_COST));
+        setText("previewAmmoTotal",money(ammoTotal));
+        setText("previewAmmoDescription",/\.45|cal\s*45/i.test(d.firearm||"")?"Ctg, Cal .45, Ball":"Ctg, 9mm, Ball");
+        setText("previewReceivedBy",(d.receivedBy||"").toUpperCase()||"—");
+        setText("previewIssuedBy",(d.issuedBy||"").toUpperCase()||"—");
+        setText("previewReceivedOffice",d.unit||"—");
+        setText("previewIssuedOffice","Chief, PAOGS, APAO, PA");
+        const sd=fmtDate(todayStr());setText("previewSignDateLeft",sd);setText("previewSignDateRight",sd);
+      }
       function fillForm(d){Object.entries(fieldMap).forEach(([key,fId])=>{const el=document.getElementById(fId);if(el)el.value=d[key]!=null?String(d[key]):"";});}
       function collectForm(){const d={};Object.entries(fieldMap).forEach(([key,fId])=>{const el=document.getElementById(fId);d[key]=el?el.value.trim():"";});return d;}
       function saveICS(d){try{localStorage.setItem(ICS_KEY,JSON.stringify(d));}catch(e){}}
@@ -3279,6 +3382,7 @@
       try{const saved=localStorage.getItem(PHOTO_KEY);if(saved)applyICSPhoto(saved);}catch(e){}
       photoInput?.addEventListener("change",function(){const file=this.files?.[0];if(!file||!file.type.startsWith("image/"))return;const reader=new FileReader();reader.onload=ev=>{const src=ev.target.result;applyICSPhoto(src);try{localStorage.setItem(PHOTO_KEY,src);}catch(e){}};reader.readAsDataURL(file);});
       document.getElementById("icsResetPhotoBtn")?.addEventListener("click",()=>{applyICSPhoto(PLACEHOLDER);if(photoInput)photoInput.value="";try{localStorage.removeItem(PHOTO_KEY);}catch(e){}});
+
       })();
 
   });
@@ -3317,7 +3421,7 @@
       var el = document.getElementById('regFormStep'+i);
       if (el) el.style.display = (i === n) ? 'block' : 'none';
     });
-    window.scrollTo(0, 0);
+    window.staffScrollToTop();
   }
 
   function rpToggleOtherCitizenship() {
@@ -3332,7 +3436,7 @@
       : document.getElementById('rp_citizenship').value;
   }
 
-  function rpNext(step) {
+  async function rpNext(step) {
     if (step === 1) {
       var fields = [
         {id:'rp_lastName',  label:'Last Name'},
@@ -3357,6 +3461,76 @@
         }
         if (el) el.style.borderColor = '';
       }
+      var dobInput = document.getElementById('rp_dob');
+      if (dobInput.value > dobInput.max) {
+        dobInput.focus();
+        dobInput.style.borderColor = '#e53e3e';
+        errEl.textContent = 'Date of Birth cannot be in the future.';
+        errEl.style.display = 'block';
+        return;
+      }
+      var emailInput = document.getElementById('rp_email');
+      if (!emailInput.checkValidity()) {
+        emailInput.focus();
+        emailInput.style.borderColor = '#e53e3e';
+        errEl.textContent = 'Please enter a valid email address.';
+        errEl.style.display = 'block';
+        return;
+      }
+
+      var availabilityButton = document.getElementById('rpNextPersonalBtn');
+      availabilityButton.disabled = true;
+      availabilityButton.textContent = 'Checking...';
+
+      try {
+        var availabilityResponse = await fetch(document.getElementById('rpAvailabilityUrl').value, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+          },
+          body: JSON.stringify({
+            afpSerialNumber: document.getElementById('rp_afpSerial').value,
+            email: emailInput.value,
+            contactNumber: document.getElementById('rp_contact').value
+          })
+        });
+        var availabilityData = await availabilityResponse.json();
+
+        ['rp_afpSerial', 'rp_email', 'rp_contact'].forEach(function(id) {
+          document.getElementById(id).style.borderColor = '';
+        });
+
+        if (!availabilityResponse.ok || !availabilityData.available) {
+          var fieldMap = {
+            afpSerialNumber: 'rp_afpSerial',
+            email: 'rp_email',
+            contactNumber: 'rp_contact'
+          };
+          var messages = [];
+          Object.keys(availabilityData.errors || {}).forEach(function(field) {
+            var input = document.getElementById(fieldMap[field]);
+            if (input) input.style.borderColor = '#e53e3e';
+            messages = messages.concat(availabilityData.errors[field]);
+          });
+          errEl.textContent = messages.join(' ') || availabilityData.message || 'Unable to verify these details.';
+          errEl.style.display = 'block';
+          var firstInvalidField = Object.keys(availabilityData.errors || {})[0];
+          if (firstInvalidField && fieldMap[firstInvalidField]) {
+            document.getElementById(fieldMap[firstInvalidField]).focus();
+          }
+          return;
+        }
+      } catch (error) {
+        errEl.textContent = 'Unable to check for existing records. Please try again.';
+        errEl.style.display = 'block';
+        return;
+      } finally {
+        availabilityButton.disabled = false;
+        availabilityButton.textContent = 'Next: Firearm Info →';
+      }
+
       errEl.style.display = 'none';
       rpSetStep(2);
     } else if (step === 2) {
@@ -3364,7 +3538,8 @@
         {id:'rp_pistolNomenclature', label:'Nomenclature of Pistol'},
         {id:'rp_pistolType',         label:'Pistol Type'},
         {id:'rp_pistolSerial',       label:'Pistol Serial Number'},
-        {id:'rp_ammo',               label:'Quantity of Ammo'}
+        {id:'rp_ammo',               label:'Quantity of Ammo'},
+        {id:'rp_issuedBy',            label:'Issued By'}
       ];
       var errEl2 = document.getElementById('rp_err2');
       for (var j=0; j<fields2.length; j++) {
@@ -3376,6 +3551,49 @@
           return;
         }
         if (el2) el2.style.borderColor = '';
+      }
+      var ammoInput = document.getElementById('rp_ammo');
+      var ammoQuantity = Number(ammoInput.value);
+      if (!Number.isInteger(ammoQuantity) || ammoQuantity < 0) {
+        ammoInput.focus();
+        ammoInput.style.borderColor = '#e53e3e';
+        errEl2.textContent = 'Quantity of Ammo must be a whole number of 0 or more.';
+        errEl2.style.display = 'block';
+        return;
+      }
+      var firearmButton = document.getElementById('rpNextFirearmBtn');
+      firearmButton.disabled = true;
+      firearmButton.textContent = 'Checking...';
+
+      try {
+        var pistolResponse = await fetch(document.getElementById('rpAvailabilityUrl').value, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json',
+            'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').content
+          },
+          body: JSON.stringify({
+            pistolSerialNumber: document.getElementById('rp_pistolSerial').value
+          })
+        });
+        var pistolData = await pistolResponse.json();
+        document.getElementById('rp_pistolSerial').style.borderColor = '';
+
+        if (!pistolResponse.ok || !pistolData.available) {
+          document.getElementById('rp_pistolSerial').style.borderColor = '#e53e3e';
+          errEl2.textContent = pistolData.errors?.pistolSerialNumber?.[0] || pistolData.message || 'Unable to verify the pistol serial number.';
+          errEl2.style.display = 'block';
+          document.getElementById('rp_pistolSerial').focus();
+          return;
+        }
+      } catch (error) {
+        errEl2.textContent = 'Unable to check the pistol serial number. Please try again.';
+        errEl2.style.display = 'block';
+        return;
+      } finally {
+        firearmButton.disabled = false;
+        firearmButton.textContent = 'Next: Documents →';
       }
       errEl2.style.display = 'none';
       rpSetStep(3);
@@ -3429,31 +3647,16 @@
 
       document.getElementById('rp_reviewAttachments').innerHTML = attachHtml;
 
-      document.getElementById('rp_reviewFirearm').innerHTML += row('PAR Issued By',document.getElementById('rp_parIssuedBy').value)+row('PAR Approved By',document.getElementById('rp_parApprovedBy').value)+row('Selected Equipment',rpSelectedEquipment().join(', ')||'None')+row('Total Cost','₱'+rpParTotal().toFixed(2));
       document.getElementById('rp_reviewFirearm').innerHTML = rf.map(function(x){return row(x[0],x[1]);}).join('');
       rpSetStep(5);
     }
   }
 
-  function rpPrev(step) { rpSetStep(step - 1); }
-
-  var rpIssuedSignatureBase64=null, rpApprovedSignatureBase64=null;
-  var rpDefaultEquipment=['Back Straps','Magazine (17 rds Cap)','Cleaning Kit','Speed Loader',"User's Manual",'Gun Case','Magazine Pouch (3 mag capacity)','Ctg, 9mm, Ball'];
-  function rpEquipmentRow(name,checked){var row=document.createElement('div');row.className='par-equipment-item';row.innerHTML='<input type="checkbox" class="par-equipment-check" '+(checked?'checked':'')+' onchange="rpUpdateParPreview()"><input type="text" class="reg-input par-equipment-name" value="" aria-label="Equipment name"><button type="button" class="par-equipment-remove" aria-label="Remove equipment">Remove</button>';row.querySelector('.par-equipment-name').value=name;row.querySelector('.par-equipment-name').addEventListener('input',rpUpdateParPreview);row.querySelector('.par-equipment-remove').addEventListener('click',function(){row.remove();rpUpdateParPreview();});return row;}
-  function rpInitEquipment(){var list=document.getElementById('rp_parEquipmentList');if(list.children.length)return;rpDefaultEquipment.forEach(function(name){list.appendChild(rpEquipmentRow(name,true));});}
-  function rpAddEquipment(){document.getElementById('rp_parEquipmentList').appendChild(rpEquipmentRow('',true));var inputs=document.querySelectorAll('#rp_parEquipmentList .par-equipment-name');inputs[inputs.length-1].focus();rpUpdateParPreview();}
-  function rpSelectedEquipment(){return Array.from(document.querySelectorAll('#rp_parEquipmentList .par-equipment-item')).filter(function(row){return row.querySelector('.par-equipment-check').checked;}).map(function(row){return row.querySelector('.par-equipment-name').value.trim();}).filter(Boolean);}
-  function rpParTotal(){return (Number(document.getElementById('rp_parFirearmQty').value)||0)*(Number(document.getElementById('rp_parFirearmCost').value)||0)+(Number(document.getElementById('rp_ammo').value)||0)*(Number(document.getElementById('rp_parAmmoCost').value)||0);}
-  function rpUpdateParPreview(){
-    var issued=document.getElementById('rp_parIssuedBy'),approved=document.getElementById('rp_parApprovedBy'),firearmQty=Number(document.getElementById('rp_parFirearmQty').value)||0,ammoQty=Number(document.getElementById('rp_ammo').value)||0,firearmSubtotal=firearmQty*(Number(document.getElementById('rp_parFirearmCost').value)||0),ammoSubtotal=ammoQty*(Number(document.getElementById('rp_parAmmoCost').value)||0),total=firearmSubtotal+ammoSubtotal,tax=total*.0176;
-    document.getElementById('rp_parPackageFirearm').textContent=document.getElementById('rp_pistolNomenclature').value+' · S/N '+document.getElementById('rp_pistolSerial').value;
-    document.getElementById('rp_parPackageAmmo').textContent=ammoQty+' rounds';
-    document.getElementById('rp_parEquipmentSubtotal').textContent='₱'+firearmSubtotal.toFixed(2);document.getElementById('rp_parAmmoSubtotal').textContent='₱'+ammoSubtotal.toFixed(2);document.getElementById('rp_parGrandTotal').textContent='₱'+total.toFixed(2);
-    document.getElementById('rp_parPreview').innerHTML='<div style="text-align:center;font-weight:800;font-size:1rem;">PROPERTY ACKNOWLEDGEMENT RECEIPT</div><p><b>Personnel:</b> '+document.getElementById('rp_parPersonnel').textContent+'</p><hr><p><b>Description:</b> '+document.getElementById('rp_pistolNomenclature').value+' / Serial '+document.getElementById('rp_pistolSerial').value+'; '+document.getElementById('rp_ammo').value+' rounds<br>'+rpSelectedEquipment().join('<br>')+'</p><p><b>Total:</b> ₱'+total.toFixed(2)+' &nbsp; <b>Net:</b> ₱'+(total-tax).toFixed(2)+'</p><p><b>Issued By:</b> '+(issued.value||'—')+' &nbsp; <b>Approved By:</b> '+(approved.value||'—')+'</p><p><b>Remarks:</b> '+(document.getElementById('rp_parRemarks').value||'—')+'</p>';
+  function rpPrev(step) {
+    // The PAR package/cost screen is not part of personnel registration.
+    // Back from Review returns directly to Documents & Uploads.
+    rpSetStep(step === 5 ? 3 : step - 1);
   }
-  function rpReadParSignature(input,setter){if(!input.files[0])return;var reader=new FileReader();reader.onload=function(e){setter(e.target.result);};reader.readAsDataURL(input.files[0]);}
-  document.getElementById('rp_parIssuedSig').addEventListener('change',function(){rpReadParSignature(this,function(v){rpIssuedSignatureBase64=v;});});
-  document.getElementById('rp_parApprovedSig').addEventListener('change',function(){rpReadParSignature(this,function(v){rpApprovedSignatureBase64=v;});});
 
   function rpSubmit() {
     var CSRF      = document.querySelector('meta[name="csrf-token"]').content;
@@ -3461,6 +3664,15 @@
     var btn       = document.getElementById('rpSubmitBtn');
     var errEl     = document.getElementById('rp_submitError');
     var sucEl     = document.getElementById('rp_submitSuccess');
+    var ammoInput = document.getElementById('rp_ammo');
+    var ammoQuantity = Number(ammoInput.value);
+    if (ammoInput.value === '' || !Number.isInteger(ammoQuantity) || ammoQuantity < 0) {
+      ammoInput.focus();
+      ammoInput.style.borderColor = '#e53e3e';
+      errEl.textContent = 'Quantity of Ammo must be a whole number of 0 or more.';
+      errEl.style.display = 'block';
+      return;
+    }
     btn.disabled  = true; btn.textContent = 'Submitting...';
     errEl.style.display='none'; sucEl.style.display='none';
   var body = {
@@ -3472,15 +3684,18 @@
       unit:               document.getElementById('rp_unit').value,
       dateOfBirth:        document.getElementById('rp_dob').value,
       email:              document.getElementById('rp_email').value,
+      contactNumber:      document.getElementById('rp_contact').value,
       pistolNomenclature: document.getElementById('rp_pistolNomenclature').value,
       pistolType:         document.getElementById('rp_pistolType').value,
       pistolSerialNumber: document.getElementById('rp_pistolSerial').value,
-      qtyAmmo:            document.getElementById('rp_ammo').value,
+      issuedBy:           document.getElementById('rp_issuedBy').value,
+      qtyAmmo:            ammoQuantity,
     photo:              rpPhotoBase64 || null,
       signature:          rpSignatureBase64 || null,
       dateOfValidity:     null,
       afosMos:            document.getElementById('rp_afosMos').value,
       branch:             document.getElementById('rp_branch').value,
+      civilStatus:        document.getElementById('rp_civil').value,
       citizenship:        rpCitizenshipValue(),
       remarks:            document.getElementById('rp_remarks').value
     };
@@ -3502,11 +3717,13 @@
             ['rp_lastName','rp_firstName','rp_middleName','rp_afpSerial','rp_email','rp_contact','rp_pistolSerial','rp_ammo','rp_issuedBy','rp_armory','rp_remarks','rp_afosMos','rp_branch','rp_otherCitizenship'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
             ['rp_rank','rp_unit','rp_pistolNomenclature','rp_pistolType','rp_civil','rp_gender','rp_citizenship','rp_dob','rp_dateIssued'].forEach(function(id){var el=document.getElementById(id);if(el)el.value='';});
             document.getElementById('rp_citizenship').value='Filipino';rpToggleOtherCitizenship();
-            ['rp_parIssuedBy','rp_parApprovedBy','rp_parValidUntil','rp_parRemarks'].forEach(function(id){document.getElementById(id).value='';});
-            document.getElementById('rp_parFirearmQty').value='1';document.getElementById('rp_parFirearmCost').value='0';document.getElementById('rp_parAmmoCost').value='0';document.getElementById('rp_parEquipmentList').innerHTML='';rpInitEquipment();rpIssuedSignatureBase64=null;rpApprovedSignatureBase64=null;
+            ['rp_parIssuedBy','rp_parApprovedBy','rp_parValidUntil'].forEach(function(id){document.getElementById(id).value='';});
             window._rpNavigate('dashboard');
           }, 2000);
-        } else { throw new Error(data.error||'Submission failed.'); }
+        } else {
+          var validationMessage = data.errors ? Object.values(data.errors).flat()[0] : null;
+          throw new Error(validationMessage || data.message || data.error || 'Submission failed.');
+        }
       })
       .catch(function(e){
         errEl.textContent='✗ '+e.message; errEl.style.display='block';
@@ -3622,48 +3839,6 @@
     document.getElementById('rp_sigModal').style.display='none';
     document.getElementById('rp_sigBox').innerHTML='<img src="'+data+'" style="max-height:55px;border-radius:6px;"><p style="font-size:.68rem;color:#64748b;margin:0;">Signature saved ✓</p>';
   }
-  </script>
-
-  {{-- =========================================================
-       STAFF DASHBOARD - 30 MINUTE INACTIVITY AUTO LOGOUT
-  ========================================================= --}}
-  <form id="autoLogoutForm"
-        method="POST"
-        action="{{ route('logout') }}"
-        style="display:none;">
-    @csrf
-  </form>
-
-  <script>
-  document.addEventListener('DOMContentLoaded', function () {
-    const INACTIVITY_LIMIT = 30 * 60 * 1000; // 30 minutes
-    let inactivityTimer;
-
-    function resetInactivityTimer() {
-      clearTimeout(inactivityTimer);
-
-      inactivityTimer = setTimeout(function () {
-        const logoutForm = document.getElementById('autoLogoutForm');
-
-        if (logoutForm) {
-          logoutForm.submit();
-        }
-      }, INACTIVITY_LIMIT);
-    }
-
-    [
-      'mousemove',
-      'mousedown',
-      'keydown',
-      'scroll',
-      'touchstart',
-      'click'
-    ].forEach(function (eventName) {
-      document.addEventListener(eventName, resetInactivityTimer, true);
-    });
-
-    resetInactivityTimer();
-  });
   </script>
 
 </body>

@@ -1,0 +1,183 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mxfile host="app.diagrams.net" modified="2026-09-28T00:00:00.000Z" agent="Codex" version="24.7.17" type="device">
+  <diagram id="apao-system-flow" name="APAO System Flowchart">
+    <mxGraphModel dx="1800" dy="1200" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1900" pageHeight="1350" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="title" value="APAO Renewal and Property Accountability System — End-to-End Flow" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=24;fontStyle=1;fontColor=#16324F;" vertex="1" parent="1">
+          <mxGeometry x="250" y="20" width="1400" height="45" as="geometry"/>
+        </mxCell>
+        <mxCell id="subtitle" value="Based on the current Laravel routes, controllers, middleware, and persistence workflow" style="text;html=1;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;fontSize=12;fontColor=#5B6573;" vertex="1" parent="1">
+          <mxGeometry x="450" y="65" width="1000" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="lane_access" value="1  ACCESS &amp; SECURITY" style="swimlane;html=1;horizontal=1;startSize=42;rounded=1;arcSize=8;fillColor=#EAF2FF;swimlaneFillColor=#F8FBFF;strokeColor=#6C8EBF;fontColor=#16324F;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="20" y="110" width="330" height="1150" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane_staff" value="2  STAFF INTAKE &amp; ICS" style="swimlane;html=1;horizontal=1;startSize=42;rounded=1;arcSize=8;fillColor=#E8F5E9;swimlaneFillColor=#FAFFFA;strokeColor=#82B366;fontColor=#234D20;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="370" y="110" width="360" height="1150" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane_admin" value="3  ADMIN INSPECTION &amp; RENEWAL" style="swimlane;html=1;horizontal=1;startSize=42;rounded=1;arcSize=8;fillColor=#FFF2CC;swimlaneFillColor=#FFFDF5;strokeColor=#D6B656;fontColor=#6B5200;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="750" y="110" width="400" height="1150" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane_par" value="4  PAR MANAGEMENT" style="swimlane;html=1;horizontal=1;startSize=42;rounded=1;arcSize=8;fillColor=#F3E5F5;swimlaneFillColor=#FFFAFF;strokeColor=#9673A6;fontColor=#4F285C;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="110" width="330" height="1150" as="geometry"/>
+        </mxCell>
+        <mxCell id="lane_system" value="5  SYSTEM SERVICES &amp; OUTPUTS" style="swimlane;html=1;horizontal=1;startSize=42;rounded=1;arcSize=8;fillColor=#F5F5F5;swimlaneFillColor=#FFFFFF;strokeColor=#666666;fontColor=#333333;fontStyle=1;fontSize=15;" vertex="1" parent="1">
+          <mxGeometry x="1520" y="110" width="360" height="1150" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="start" value="Start" style="ellipse;whiteSpace=wrap;html=1;aspect=fixed;fillColor=#16324F;strokeColor=#16324F;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="135" y="180" width="80" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="login" value="Enter email, password&lt;br&gt;&amp; single-use CAPTCHA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#DAE8FC;strokeColor=#6C8EBF;fontSize=13;" vertex="1" parent="1">
+          <mxGeometry x="70" y="300" width="210" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="valid_login" value="Credentials and&lt;br&gt;CAPTCHA valid?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="420" width="150" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="attempts" value="5 failed&lt;br&gt;attempts?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="570" width="150" height="95" as="geometry"/>
+        </mxCell>
+        <mxCell id="retry" value="Show generic error;&lt;br&gt;issue a new CAPTCHA" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;" vertex="1" parent="1">
+          <mxGeometry x="55" y="710" width="240" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="locked" value="Temporarily lock login&lt;br&gt;for 5 minutes" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="55" y="815" width="240" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="active" value="Account active and&lt;br&gt;role authorized?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="100" y="930" width="150" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="blocked" value="Block access and&lt;br&gt;audit the attempt" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;" vertex="1" parent="1">
+          <mxGeometry x="55" y="1080" width="240" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="forgot" value="Forgot password?&lt;br&gt;Email OTP → verify → reset" style="rounded=1;whiteSpace=wrap;html=1;dashed=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1">
+          <mxGeometry x="55" y="1170" width="240" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="staff_dash" value="Staff dashboard" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="435" y="190" width="230" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="register" value="Register personnel &amp; firearm&lt;br&gt;Capture photo and signature" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="415" y="300" width="270" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="unique" value="Identifiers unique?&lt;br&gt;AFP serial • pistol serial&lt;br&gt;email • contact number" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="470" y="420" width="160" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="correct" value="Correct duplicate or&lt;br&gt;invalid data" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;" vertex="1" parent="1">
+          <mxGeometry x="405" y="580" width="190" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="store_person" value="Create active personnel record&lt;br&gt;Status = new • ICS = inspection" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="420" y="685" width="260" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="prepare_ics" value="Prepare ICS and submit&lt;br&gt;for inspection&lt;br&gt;ICS = under" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="435" y="810" width="230" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="staff_correct" value="Coordinate repair / replacement&lt;br&gt;then resubmit for re-inspection" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;" vertex="1" parent="1">
+          <mxGeometry x="410" y="1050" width="280" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="staff_support" value="Also available: profile updates, renewal history, status updates, email notices, dashboard metrics" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#E8F5E9;strokeColor=#82B366;fontSize=11;fontColor=#3B6136;" vertex="1" parent="1">
+          <mxGeometry x="400" y="1160" width="300" height="70" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="admin_dash" value="Admin / Super Admin dashboard" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFE6A6;strokeColor=#D6B656;fontStyle=1;fontSize=14;" vertex="1" parent="1">
+          <mxGeometry x="825" y="190" width="250" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="admin_manage" value="Manage users, personnel,&lt;br&gt;archive, reports &amp; audit trail" style="shape=note;whiteSpace=wrap;html=1;backgroundOutline=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="820" y="300" width="260" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="review_queue" value="Review inspection queue&lt;br&gt;and personnel details" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;" vertex="1" parent="1">
+          <mxGeometry x="820" y="675" width="260" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="checklist" value="Complete firearm parts checklist&lt;br&gt;and capture signatories / remarks" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;" vertex="1" parent="1">
+          <mxGeometry x="810" y="800" width="280" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="serviceable" value="All required parts&lt;br&gt;serviceable?" style="rhombus;whiteSpace=wrap;html=1;fillColor=#FFF2CC;strokeColor=#D6B656;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="870" y="920" width="160" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="defect" value="Keep workflow = under&lt;br&gt;Condition = repair / replacement / unserviceable&lt;br&gt;Notify staff" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F8CECC;strokeColor=#B85450;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="770" y="1060" width="260" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="approve" value="Approve renewal&lt;br&gt;Validity = today + 1 year&lt;br&gt;ICS = ready" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="865" y="1170" width="220" height="75" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="par_queue" value="Staff opens PAR issuance queue&lt;br&gt;(renewed + ICS ready)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1205" y="700" width="260" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="issue_par" value="Validate property details and&lt;br&gt;issue unique PAR number" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1">
+          <mxGeometry x="1210" y="830" width="250" height="75" as="geometry"/>
+        </mxCell>
+        <mxCell id="par_state" value="Save PAR&lt;br&gt;ICS = par_issued" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#E1D5E7;strokeColor=#9673A6;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1235" y="955" width="200" height="65" as="geometry"/>
+        </mxCell>
+        <mxCell id="par_docs" value="View / print / export PDF&lt;br&gt;Update or replace PAR&lt;br&gt;(retain predecessor link)" style="document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#E1D5E7;strokeColor=#9673A6;" vertex="1" parent="1">
+          <mxGeometry x="1210" y="1080" width="250" height="100" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="db" value="Business data&lt;br&gt;&lt;b&gt;users • personnel • inspections&lt;br&gt;renewal history • PARs&lt;/b&gt;" style="shape=cylinder3;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;size=15;fillColor=#DAE8FC;strokeColor=#6C8EBF;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="235" width="240" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="audit" value="Audit every material action&lt;br&gt;with user, target, IP &amp; time" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="420" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="notify" value="In-app notifications&lt;br&gt;Admin ↔ Staff" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="565" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="email" value="Email service&lt;br&gt;OTP and personnel notices" style="shape=mxgraph.basic.mail;whiteSpace=wrap;html=1;fillColor=#F5F5F5;strokeColor=#666666;" vertex="1" parent="1">
+          <mxGeometry x="1595" y="700" width="210" height="85" as="geometry"/>
+        </mxCell>
+        <mxCell id="reports" value="Operational outputs&lt;br&gt;Inspection PDF • PAR PDF&lt;br&gt;Renewal / RPCSP reports" style="document;whiteSpace=wrap;html=1;boundedLbl=1;fillColor=#FFF2CC;strokeColor=#D6B656;" vertex="1" parent="1">
+          <mxGeometry x="1575" y="855" width="250" height="105" as="geometry"/>
+        </mxCell>
+        <mxCell id="monitor" value="Dashboards and status monitoring&lt;br&gt;new • pending • renewed&lt;br&gt;within period • expired" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#D5E8D4;strokeColor=#82B366;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="1030" width="240" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="end" value="Record remains available for&lt;br&gt;monitoring, renewal, archive,&lt;br&gt;or future PAR replacement" style="ellipse;whiteSpace=wrap;html=1;fillColor=#16324F;strokeColor=#16324F;fontColor=#FFFFFF;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="1580" y="1160" width="240" height="75" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e1" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#16324F;" edge="1" parent="1" source="start" target="login"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e2" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#16324F;" edge="1" parent="1" source="login" target="valid_login"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e3" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#B85450;fontColor=#B85450;fontStyle=1;" edge="1" parent="1" source="valid_login" target="attempts"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e4" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#B85450;fontColor=#B85450;fontStyle=1;" edge="1" parent="1" source="attempts" target="retry"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e5" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#B85450;fontColor=#B85450;fontStyle=1;" edge="1" parent="1" source="attempts" target="locked"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e6" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeColor=#B85450;" edge="1" parent="1" source="retry" target="login"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="35" y="742"/><mxPoint x="35" y="335"/></Array></mxGeometry></mxCell>
+        <mxCell id="e7" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#82B366;fontColor=#3B6136;fontStyle=1;" edge="1" parent="1" source="valid_login" target="active"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="320" y="470"/><mxPoint x="320" y="980"/></Array></mxGeometry></mxCell>
+        <mxCell id="e8" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#B85450;fontColor=#B85450;fontStyle=1;" edge="1" parent="1" source="active" target="blocked"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e9" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeColor=#9673A6;" edge="1" parent="1" source="login" target="forgot"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="30" y="335"/><mxPoint x="30" y="1200"/></Array></mxGeometry></mxCell>
+        <mxCell id="e10" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeColor=#9673A6;" edge="1" parent="1" source="forgot" target="login"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="315" y="1200"/><mxPoint x="315" y="335"/></Array></mxGeometry></mxCell>
+        <mxCell id="e11" value="Staff" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#82B366;fontColor=#3B6136;fontStyle=1;" edge="1" parent="1" source="active" target="staff_dash"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="335" y="980"/><mxPoint x="335" y="220"/></Array></mxGeometry></mxCell>
+        <mxCell id="e12" value="Admin / Super Admin" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#D6B656;fontColor=#6B5200;fontStyle=1;" edge="1" parent="1" source="active" target="admin_dash"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="340" y="980"/><mxPoint x="340" y="150"/><mxPoint x="950" y="150"/></Array></mxGeometry></mxCell>
+        <mxCell id="e13" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#82B366;" edge="1" parent="1" source="staff_dash" target="register"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e14" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#82B366;" edge="1" parent="1" source="register" target="unique"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e15" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#B85450;fontColor=#B85450;fontStyle=1;" edge="1" parent="1" source="unique" target="correct"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e16" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeColor=#B85450;" edge="1" parent="1" source="correct" target="register"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="390" y="610"/><mxPoint x="390" y="337"/></Array></mxGeometry></mxCell>
+        <mxCell id="e17" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#82B366;fontColor=#3B6136;fontStyle=1;" edge="1" parent="1" source="unique" target="store_person"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e18" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#82B366;" edge="1" parent="1" source="store_person" target="prepare_ics"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e19" value="Submit" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#D6B656;fontColor=#6B5200;fontStyle=1;" edge="1" parent="1" source="prepare_ics" target="review_queue"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e20" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#D6B656;" edge="1" parent="1" source="review_queue" target="checklist"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e21" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#D6B656;" edge="1" parent="1" source="checklist" target="serviceable"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e22" value="No" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#B85450;fontColor=#B85450;fontStyle=1;" edge="1" parent="1" source="serviceable" target="defect"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e23" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#B85450;" edge="1" parent="1" source="defect" target="staff_correct"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e24" value="Re-inspect" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeColor=#B85450;fontColor=#B85450;fontStyle=1;" edge="1" parent="1" source="staff_correct" target="review_queue"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="715" y="1087"/><mxPoint x="715" y="710"/></Array></mxGeometry></mxCell>
+        <mxCell id="e25" value="Yes" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#82B366;fontColor=#3B6136;fontStyle=1;" edge="1" parent="1" source="serviceable" target="approve"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1105" y="972"/><mxPoint x="1105" y="1207"/></Array></mxGeometry></mxCell>
+        <mxCell id="e26" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#9673A6;" edge="1" parent="1" source="approve" target="par_queue"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1125" y="1207"/><mxPoint x="1125" y="737"/></Array></mxGeometry></mxCell>
+        <mxCell id="e27" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#9673A6;" edge="1" parent="1" source="par_queue" target="issue_par"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e28" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#9673A6;" edge="1" parent="1" source="issue_par" target="par_state"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e29" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#9673A6;" edge="1" parent="1" source="par_state" target="par_docs"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e30" value="Persist" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeColor=#6C8EBF;fontColor=#6C8EBF;" edge="1" parent="1" source="store_person" target="db"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="710" y="722"/><mxPoint x="710" y="390"/><mxPoint x="1550" y="390"/><mxPoint x="1550" y="290"/></Array></mxGeometry></mxCell>
+        <mxCell id="e31" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeColor=#6C8EBF;" edge="1" parent="1" source="approve" target="db"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1135" y="1207"/><mxPoint x="1135" y="390"/><mxPoint x="1550" y="390"/><mxPoint x="1550" y="290"/></Array></mxGeometry></mxCell>
+        <mxCell id="e32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeColor=#6C8EBF;" edge="1" parent="1" source="par_state" target="db"><mxGeometry relative="1" as="geometry"><Array as="points"><mxPoint x="1480" y="987"/><mxPoint x="1480" y="290"/></Array></mxGeometry></mxCell>
+        <mxCell id="e33" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeColor=#666666;" edge="1" parent="1" source="db" target="audit"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e34" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeColor=#666666;" edge="1" parent="1" source="audit" target="notify"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;dashed=1;strokeColor=#666666;" edge="1" parent="1" source="notify" target="email"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#D6B656;" edge="1" parent="1" source="par_docs" target="reports"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeColor=#82B366;" edge="1" parent="1" source="reports" target="monitor"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="e38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;html=1;endArrow=block;endFill=1;strokeWidth=2;strokeColor=#16324F;" edge="1" parent="1" source="monitor" target="end"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

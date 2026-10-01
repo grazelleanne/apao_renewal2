@@ -1,0 +1,95 @@
+flowchart LR
+    Visitor[Unauthenticated User]
+    Staff[Staff]
+    Admin[Admin]
+    SuperAdmin[Super Admin]
+    Personnel[Personnel / Recipient]
+    Mail[Email Service]
+    Scheduler[Scheduled Command]
+
+    subgraph APAO[APAO Renewal and Property Accountability System]
+        direction TB
+
+        subgraph Access[Access and Account Security]
+            Login([Log in with email, password, and CAPTCHA])
+            Reset([Reset forgotten password with OTP])
+            Profile([Update profile and password])
+            Users([Create and manage user accounts])
+        end
+
+        subgraph Registration[Personnel Registration]
+            Register([Register personnel and firearm])
+            Unique([Validate unique AFP serial, pistol serial, email, and contact])
+            Capture([Capture personnel photo and signature])
+            PersonnelData([View and maintain personnel records])
+            Archive([Archive, restore, or permanently delete records])
+        end
+
+        subgraph InspectionRenewal[Inspection and Renewal]
+            SubmitICS([Send ICS record for inspection])
+            Inspect([Complete firearm parts inspection])
+            Decision([Approve or flag repair/replacement])
+            Renewal([Update renewal status and validity])
+            History([View renewal history])
+        end
+
+        subgraph Property[Property Accountability]
+            PAR([Issue or update PAR])
+            ReplacePAR([Replace PAR and retain predecessor link])
+            Document([View, print, or export PAR document])
+            ICS([Prepare and print ICS])
+        end
+
+        subgraph Oversight[Communication and Oversight]
+            Notify([Send renewal and status notifications])
+            Bell([Read system notifications])
+            Reports([Generate renewal and RPCSP reports])
+            Audit([Review audit trail])
+            Dashboard([View role-based dashboard and metrics])
+        end
+
+        Register -. includes .-> Unique
+        Register -. includes .-> Capture
+        SubmitICS --> Inspect
+        Inspect --> Decision
+        Decision --> Renewal
+        PAR --> Document
+        ReplacePAR --> Document
+        Renewal --> Notify
+    end
+
+    Visitor --> Login
+    Visitor --> Reset
+    Staff --> Login
+    Staff --> Profile
+    Staff --> Register
+    Staff --> PersonnelData
+    Staff --> SubmitICS
+    Staff --> History
+    Staff --> PAR
+    Staff --> ReplacePAR
+    Staff --> Document
+    Staff --> ICS
+    Staff --> Notify
+    Staff --> Bell
+    Staff --> Reports
+    Staff --> Dashboard
+    Admin --> Login
+    Admin --> Profile
+    Admin --> Users
+    Admin --> PersonnelData
+    Admin --> Archive
+    Admin --> Inspect
+    Admin --> Decision
+    Admin --> Renewal
+    Admin --> History
+    Admin --> Notify
+    Admin --> Bell
+    Admin --> Reports
+    Admin --> Audit
+    Admin --> Dashboard
+    SuperAdmin -. inherits all Admin capabilities .-> Admin
+    Reset --> Mail
+    Notify --> Mail
+    Mail --> Personnel
+    Scheduler --> Notify

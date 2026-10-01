@@ -868,17 +868,6 @@ function renderUsersTable(){
   }).join('');
 }
 
-// ===== SESSION TIMEOUT — 15 minutes =====
-(function(){
-  const TIMEOUT_MS=15*60*1000,WARN_MS=60*1000;let timer,warnTimer,countdownTimer;
-  const banner=document.createElement('div');banner.id='session-timeout-banner';banner.style.cssText='display:none;position:fixed;bottom:24px;left:50%;transform:translateX(-50%);z-index:9999;background:#92400e;color:#fef3c7;padding:12px 24px;border-radius:10px;font-size:.85rem;font-weight:600;box-shadow:0 8px 24px rgba(0,0,0,.4);text-align:center;min-width:320px;';
-  banner.innerHTML='Your session will expire in <span id="session-countdown">60</span> seconds due to inactivity. <button id="stayLoggedInBtn" style="margin-left:12px;background:#fde68a;color:#92400e;border:none;border-radius:5px;padding:4px 12px;font-weight:700;cursor:pointer;">Stay Logged In</button>';document.body.appendChild(banner);
-  function showWarning(){banner.style.display='block';let secs=60;const el=document.getElementById('session-countdown');el.textContent=secs;clearInterval(countdownTimer);countdownTimer=setInterval(()=>{secs--;el.textContent=Math.max(0,secs);if(secs<=0)clearInterval(countdownTimer);},1000);}
-  function doLogout(){banner.style.display='none';const form=document.querySelector('form[action*="logout"]');if(form){form.submit();return;}fetch('/logout',{method:'POST',headers:{'X-CSRF-TOKEN':CSRF}}).finally(()=>location.href='/login');}
-  window.resetSessionTimer=function(){clearTimeout(timer);clearTimeout(warnTimer);clearInterval(countdownTimer);banner.style.display='none';warnTimer=setTimeout(showWarning,TIMEOUT_MS-WARN_MS);timer=setTimeout(doLogout,TIMEOUT_MS);};
-  document.getElementById('stayLoggedInBtn').addEventListener('click',window.resetSessionTimer);
-  ['mousemove','keydown','click','scroll','touchstart'].forEach(evt=>document.addEventListener(evt,window.resetSessionTimer,{passive:true}));window.resetSessionTimer();
-})();
 </script>
 </body>
 </html>

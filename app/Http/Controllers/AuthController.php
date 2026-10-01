@@ -20,7 +20,7 @@ class AuthController extends Controller
         if (Auth::check()) {
             $user = Auth::user();
 
-            if ($user->role === 'admin') {
+            if (in_array($user->role, ['super_admin', 'admin'], true)) {
                 return redirect()->route('admin.dashboard');
             }
 
@@ -343,7 +343,7 @@ class AuthController extends Controller
         |--------------------------------------------------------------------------
         */
 
-        if ($user->role === 'admin') {
+        if (in_array($user->role, ['super_admin', 'admin'], true)) {
             $redirectUrl = route('admin.dashboard');
 
         } elseif ($user->role === 'staff') {

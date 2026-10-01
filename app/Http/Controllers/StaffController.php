@@ -163,7 +163,7 @@ class StaffController extends Controller
         } catch (\Exception $e) {
             return response()->json([
                 'success' => false,
-                'error'   => 'Failed to send email: ' . $e->getMessage(),
+                'error'   => 'Failed to send email. Please try again later.',
             ], 500);
         }
     }

@@ -11,12 +11,18 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        $email = env('DEFAULT_ADMIN_EMAIL', 'admin@apao.local');
+        $email = env('SUPER_ADMIN_EMAIL');
+        $password = env('SUPER_ADMIN_PASSWORD');
+
+        if (!$email || !$password) {
+            $this->command?->warn('Super admin not seeded: set SUPER_ADMIN_EMAIL and SUPER_ADMIN_PASSWORD, or run super-admin:create.');
+            return;
+        }
 
         $admin = [
-            'name' => env('DEFAULT_ADMIN_NAME', 'APAO Administrator'),
-            'password' => Hash::make(env('DEFAULT_ADMIN_PASSWORD', 'Admin@12345')),
-            'role' => 'admin',
+            'name' => env('SUPER_ADMIN_NAME', 'APAO Super Administrator'),
+            'password' => Hash::make($password),
+            'role' => 'super_admin',
             'updated_at' => now(),
         ];
 

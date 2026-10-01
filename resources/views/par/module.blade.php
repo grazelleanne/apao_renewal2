@@ -1235,7 +1235,7 @@
     document.getElementById('par-mgmt-list').style.display = 'none';
     document.getElementById('par-doc-view').style.display = 'none';
     parRenderHub();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.staffScrollToTop?.();
   };
   window.parShowIssuanceList = function () {
     var rv = document.getElementById('par-replace-view'); if (rv) rv.style.display = 'none';
@@ -1244,7 +1244,7 @@
     document.getElementById('par-doc-view').style.display = 'none';
     document.getElementById('par-issuance-list').style.display = 'block';
     parRenderIssuanceTable();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.staffScrollToTop?.();
   };
   window.parShowMgmtList = function () {
     var rv = document.getElementById('par-replace-view'); if (rv) rv.style.display = 'none';
@@ -1254,7 +1254,7 @@
     document.getElementById('par-mgmt-list').style.display = 'block';
     parRenderMgmtTable();
     parRenderMgmtActivity();
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.staffScrollToTop?.();
   };
   window.parBackFromDoc = function () {
     document.getElementById('par-doc-view').style.display = 'none';
@@ -1692,7 +1692,7 @@
     document.getElementById('par-doc-view').style.display = 'none';
     document.getElementById('par-replace-view').style.display = 'block';
 
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.staffScrollToTop?.();
   };
 
   document.getElementById('replace_reason')?.addEventListener('change', function () {
@@ -1942,7 +1942,7 @@
     document.getElementById('par-issuance-list').style.display = 'none';
     document.getElementById('par-mgmt-list').style.display = 'none';
     document.getElementById('par-doc-view').style.display = 'block';
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    window.staffScrollToTop?.();
   };
 
   function parApplySigInput(which, src) {

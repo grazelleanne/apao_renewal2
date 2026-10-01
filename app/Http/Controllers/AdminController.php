@@ -220,7 +220,7 @@ class AdminController extends Controller
             Log::error('Admin manual notify failed for #' . $id . ': ' . $e->getMessage());
             return response()->json([
                 'success' => false,
-                'error'   => 'Failed to send email: ' . $e->getMessage(),
+                'error'   => 'Failed to send email. Please try again later.',
             ], 500);
         }
     }

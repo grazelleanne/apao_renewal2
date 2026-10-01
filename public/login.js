@@ -75,7 +75,7 @@
                         hintEl.textContent = 'Redirecting in ' + count + '…';
                     } else {
                         clearInterval(timer);
-                        window.location.href = data.redirect;
+                        window.location.replace(data.redirect);
                     }
                 }, 1000);
 

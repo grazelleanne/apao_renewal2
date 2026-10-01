@@ -254,7 +254,7 @@
         </div>
         <button id="applyFiltersBtn" class="bg-[#35b4df] text-[#10212e] font-700 rounded-lg px-4 py-2 text-xs font-bold hover:bg-[#249bc2] transition-colors self-end">Apply Filters</button>
         <button id="clearFiltersBtn" class="bg-transparent text-[#94a3b8] border border-[#3b4456] rounded-lg px-4 py-2 text-xs font-semibold hover:bg-[#23272f] transition-colors self-end">Clear</button>
-        <button id="exportCsvBtn" class="export-btn self-end ml-auto">⬇ Export CSV</button>
+        <button id="exportCsvBtn" class="export-btn self-end ml-auto">⬇ Export Excel</button>
       </div>
 
       <!-- SUMMARY BADGES -->
@@ -294,6 +294,7 @@
 <!-- DETAILS MODAL -->
 <div id="detailsModal" style="display:none;"></div>
 
+<script src="{{ asset('js/rpcsp_excel.js') }}"></script>
 <script>
 const CSRF = document.querySelector('meta[name="csrf-token"]').content;
 const AUDIT_URL      = "{{ route('admin.audit.data') }}";
@@ -608,25 +609,41 @@ document.addEventListener("DOMContentLoaded", function () {
     modal.querySelector('.modal-bg').onclick = (e) => { if(e.target===modal.querySelector('.modal-bg')) modal.style.display='none'; };
   }
 
-  // EXPORT CSV
+  // EXPORT EXCEL
   document.getElementById('exportCsvBtn').addEventListener('click', function() {
     if (!allLogs.length) return;
-    const headers = ['#','Date & Time','User','Role','Action','Target','IP Address','Details'];
-    const rows = allLogs.map((l, i) => [
-      i+1,
-      formatDate(l.createdAt),
-      l.userName||'',
-      l.userRole||'',
-      l.action||'',
-      l.target||'',
-      l.ipAddress||'',
-      l.details ? JSON.stringify(l.details) : ''
-    ].map(v => `"${String(v).replace(/"/g,'""')}"`).join(','));
-    const csv  = [headers.join(','), ...rows].join('\n');
-    const blob = new Blob([csv], { type:'text/csv' });
-    const url  = URL.createObjectURL(blob);
-    const a    = document.createElement('a'); a.href=url; a.download='audit_log.csv'; a.click();
-    URL.revokeObjectURL(url);
+    const from = document.getElementById('filterDateFrom').value;
+    const to = document.getElementById('filterDateTo').value;
+    const today = new Date();
+    const filenameDate = [
+      today.getFullYear(),
+      String(today.getMonth() + 1).padStart(2, '0'),
+      String(today.getDate()).padStart(2, '0'),
+    ].join('-');
+    let period = 'All dates';
+    if (from && to) period = `${from} to ${to}`;
+    else if (from) period = `From ${from}`;
+    else if (to) period = `Up to ${to}`;
+
+    window.exportAuditLogExcel({
+      filename: `APAO_Audit_Log_${filenameDate}.xls`,
+      generatedDate: today.toLocaleString('en-PH', {
+        year: 'numeric', month: 'long', day: '2-digit',
+        hour: '2-digit', minute: '2-digit',
+      }),
+      period,
+      rows: allLogs.map((log, index) => ({
+        number: index + 1,
+        createdAt: formatDate(log.createdAt).replace(/&mdash;/g, '—'),
+        userName: log.userName || '',
+        userRole: log.userRole || '',
+        action: log.action || '',
+        actionLabel: ACTION_LABELS[log.action] || '',
+        target: log.target || '',
+        ipAddress: log.ipAddress || '',
+        details: log.details || '',
+      })),
+    });
   });
 
   // FILTER EVENTS

@@ -48,6 +48,12 @@
     .card-main-text{color:#33b481 !important;font-weight:bold;}
     .card-label{color:#228b68 !important;font-weight:600;}
     .card-desc{color:#89e2bc !important;}
+    .status-card-renewed .card-label,.status-card-renewed .status-card-value{color:#33b481!important;}
+    .status-card-renewed .card-desc{color:#89e2bc!important;}
+    .status-card-within .card-label,.status-card-within .status-card-value{color:#ecc94b!important;}
+    .status-card-within .card-desc{color:#f6e58d!important;}
+    .status-card-expired .card-label,.status-card-expired .status-card-value{color:#fc8181!important;}
+    .status-card-expired .card-desc{color:#f7a8a8!important;}
     .force-light-text{color:#e5eaf2;}
     .abadge{display:inline-flex;align-items:center;gap:3px;padding:2px 9px;border-radius:999px;font-size:0.68rem;font-weight:700;white-space:nowrap;}
     .abadge-new{background:#0a1f3a;color:#3ec6ff;}
@@ -97,6 +103,12 @@
     body.light-mode .card-main-text{color:#0d6641 !important;}
     body.light-mode .card-label{color:#1a7a55 !important;}
     body.light-mode .card-desc{color:#2d8a65 !important;}
+    body.light-mode .status-card-renewed .card-label,body.light-mode .status-card-renewed .status-card-value{color:#067647!important;}
+    body.light-mode .status-card-renewed .card-desc{color:#287a5b!important;}
+    body.light-mode .status-card-within .card-label,body.light-mode .status-card-within .status-card-value{color:#9a6700!important;}
+    body.light-mode .status-card-within .card-desc{color:#8a6512!important;}
+    body.light-mode .status-card-expired .card-label,body.light-mode .status-card-expired .status-card-value{color:#b42318!important;}
+    body.light-mode .status-card-expired .card-desc{color:#a33a32!important;}
     body.light-mode .force-light-text{color:#1e293b !important;}
     body.light-mode input,body.light-mode select{background:#f8fafc !important;color:#1e293b !important;border-color:#cbd5e1 !important;}
     body.light-mode .abadge-new{background:#dbeafe;color:#1e40af;}
@@ -216,19 +228,19 @@
         <p id="totalUsers" class="text-3xl font-extrabold card-main-text">--</p>
         <p class="text-xs card-desc">Total users managed on the platform. <span class="underline text-accent font-medium">View all users</span></p>
       </a>
-      <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2" style="border-left:4px solid #33b481;">
+      <div class="status-card-renewed bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2" style="border-left:4px solid #33b481;">
         <div class="text-xs uppercase font-semibold card-label tracking-wide mb-1">Total Renewed</div>
-        <p id="totalRenewed" class="text-3xl font-extrabold" style="color:#33b481;">--</p>
+        <p id="totalRenewed" class="status-card-value text-3xl font-extrabold">--</p>
         <p class="text-xs card-desc">Personnel with up-to-date renewal.</p>
       </div>
-      <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2" style="border-left:4px solid #ecc94b;">
+      <div class="status-card-within bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2" style="border-left:4px solid #ecc94b;">
         <div class="text-xs uppercase font-semibold card-label tracking-wide mb-1">Within Renewal Period</div>
-        <p id="withinRenewal" class="text-3xl font-extrabold" style="color:#ecc94b;">--</p>
+        <p id="withinRenewal" class="status-card-value text-3xl font-extrabold">--</p>
         <p class="text-xs card-desc">Personnel within the current renewal window.</p>
       </div>
-      <div class="bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2" style="border-left:4px solid #e53e3e;">
+      <div class="status-card-expired bg-[#23272f] rounded-lg p-6 shadow shadow-black/10 flex flex-col gap-2" style="border-left:4px solid #e53e3e;">
         <div class="text-xs uppercase font-semibold card-label tracking-wide mb-1">Expired</div>
-        <p id="expired" class="text-3xl font-extrabold" style="color:#e53e3e;">--</p>
+        <p id="expired" class="status-card-value text-3xl font-extrabold">--</p>
         <p class="text-xs card-desc">Personnel with expired renewal.</p>
       </div>
     </div>

@@ -15,7 +15,11 @@ class RoleMiddleware
             return redirect()->route('login');
         }
 
-        if (!in_array(Auth::user()->role, $roles)) {
+        $userRole = Auth::user()->role;
+        $hasAccess = in_array($userRole, $roles, true)
+            || ($userRole === 'super_admin' && in_array('admin', $roles, true));
+
+        if (!$hasAccess) {
             abort(403, 'You do not have permission to access this page.');
         }
 

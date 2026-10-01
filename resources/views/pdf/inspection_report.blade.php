@@ -506,7 +506,10 @@
             $nextRenewal = \Carbon\Carbon::parse($p->date_of_validity)
                 ->format('d F Y');
         } else {
-            $nextRenewal = $approvedCarbon->copy()->addYear()->format('d F Y');
+            $nextRenewal = \App\Models\Personnel::renewalValidityDate(
+                $p->date_of_birth,
+                $approvedCarbon
+            )->format('d F Y');
         }
     } catch (\Exception $e) {
         $nextRenewal = '-';

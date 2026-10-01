@@ -7,6 +7,10 @@
 <a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
 </p>
 
+## APAO system diagrams
+
+See the project [ERD and use-case documentation](docs/SYSTEM_DIAGRAMS.md). Editable Draw.io files are available for the [end-to-end system flowchart](docs/APAO_System_Flowchart.drawio) and the [ERD/use-case diagrams](docs/APAO_System_Diagrams.drawio), with Mermaid sources in `docs/erd.mmd` and `docs/use-case.mmd`.
+
 ## About Laravel
 
 Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
@@ -53,6 +57,19 @@ In order to ensure that the Laravel community is welcoming to all, please review
 ## Security Vulnerabilities
 
 If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+
+## Super administrator
+
+After running the database migrations, create the system owner account interactively:
+
+```bash
+php artisan migrate
+php artisan super-admin:create owner@example.com --name="System Owner"
+```
+
+The command securely prompts for a password. For unattended deployments, set
+`SUPER_ADMIN_NAME`, `SUPER_ADMIN_EMAIL`, and `SUPER_ADMIN_PASSWORD` before running
+`php artisan db:seed`.
 
 ## License
 

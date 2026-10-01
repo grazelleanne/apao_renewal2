@@ -10,12 +10,12 @@ class PersonnelPolicy
 {
     public function managePersonnel(User $user): bool
     {
-        return in_array($user->role, ['admin', 'staff']);
+        return in_array($user->role, ['super_admin', 'admin', 'staff'], true);
     }
 
     public function deletePersonnel(User $user): bool
     {
-        return $user->role === 'admin';
+        return in_array($user->role, ['super_admin', 'admin'], true);
     }
 
     public function viewPersonnel(User $user): bool

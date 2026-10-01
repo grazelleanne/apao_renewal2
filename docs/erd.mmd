@@ -1,0 +1,186 @@
+erDiagram
+    USERS {
+        bigint id PK
+        string name
+        string email UK
+        string contact_number
+        string password
+        enum role "super_admin, admin, staff, viewer"
+        boolean is_active
+        timestamp last_login_at
+    }
+
+    PERSONNEL {
+        bigint id PK
+        integer item_number UK
+        string rank
+        string last_name
+        string first_name
+        string middle_name
+        string afp_serial_number UK
+        string email UK
+        string contact_number UK
+        string unit
+        string afos_mos
+        string branch
+        date date_of_birth
+        string civil_status
+        string citizenship
+        string pistol_nomenclature
+        string pistol_type
+        string pistol_serial_number UK
+        integer qty_ammo
+        string issued_by
+        date date_of_validity
+        enum approved_status
+        string ics_status
+        date date_approved
+        date last_renewed_at
+        longtext photo
+        longtext signature
+        date archived_at
+    }
+
+    INSPECTIONS {
+        bigint id PK
+        bigint personnel_id FK
+        integer item_number
+        string afp_serial_number
+        string pistol_type
+        date date_registered
+        enum status "pending, under, approved, needs_repair"
+        string barrel "firearm checklist field"
+        string slide "firearm checklist field"
+        string frame "firearm checklist field"
+        string magazine "firearm checklist field"
+        text remarks
+        string inspected_by_name
+        bigint inspected_by_user_id "logical user reference"
+        timestamp inspected_at
+        date next_renewal_date
+    }
+
+    PROPERTY_ACKNOWLEDGEMENT_RECEIPTS {
+        bigint id PK
+        string par_number UK
+        bigint personnel_id FK
+        bigint previous_par_id FK
+        string unit
+        string firearm
+        string firearm_serial_number
+        integer firearm_quantity
+        decimal firearm_unit_cost
+        integer ammunition_quantity
+        decimal ammunition_unit_cost
+        json equipment_items
+        string status
+        date issued_date
+        date valid_until
+        string issued_by
+        bigint issued_by_personnel_id FK
+        string approved_by
+        bigint approved_by_personnel_id FK
+        text remarks
+        text replacement_reason
+        timestamp replaced_at
+        bigint created_by FK
+        bigint updated_by FK
+    }
+
+    RENEWAL_TRANSACTIONS {
+        bigint id PK
+        bigint personnel_id FK
+        integer item_number
+        string par_number
+        date renewal_date
+        date new_validity_date
+        date old_validity_date
+        enum status "submitted through cancelled"
+        string processed_by
+        bigint processed_by_user_id "logical user reference"
+        text remarks
+    }
+
+    RENEWAL_HISTORY {
+        bigint id PK
+        integer item_number "logical personnel reference"
+        string action
+        date date_of_validity
+        date previous_validity
+        string inspected_by
+        text remarks
+    }
+
+    NOTIFICATIONS {
+        bigint id PK
+        string type
+        string title
+        text message
+        string personnel_name
+        integer personnel_id "stores personnel.item_number"
+        boolean read_by_admin
+        boolean read_by_staff
+    }
+
+    PERSONNEL_NOTIFICATIONS {
+        bigint id PK
+        bigint user_id FK
+        string title
+        text message
+        enum type "renewed, expired, within_renewal"
+        boolean read
+    }
+
+    AUDIT_LOGS {
+        bigint id PK
+        bigint user_id FK
+        string user_name
+        string user_role
+        string action
+        string model_type
+        bigint model_id
+        string subject
+        json old_values
+        json new_values
+        text description
+        string target
+        string ip_address
+        timestamp created_at
+    }
+
+    PASSWORD_RESETS_OTP {
+        string email PK
+        string otp
+        timestamp expires_at
+        timestamp created_at
+    }
+
+    ICS_SETTINGS {
+        bigint id PK
+        string office_name
+        string agency_name
+        string unit_address
+        string unit_code
+        string chief_officer_name
+        string chief_officer_position
+        string issued_by_name
+        string issued_by_position
+        string pistol_unit_cost
+        string ammo_unit_cost
+    }
+
+    USERS ||--o{ AUDIT_LOGS : creates
+    USERS ||--o{ PERSONNEL_NOTIFICATIONS : receives
+    USERS o|--o{ INSPECTIONS : performs
+    USERS o|--o{ RENEWAL_TRANSACTIONS : processes
+    USERS o|--o{ PROPERTY_ACKNOWLEDGEMENT_RECEIPTS : creates
+    USERS o|--o{ PROPERTY_ACKNOWLEDGEMENT_RECEIPTS : updates
+    PERSONNEL ||--o{ INSPECTIONS : undergoes
+    PERSONNEL ||--o{ PROPERTY_ACKNOWLEDGEMENT_RECEIPTS : receives
+    PERSONNEL ||--o{ RENEWAL_TRANSACTIONS : has
+    PERSONNEL ||--o{ RENEWAL_HISTORY : has
+    PERSONNEL o|--o{ NOTIFICATIONS : concerns
+    PERSONNEL o|--o{ PROPERTY_ACKNOWLEDGEMENT_RECEIPTS : issues
+    PERSONNEL o|--o{ PROPERTY_ACKNOWLEDGEMENT_RECEIPTS : approves
+    PROPERTY_ACKNOWLEDGEMENT_RECEIPTS o|--o{ PROPERTY_ACKNOWLEDGEMENT_RECEIPTS : replaces
+    USERS o|--o| PASSWORD_RESETS_OTP : requests

@@ -22,6 +22,8 @@ class Personnel extends Model
         'rank',
         'afp_serial_number',
         'date_of_birth',
+        'civil_status',
+        'citizenship',
         'pistol_nomenclature',
         'pistol_serial_number',
         'qty_ammo',
@@ -57,6 +59,39 @@ class Personnel extends Model
         }
 
         return 'valid';
+    }
+
+    /**
+     * Calculate the validity date for a completed renewal.
+     *
+     * Renewals expire on the personnel's birthday two calendar years after
+     * the renewal year. Older records without a birthday retain a two-year
+     * validity period measured from the renewal date.
+     */
+    public static function renewalValidityDate($dateOfBirth, $renewedAt = null): Carbon
+    {
+        $renewalDate = $renewedAt ? Carbon::parse($renewedAt) : Carbon::today();
+
+        if (empty($dateOfBirth)) {
+            return $renewalDate->copy()->addYearsNoOverflow(2)->startOfDay();
+        }
+
+        $birthday = Carbon::parse($dateOfBirth);
+        $validityYear = $renewalDate->year + 2;
+        $validityDay = min(
+            $birthday->day,
+            Carbon::create($validityYear, $birthday->month, 1)->daysInMonth
+        );
+
+        return Carbon::create(
+            $validityYear,
+            $birthday->month,
+            $validityDay,
+            0,
+            0,
+            0,
+            $renewalDate->getTimezone()
+        );
     }
 
     public function refreshStatus()
@@ -167,6 +202,8 @@ class Personnel extends Model
             'rank'               => $this->rank,
             'afpSerialNumber'    => $this->afp_serial_number,
             'dateOfBirth'        => $this->formatDate($this->date_of_birth),
+            'civilStatus'        => $this->civil_status,
+            'citizenship'        => $this->citizenship,
             'pistolNomenclature' => $this->pistol_nomenclature,
             'pistolSerialNumber' => $this->pistol_serial_number,
             'qtyAmmo'            => $this->qty_ammo,

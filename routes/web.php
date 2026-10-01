@@ -7,17 +7,33 @@ use Illuminate\Support\Facades\RateLimiter;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\Request;
+use Illuminate\Database\QueryException;
+use Illuminate\Validation\Rule;
 use App\Http\Controllers\ForgotPasswordController;
 use App\Http\Controllers\StaffController;
 use App\Http\Controllers\ParController;
 use App\Http\Controllers\ProfileController;
 use App\Models\Inspection;
+use App\Models\Personnel;
+use App\Rules\NoInvisibleCharacters;
 
 if (!function_exists('inspectionPartsForFirearm')) {
     function inspectionPartsForFirearm(?string $firearm): array
     {
         // The approved checklist is shared by Pistol 9mm and Pistol Cal .45.
         return array_keys(Inspection::parts());
+    }
+}
+
+if (!function_exists('loginCaptchaChallenge')) {
+    function loginCaptchaChallenge(Request $request): string
+    {
+        $left = random_int(1, 9);
+        $right = random_int(1, 9);
+
+        $request->session()->put('login_captcha_answer', $left + $right);
+
+        return "{$left} + {$right} = ?";
     }
 }
 
@@ -101,7 +117,20 @@ function rpcspRemarkFromInspection($inspection): string
 
 // ===== PUBLIC =====
 Route::get('/', fn() => redirect()->route('login'));
-Route::get('/login',           fn() => view('login'))->name('login');
+Route::get('/login', function (Request $request) {
+    return response()
+        ->view('login', ['captchaQuestion' => loginCaptchaChallenge($request)])
+        ->withHeaders([
+            'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, private',
+            'Pragma' => 'no-cache',
+            'Expires' => 'Thu, 01 Jan 1970 00:00:00 GMT',
+        ]);
+})->name('login');
+Route::get('/login/captcha', function (Request $request) {
+    return response()->json([
+        'question' => loginCaptchaChallenge($request),
+    ]);
+})->middleware('throttle:30,1')->name('login.captcha');
 // Public account self-registration is disabled.
 // User accounts are created only by an authenticated Admin from Manage Users.
 Route::get('/register', function () {
@@ -122,10 +151,23 @@ Route::post('/login', function (Request $request) {
     $request->validate([
         'email'    => 'required|email',
         'password' => 'required',
+        'captcha'  => 'required|integer',
     ]);
 
     $email    = Str::lower(trim($request->email));
     $password = $request->password;
+    $expectedCaptcha = $request->session()->pull('login_captcha_answer');
+
+    if ($expectedCaptcha === null || (int) $request->captcha !== (int) $expectedCaptcha) {
+        return response()->json([
+            'success' => false,
+            'message' => 'Incorrect security answer. Please solve the new question.',
+            'captcha_question' => loginCaptchaChallenge($request),
+        ], 422);
+    }
+
+    // Every challenge is single-use, including when the credentials are wrong.
+    $nextCaptchaQuestion = loginCaptchaChallenge($request);
 
     // 5 wrong attempts = 5-minute temporary lock
     $maxAttempts = 5;
@@ -140,6 +182,7 @@ Route::post('/login', function (Request $request) {
             'success'     => false,
             'message'     => "Too many failed login attempts. Please try again in {$minutes} minute(s).",
             'retry_after' => $seconds,
+            'captcha_question' => $nextCaptchaQuestion,
         ], 429);
     }
 
@@ -196,12 +239,14 @@ Route::post('/login', function (Request $request) {
             return response()->json([
                 'success' => false,
                 'message' => 'Too many failed login attempts. Login has been temporarily locked for 5 minutes.',
+                'captcha_question' => $nextCaptchaQuestion,
             ], 429);
         }
 
         return response()->json([
             'success' => false,
             'message' => "Invalid email or password. {$remaining} attempt(s) remaining.",
+            'captcha_question' => $nextCaptchaQuestion,
         ], 401);
     }
 
@@ -230,6 +275,7 @@ Route::post('/login', function (Request $request) {
         return response()->json([
             'success' => false,
             'message' => 'Your account is inactive. Please contact the administrator.',
+            'captcha_question' => $nextCaptchaQuestion,
         ], 403);
     }
 
@@ -253,6 +299,7 @@ Route::post('/login', function (Request $request) {
     ]);
 
     $redirect = match ($user->role ?? '') {
+        'super_admin' => route('admin.dashboard'),
         'admin' => route('admin.dashboard'),
         'staff' => route('staff.dashboard'),
         default => null,
@@ -264,6 +311,7 @@ Route::post('/login', function (Request $request) {
         return response()->json([
             'success' => false,
             'message' => 'Your account does not have permission to access a dashboard.',
+            'captcha_question' => $nextCaptchaQuestion,
         ], 403);
     }
 
@@ -275,12 +323,29 @@ Route::post('/login', function (Request $request) {
 })->name('login.post');
 
 // ===== LOGOUT =====
+Route::get('/session/status', function () {
+    $response = session()->has('user')
+        ? response()->json(['authenticated' => true])
+        : response()->json(['authenticated' => false], 401);
+
+    return $response->withHeaders([
+        'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, private',
+        'Pragma' => 'no-cache',
+        'Expires' => 'Thu, 01 Jan 1970 00:00:00 GMT',
+    ]);
+})->name('session.status');
+
 Route::post('/logout', function (Request $request) {
     auditLog('logout');
-    session()->forget('user');
-    session()->invalidate();
-    session()->regenerateToken();
-    return redirect()->route('login');
+    $request->session()->forget('user');
+    $request->session()->invalidate();
+    $request->session()->regenerateToken();
+
+    return redirect()->route('login')->withHeaders([
+        'Cache-Control' => 'no-store, no-cache, must-revalidate, max-age=0, private',
+        'Pragma' => 'no-cache',
+        'Expires' => 'Thu, 01 Jan 1970 00:00:00 GMT',
+    ]);
 })->name('logout');
 
 // =====================================================
@@ -452,7 +517,8 @@ Route::middleware('check.session:admin')->prefix('admin')->group(function () {
                 'signature'          => $newRow->signature            ?? null,
             ]]);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+            \Illuminate\Support\Facades\Log::error('Personnel create failed: ' . $e->getMessage());
+            return response()->json(['success' => false, 'error' => 'Unable to save personnel record.'], 500);
         }
     })->name('admin.personnel.store');
 
@@ -699,8 +765,8 @@ Route::middleware('check.session:admin')->prefix('admin')->group(function () {
         ]);
 
         $request->validate([
-            'username'      => ['required', 'email', 'max:255', 'unique:users,email'],
-            'fullName'      => ['required', 'string', 'max:255'],
+            'username'      => ['required', 'email', 'max:255', 'unique:users,email', new NoInvisibleCharacters],
+            'fullName'      => ['required', 'string', 'max:255', new NoInvisibleCharacters],
             'role'          => ['required', 'in:admin,staff'],
             'password'      => [
                 'required',
@@ -713,7 +779,7 @@ Route::middleware('check.session:admin')->prefix('admin')->group(function () {
                 'regex:/[^A-Za-z0-9]/',
             ],
             'status'        => ['nullable', 'in:Active,Inactive'],
-            'adminPassword' => ['required', 'string'],
+            'adminPassword' => ['required', 'string', new NoInvisibleCharacters],
         ], [
             'password.regex' => 'Password must contain uppercase, lowercase, number, and special character.',
         ]);
@@ -729,7 +795,7 @@ Route::middleware('check.session:admin')->prefix('admin')->group(function () {
 
         if (
             !$currentAdmin ||
-            Str::lower((string) $currentAdmin->role) !== 'admin' ||
+            !in_array(Str::lower((string) $currentAdmin->role), ['super_admin', 'admin'], true) ||
             !Hash::check($request->adminPassword, $currentAdmin->password)
         ) {
             auditLog('admin_password_confirmation_failed', $request->username, [
@@ -790,8 +856,8 @@ Route::middleware('check.session:admin')->prefix('admin')->group(function () {
         ]);
 
         $request->validate([
-            'username'      => ['required', 'email', 'max:255'],
-            'fullName'      => ['required', 'string', 'max:255'],
+            'username'      => ['required', 'email', 'max:255', new NoInvisibleCharacters],
+            'fullName'      => ['required', 'string', 'max:255', new NoInvisibleCharacters],
             'role'          => ['required', 'in:admin,staff'],
             'status'        => ['required', 'in:Active,Inactive'],
             'adminPassword' => ['nullable', 'string'],
@@ -829,7 +895,7 @@ Route::middleware('check.session:admin')->prefix('admin')->group(function () {
             ? DB::table('users')->where('id', $adminId)->first()
             : null;
 
-        if (!$currentAdmin || Str::lower((string) $currentAdmin->role) !== 'admin') {
+        if (!$currentAdmin || !in_array(Str::lower((string) $currentAdmin->role), ['super_admin', 'admin'], true)) {
             return response()->json([
                 'success' => false,
                 'message' => 'Administrator session could not be verified.',
@@ -1202,7 +1268,7 @@ Route::get('/inspection/{itemNumber}/detail', function ($itemNumber) {
         if ($request->status === 'approved') {
     // IMPORTANT: capture the OLD validity before updating personnel.
     $previousValidity = $p->date_of_validity ?? null;
-    $newValidity = now()->addYear()->toDateString();
+    $newValidity = Personnel::renewalValidityDate($p->date_of_birth, now())->toDateString();
 
     DB::table('personnel')
         ->where('item_number', $request->itemNumber)
@@ -1223,7 +1289,7 @@ Route::get('/inspection/{itemNumber}/detail', function ($itemNumber) {
         ]);
 
     // Save renewal history using the validity captured BEFORE the update.
-    DB::table('renewal_history')->insert([
+    $renewalHistoryId = DB::table('renewal_history')->insertGetId([
         'item_number'       => $request->itemNumber,
         'action'            => 'renewed',
         'date_of_validity'  => $newValidity,
@@ -1232,6 +1298,22 @@ Route::get('/inspection/{itemNumber}/detail', function ($itemNumber) {
         'remarks'           => $request->remarks ?? null,
         'created_at'        => now(),
         'updated_at'        => now(),
+    ]);
+
+    DB::table('renewal_transactions')->insert([
+        'source_history_id'    => $renewalHistoryId,
+        'personnel_id'         => $p->id,
+        'item_number'          => $request->itemNumber,
+        'par_number'           => null,
+        'renewal_date'         => now()->toDateString(),
+        'new_validity_date'    => $newValidity,
+        'old_validity_date'    => $previousValidity,
+        'status'               => 'approved',
+        'processed_by'         => $request->inspectedByName ?? ($user['name'] ?? 'Admin'),
+        'processed_by_user_id' => $user['id'] ?? null,
+        'remarks'              => $request->remarks ?? null,
+        'created_at'           => now(),
+        'updated_at'           => now(),
     ]);
 }
 
@@ -1428,9 +1510,18 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
             ->unique('personnel_id')
             ->keyBy('personnel_id');
 
-        $personnel = $all->map(function ($p) use ($latestInspections, $latestPars) {
+        $latestRenewals = DB::table('renewal_history')
+            ->whereIn('item_number', $all->pluck('item_number'))
+            ->where('action', 'renewed')
+            ->orderByDesc('id')
+            ->get()
+            ->unique('item_number')
+            ->keyBy('item_number');
+
+        $personnel = $all->map(function ($p) use ($latestInspections, $latestPars, $latestRenewals) {
             $inspection = $latestInspections->get($p->item_number);
             $par = $latestPars->get($p->id);
+            $renewal = $latestRenewals->get($p->item_number);
             $rpcspRemark = rpcspRemarkFromInspection($inspection);
 
             $inspectionResult = match (true) {
@@ -1461,10 +1552,14 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
             'approvedStatus'     => $p->approved_status      ?? 'pending',
             'email'              => $p->email                ?? '',
             'photo'              => $p->photo                ?? null,
+            'dateRenewed'        => $p->date_approved        ?? $p->last_renewed_at ?? $renewal?->created_at,
+            'renewedBy'          => $renewal?->inspected_by  ?? null,
 
             // Digital signature captured during New Registration.
             // PAR and ICS use this as the personnel / receiver signature.
             'signature'          => $p->signature            ?? null,
+            'civilStatus'        => $p->civil_status         ?? '',
+            'citizenship'        => $p->citizenship          ?? 'Filipino',
 
             'icsStatus'           => $p->ics_status           ?? 'inspection',
             'parNumber'           => $par->par_number         ?? null,
@@ -1487,11 +1582,86 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
     })->name('staff.dashboard.data');
 
     // ---- REGISTER PERSONNEL (STAFF) ----
+    Route::post('/personnel/check-availability', function (Request $request) {
+        $values = [
+            'afpSerialNumber' => Str::upper(trim((string) $request->input('afpSerialNumber'))),
+            'email' => Str::lower(trim((string) $request->input('email'))),
+            'contactNumber' => trim((string) $request->input('contactNumber')),
+            'pistolSerialNumber' => Str::upper(trim((string) $request->input('pistolSerialNumber'))),
+        ];
+
+        $request->merge($values);
+        $request->validate([
+            'afpSerialNumber' => ['nullable', 'string', 'max:100'],
+            'email' => ['nullable', 'email', 'max:255'],
+            'contactNumber' => ['nullable', 'regex:/^[0-9]+$/', 'max:20'],
+            'pistolSerialNumber' => ['nullable', 'string', 'max:100'],
+        ], [
+            'contactNumber.regex' => 'The contact number must contain numbers only.',
+        ]);
+
+        $errors = [];
+
+        if ($values['afpSerialNumber'] !== '' && DB::table('personnel')->where('afp_serial_number', $values['afpSerialNumber'])->exists()) {
+            $errors['afpSerialNumber'] = ['This AFP serial number is already registered.'];
+        }
+
+        if ($values['email'] !== '' && DB::table('personnel')->where('email', $values['email'])->exists()) {
+            $errors['email'] = ['This email address is already registered.'];
+        }
+
+        if ($values['contactNumber'] !== '' && DB::table('personnel')->where('contact_number', $values['contactNumber'])->exists()) {
+            $errors['contactNumber'] = ['This contact number is already registered.'];
+        }
+
+        if ($values['pistolSerialNumber'] !== '' && DB::table('personnel')->where('pistol_serial_number', $values['pistolSerialNumber'])->exists()) {
+            $errors['pistolSerialNumber'] = ['This pistol serial number is already registered.'];
+        }
+
+        return response()->json([
+            'available' => $errors === [],
+            'errors' => $errors,
+        ], $errors === [] ? 200 : 422);
+    })->middleware('throttle:60,1')->name('staff.personnel.availability');
+
     Route::post('/personnel', function (Request $request) {
+        $request->merge([
+            'email' => Str::lower(trim((string) $request->input('email'))),
+            'contactNumber' => trim((string) $request->input('contactNumber')),
+            'afpSerialNumber' => Str::upper(trim((string) $request->input('afpSerialNumber'))),
+            'pistolSerialNumber' => Str::upper(trim((string) $request->input('pistolSerialNumber'))),
+            'issuedBy' => trim((string) $request->input('issuedBy')),
+        ]);
+
+        $validated = $request->validate([
+            'lastName' => ['required', 'string', 'max:100'],
+            'firstName' => ['required', 'string', 'max:100'],
+            'rank' => ['required', 'string', 'max:50'],
+            'unit' => ['required', 'string', 'max:150'],
+            'dateOfBirth' => ['required', 'date', 'before_or_equal:today'],
+            'email' => ['required', 'email', 'max:255', 'unique:personnel,email'],
+            'contactNumber' => ['nullable', 'regex:/^[0-9]+$/', 'max:20', 'unique:personnel,contact_number'],
+            'afpSerialNumber' => ['required', 'string', 'max:100', 'unique:personnel,afp_serial_number'],
+            'pistolSerialNumber' => ['required', 'string', 'max:100', 'unique:personnel,pistol_serial_number'],
+            'pistolNomenclature' => ['required', 'string', 'max:150'],
+            'issuedBy' => ['required', Rule::in([
+                'MS ROSEMARIE O VILBAR',
+                'MS EVANGELINE M SINGUEO, Ph.D.',
+            ])],
+            'qtyAmmo' => ['nullable', 'integer', 'min:0'],
+        ], [
+            'email.unique' => 'This email address is already registered.',
+            'afpSerialNumber.unique' => 'This AFP serial number is already registered.',
+            'pistolSerialNumber.unique' => 'This pistol serial number is already registered.',
+            'contactNumber.regex' => 'The contact number must contain numbers only.',
+            'contactNumber.unique' => 'This contact number is already registered.',
+            'issuedBy.in' => 'Please choose an issuing officer from the list.',
+        ]);
+
         try {
-            $body  = json_decode($request->getContent(), true) ?? [];
-            $email = $body['email'] ?? $request->input('email') ?? null;
-            $id = DB::transaction(function () use ($body, $request, $email) {
+            $body  = $request->all();
+            $email = $validated['email'];
+            $id = DB::transaction(function () use ($body, $request, $email, $validated) {
               $lastItem = DB::table('personnel')->lockForUpdate()->max('item_number') ?? 0;
               $id = DB::table('personnel')->insertGetId([
                 'item_number'          => $lastItem + 1,
@@ -1500,18 +1670,21 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
                 'last_name'            => $body['lastName']           ?? $request->lastName           ?? '',
                 'first_name'           => $body['firstName']          ?? $request->firstName          ?? '',
                 'middle_name'          => $body['middleName']         ?? $request->middleName         ?? '',
-                'afp_serial_number'    => $body['afpSerialNumber']    ?? $request->afpSerialNumber    ?? '',
+                'afp_serial_number'    => $validated['afpSerialNumber'],
                 'afos_mos'             => $body['afosMos']            ?? $request->afosMos            ?? '',
                 'branch'               => $body['branch']             ?? $request->branch             ?? '',
                 'unit'                 => $body['unit']               ?? $request->unit               ?? '',
-                'date_of_birth'        => $body['dateOfBirth']        ?? $request->dateOfBirth        ?: null,
+                'date_of_birth'        => $validated['dateOfBirth'],
                 'pistol_nomenclature'  => $body['pistolNomenclature'] ?? $request->pistolNomenclature ?? '',
-                'pistol_serial_number' => $body['pistolSerialNumber'] ?? $request->pistolSerialNumber ?? '',
-                'qty_ammo'             => (int) ($body['qtyAmmo']     ?? $request->qtyAmmo            ?? 0),
+                'pistol_serial_number' => $validated['pistolSerialNumber'],
+                'qty_ammo'             => $validated['qtyAmmo'] ?? 0,
                 'email'                => $email,
+                'contact_number'       => $validated['contactNumber'] ?? null,
+                'issued_by'            => $validated['issuedBy'] ?? null,
                 'photo'                => $body['photo'] ?? $request->input('photo') ?? null,
                 'signature'            => $body['signature'] ?? null,
                 'citizenship'          => trim((string) ($body['citizenship'] ?? 'Filipino')) ?: 'Filipino',
+                'civil_status'         => trim((string) ($body['civilStatus'] ?? '')) ?: null,
                 'approved_status'      => 'new',
                 'ics_status'           => 'inspection',
                 'status'               => 'active',
@@ -1549,9 +1722,22 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
                 'email'              => $newRow->email                ?? '',
                 'photo'              => $newRow->photo                ?? null,
                 'signature'          => $newRow->signature            ?? null,
+                'civilStatus'        => $newRow->civil_status         ?? '',
+                'citizenship'        => $newRow->citizenship          ?? 'Filipino',
             ]]);
+        } catch (QueryException $e) {
+            if (in_array((string) $e->getCode(), ['23000', '23505'], true)) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'The email or serial number is already registered.',
+                    'errors' => ['duplicate' => ['The email or serial number is already registered.']],
+                ], 422);
+            }
+
+            throw $e;
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+            \Illuminate\Support\Facades\Log::error('Personnel update failed: ' . $e->getMessage());
+            return response()->json(['success' => false, 'error' => 'Unable to update personnel record.'], 500);
         }
     })->name('staff.personnel.store');
 
@@ -1580,7 +1766,12 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
     // ---- APPROVAL ----
     Route::post('/personnel/{id}/approve', function (Request $request, $id) {
         $request->validate(['approvedStatus' => 'required|in:pending,renewed,within,expired']);
-        DB::table('personnel')->where('item_number', $id)->update(['approved_status' => $request->approvedStatus, 'updated_at' => now()]);
+        $statusUpdate = ['approved_status' => $request->approvedStatus, 'updated_at' => now()];
+        if ($request->approvedStatus === 'renewed') {
+            $statusUpdate['date_approved'] = now()->toDateString();
+            $statusUpdate['last_renewed_at'] = now()->toDateString();
+        }
+        DB::table('personnel')->where('item_number', $id)->update($statusUpdate);
         $p    = DB::table('personnel')->where('item_number', $id)->first();
         $name = trim(($p->rank ?? '') . ' ' . ($p->last_name ?? '') . ', ' . ($p->first_name ?? ''));
         $statusLabels = ['renewed' => 'Renewed', 'within' => 'Within Renewal Period', 'expired' => 'Expired', 'pending' => 'Pending'];
@@ -1644,7 +1835,8 @@ Route::middleware('check.session:staff')->prefix('staff')->group(function () {
             ]);
             return response()->json(['success' => true, 'message' => 'Email sent successfully.']);
         } catch (\Exception $e) {
-            return response()->json(['success' => false, 'error' => $e->getMessage()], 500);
+            \Illuminate\Support\Facades\Log::error('Personnel operation failed: ' . $e->getMessage());
+            return response()->json(['success' => false, 'error' => 'The requested operation could not be completed.'], 500);
         }
     })->middleware('throttle:notify')->name('staff.personnel.notify');
 
