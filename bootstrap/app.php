@@ -11,6 +11,10 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware) {
+        // Render terminates HTTPS at its proxy. Trust its forwarded headers so
+        // Laravel generates HTTPS URLs and secure session cookies correctly.
+        $middleware->trustProxies(at: '*');
+
         $middleware->alias([
             'check.session' => \App\Http\Middleware\CheckSession::class,
         ]);
