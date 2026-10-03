@@ -11,10 +11,14 @@
 /.phpunit.cache
 /.vscode
 /.zed
+/.agents
+/.kilo
+/.tmp-appdata
 /auth.json
 /node_modules
 /public/build
 /public/hot
+/public/*.sql
 /public/storage
 /storage/*.key
 /storage/pail
